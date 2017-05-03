@@ -23,7 +23,7 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity {
 
-    RequestQueue queue;
+
     WeatherUpdater weatherService;
     boolean serviceBound = false;
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, WeatherUpdater.class);
         bindService(intent, mConnection, this.BIND_AUTO_CREATE);
+        weatherService.SendRequest();
     }
 
     @Override
@@ -69,42 +70,4 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
-    //Følgende flyttes til CheckNetwork eller Service.
-    private void checkNetwork(){
-        String status = NetworkChecker.getNetworkStatus(this);
-        Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
-    }
-
-    private void sendRequest(){
-        //send request using Volley
-        if(queue==null){
-            queue = Volley.newRequestQueue(this);
-        }
-        String url = Globals.WEATHER_API_CALL;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        queue.add(stringRequest);
-
-    }
-
-
-    //attempt to decode the json response from weather server
-    public void interpretWeatherJSON(String jsonResonse){
-
-       // txtJsonResponse.setText(WeatherJsonParser.parseCityWeatherJsonWithGson(jsonResonse));
-    }
 }
