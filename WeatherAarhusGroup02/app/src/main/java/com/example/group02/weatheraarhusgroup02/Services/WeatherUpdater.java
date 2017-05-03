@@ -21,7 +21,7 @@ public class WeatherUpdater extends Service {
         return mBinder;
     }
     public class LocalBinder extends Binder {
-        WeatherUpdater getService() {
+        public WeatherUpdater getService() {
             return WeatherUpdater.this;
         }
     }
