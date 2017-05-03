@@ -4,24 +4,25 @@ package com.example.group02.weatheraarhusgroup02.Model;
  * Created by Rune Rask on 03-05-2017.
  */
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Main {
 
+    @SerializedName("temp")
+    @Expose
     public Double temp;
+    @SerializedName("pressure")
+    @Expose
     public Integer pressure;
+    @SerializedName("humidity")
+    @Expose
     public Integer humidity;
+    @SerializedName("temp_min")
+    @Expose
     public Double tempMin;
+    @SerializedName("temp_max")
+    @Expose
     public Double tempMax;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }

@@ -1,22 +1,18 @@
 package com.example.group02.weatheraarhusgroup02.Model;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Wind {
 
+    @SerializedName("speed")
+    @Expose
     public Double speed;
+    @SerializedName("deg")
+    @Expose
     public Integer deg;
+    @SerializedName("gust")
+    @Expose
     public Double gust;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }
