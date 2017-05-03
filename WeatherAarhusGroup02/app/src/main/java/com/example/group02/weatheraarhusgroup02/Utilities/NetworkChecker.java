@@ -13,7 +13,7 @@ import static com.example.group02.weatheraarhusgroup02.Utilities.Globals.CONNECT
 
 public class NetworkChecker {
 
-    public static String getNetworkStatus(Context c){
+    public static boolean getNetworkStatus(Context c){
         ConnectivityManager connectMan = (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectMan.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnected()) {
@@ -22,11 +22,13 @@ public class NetworkChecker {
                     netInfo.toString()
             );
 
-            return "Got connections" + netInfo.toString();
+            //return "Got connections" + netInfo.toString();
+            return  true;
         } else {
             //oh no, no connection
             Log.d(CONNECT, "No connections");
-            return "No connections";
+            //return "No connections";
+            return false;
         }
     }
 }

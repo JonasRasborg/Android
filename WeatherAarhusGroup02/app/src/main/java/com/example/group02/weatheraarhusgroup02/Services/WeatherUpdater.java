@@ -4,35 +4,37 @@ package com.example.group02.weatheraarhusgroup02.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
-import com.example.group02.weatheraarhusgroup02.R;
 import com.example.group02.weatheraarhusgroup02.Utilities.JsonParser;
+import com.example.group02.weatheraarhusgroup02.Utilities.NetworkChecker;
 import com.example.group02.weatheraarhusgroup02.Utilities.WebConnector;
-
-import com.example.group02.weatheraarhusgroup02.Model.Weather;
 
 public class WeatherUpdater extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
     private WebConnector webConnector;
-    //private JsonParser jsonParser;
-    private String thisResponse;
-    private WeatherInfo weatherInfo;
+    private NetworkChecker networkChecker;
 
-    public WeatherUpdater() {
+    private String thisResponse;
+    private WeatherInfo UIweatherInfo;
+    private WeatherInfo HistoricweatherInfo;
+
+
+    public WeatherUpdater()
+    {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        webConnector = new WebConnector();
-        //jsonParser = new JsonParser();
-        weatherInfo = new WeatherInfo();
 
+        webConnector = new WebConnector();
+        UIweatherInfo = new WeatherInfo();
+        HistoricweatherInfo = new WeatherInfo();
+        networkChecker = new NetworkChecker();
     }
 
     @Override
@@ -47,12 +49,23 @@ public class WeatherUpdater extends Service {
         }
     }
 
-    public WeatherInfo SendRequest(){
+    public WeatherInfo GetLatestWeather(){
 
+
+        if(networkChecker.getNetworkStatus(this) == true)
+        {
             thisResponse = webConnector.sendRequest(this);
-            weatherInfo = JsonParser.parseCityWeatherJsonWithGson(thisResponse);
-            return weatherInfo;
+            // parse til Gson fil (DTO)
+            UIweatherInfo = JsonParser.parseCityWeatherJsonWithGson(thisResponse);
+            return UIweatherInfo;
+        }
+        else
+        {
+            return null;
+        }
 
     }
+
+
 
 }

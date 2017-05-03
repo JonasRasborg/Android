@@ -20,10 +20,6 @@ public class WebConnector {
     String thisResponse;
 
 
-    //Følgende flyttes til CheckNetwork eller Service.
-    public void checkNetwork(Service s){
-        String status = NetworkChecker.getNetworkStatus(s);
-    }
 
     public String sendRequest(Service s){
         //send request using Volley
@@ -51,10 +47,4 @@ public class WebConnector {
             return thisResponse;
     }
 
-
-    //attempt to decode the json response from weather server
-    public void interpretWeatherJSON(String jsonResonse){
-
-        // txtJsonResponse.setText(WeatherJsonParser.parseCityWeatherJsonWithGson(jsonResonse));
-    }
 }

@@ -9,20 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
 import com.example.group02.weatheraarhusgroup02.Services.WeatherUpdater;
-import com.example.group02.weatheraarhusgroup02.Utilities.Globals;
-import com.example.group02.weatheraarhusgroup02.Utilities.NetworkChecker;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpStack;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,25 +21,35 @@ public class MainActivity extends AppCompatActivity {
     boolean serviceBound = false;
     Button btnUpdate;
     WeatherInfo currentWeatherInfo;
-    TextView textviewCloudy;
+    TextView textviewDescription;
+    TextView textviewCity;
+    TextView textviewTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Make instances
+        // bind controls in Activity
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         currentWeatherInfo = new WeatherInfo();
-        textviewCloudy = (TextView) findViewById(R.id.textViewCloudy);
+        textviewDescription = (TextView) findViewById(R.id.textViewDescription);
+        textviewCity = (TextView) findViewById(R.id.textViewCity);
+        textviewTemp = (TextView) findViewById(R.id.textViewTemperature);
 
+
+        // At "update" button press
         btnUpdate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                currentWeatherInfo = weatherService.SendRequest();
+                //get weather info
+                currentWeatherInfo = weatherService.GetLatestWeather();
                 if (currentWeatherInfo!=null)
                 {
-                    textviewCloudy.setText(currentWeatherInfo.wind.speed.toString());
+                    textviewDescription.setText(currentWeatherInfo.weather.get(0).description);
+                    textviewCity.setText(currentWeatherInfo.name);
+                    double currenttemp = currentWeatherInfo.main.temp-273.15;
+                    textviewTemp.setText(String.format( "%.1f", currenttemp )+(char) 0x00B0+" C");
                 }
             };
         });
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, WeatherUpdater.class);
         bindService(intent, mConnection, this.BIND_AUTO_CREATE);
-       // weatherService.SendRequest();
+        // weatherService.SendRequest();
     }
 
     @Override
