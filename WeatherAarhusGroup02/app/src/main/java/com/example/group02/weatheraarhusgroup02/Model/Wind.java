@@ -1,12 +1,14 @@
-package Model;
+package com.example.group02.weatheraarhusgroup02.Model;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Coord {
+public class Wind {
 
-    public Double lon;
-    public Double lat;
+    public Double speed;
+    public Integer deg;
+    public Double gust;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Map<String, Object> getAdditionalProperties() {

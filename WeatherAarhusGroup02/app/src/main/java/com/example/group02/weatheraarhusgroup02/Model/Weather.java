@@ -1,16 +1,14 @@
-package Model;
+package com.example.group02.weatheraarhusgroup02.Model;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Sys {
+public class Weather {
 
-    public Integer type;
     public Integer id;
-    public Double message;
-    public String country;
-    public Integer sunrise;
-    public Integer sunset;
+    public String main;
+    public String description;
+    public String icon;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Map<String, Object> getAdditionalProperties() {
