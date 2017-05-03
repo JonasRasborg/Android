@@ -1,4 +1,4 @@
-package com.example.group02.weatheraarhusgroup02;
+package Services;
 
 import android.app.Service;
 import android.content.Intent;
