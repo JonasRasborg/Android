@@ -29,15 +29,14 @@ public class JsonParser {
     }
 
     //example of parsing with Gson - not that the Gson parser uses the model object CityWeather, Clouds, Coord, Main, Sys, Weather and Wind extracted with http://www.jsonschema2pojo.org/
-    public static String parseCityWeatherJsonWithGson(String jsonString){
+    public static WeatherInfo parseCityWeatherJsonWithGson(String jsonString){
 
         Gson gson = new GsonBuilder().create();
         WeatherInfo weatherInfo =  gson.fromJson(jsonString, WeatherInfo.class);
         if(weatherInfo != null) {
-            return weatherInfo.name + "\n" + "Temp: " + (weatherInfo.main.temp.doubleValue() + TO_CELCIOUS_FROM_KELVIN) + "\u2103" + //unicode for celcius
-                    "\nCountry: " + weatherInfo.sys.country;
+            return weatherInfo;
         } else {
-            return "could not parse with gson";
+            return weatherInfo; //return "could not parse with gson";
         }
     }
 }

@@ -6,8 +6,12 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
 import com.example.group02.weatheraarhusgroup02.Services.WeatherUpdater;
 import com.example.group02.weatheraarhusgroup02.Utilities.Globals;
 import com.example.group02.weatheraarhusgroup02.Utilities.NetworkChecker;
@@ -26,11 +30,30 @@ public class MainActivity extends AppCompatActivity {
 
     WeatherUpdater weatherService;
     boolean serviceBound = false;
+    Button btnUpdate;
+    WeatherInfo currentWeatherInfo;
+    TextView textviewCloudy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Make instances
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        currentWeatherInfo = new WeatherInfo();
+        textviewCloudy = (TextView) findViewById(R.id.textViewCloudy);
+
+        btnUpdate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                currentWeatherInfo = weatherService.SendRequest();
+                if (currentWeatherInfo!=null)
+                {
+                    textviewCloudy.setText(currentWeatherInfo.wind.speed.toString());
+                }
+            };
+        });
     }
 
     @Override
@@ -39,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // Bind to LocalService
         Intent intent = new Intent(this, WeatherUpdater.class);
         bindService(intent, mConnection, this.BIND_AUTO_CREATE);
-        weatherService.SendRequest();
+       // weatherService.SendRequest();
     }
 
     @Override

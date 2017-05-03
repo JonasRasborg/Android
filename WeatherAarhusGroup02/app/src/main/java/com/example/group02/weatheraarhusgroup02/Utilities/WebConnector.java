@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.group02.weatheraarhusgroup02.Utilities.JsonParser;
 
 /**
  * Created by Rune Rask on 03-05-2017.
@@ -16,13 +17,15 @@ import com.android.volley.toolbox.Volley;
 
 public class WebConnector {
     RequestQueue queue;
+    String thisResponse;
+
 
     //Følgende flyttes til CheckNetwork eller Service.
     public void checkNetwork(Service s){
         String status = NetworkChecker.getNetworkStatus(s);
     }
 
-    public void sendRequest(Service s){
+    public String sendRequest(Service s){
         //send request using Volley
         if(queue==null){
             queue = Volley.newRequestQueue(s);
@@ -33,9 +36,9 @@ public class WebConnector {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-
+                        thisResponse = response;
                     }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -45,6 +48,7 @@ public class WebConnector {
 
         queue.add(stringRequest);
 
+            return thisResponse;
     }
 
 

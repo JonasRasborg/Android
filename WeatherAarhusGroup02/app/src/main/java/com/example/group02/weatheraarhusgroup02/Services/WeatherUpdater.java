@@ -7,7 +7,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
 import com.example.group02.weatheraarhusgroup02.R;
+import com.example.group02.weatheraarhusgroup02.Utilities.JsonParser;
 import com.example.group02.weatheraarhusgroup02.Utilities.WebConnector;
 
 import com.example.group02.weatheraarhusgroup02.Model.Weather;
@@ -16,7 +18,10 @@ public class WeatherUpdater extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
-    private WebConnector connector;
+    private WebConnector webConnector;
+    //private JsonParser jsonParser;
+    private String thisResponse;
+    private WeatherInfo weatherInfo;
 
     public WeatherUpdater() {
     }
@@ -24,7 +29,10 @@ public class WeatherUpdater extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        connector = new WebConnector();
+        webConnector = new WebConnector();
+        //jsonParser = new JsonParser();
+        weatherInfo = new WeatherInfo();
+
     }
 
     @Override
@@ -39,8 +47,12 @@ public class WeatherUpdater extends Service {
         }
     }
 
-    public void SendRequest(){
-        connector.sendRequest(this);
+    public WeatherInfo SendRequest(){
+
+            thisResponse = webConnector.sendRequest(this);
+            weatherInfo = JsonParser.parseCityWeatherJsonWithGson(thisResponse);
+            return weatherInfo;
+
     }
 
 }
