@@ -1,9 +1,13 @@
 package com.example.smap.weatherassignment;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("ACTION"));
         // bind controls in Activity
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         currentWeatherInfo = new WeatherInfo();
@@ -63,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
             };
         });
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            int message = intent.getIntExtra("int", 0);
+            textviewCity.setText(String.valueOf(message));
+        }
+    };
 
     // Methods
 

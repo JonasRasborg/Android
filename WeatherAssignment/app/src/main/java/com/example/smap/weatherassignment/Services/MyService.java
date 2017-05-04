@@ -7,6 +7,7 @@ package com.example.smap.weatherassignment.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -20,10 +21,15 @@ import com.example.smap.weatherassignment.Utils.WebConnector;
 
 public class MyService extends Service
 {
+
     // Attributes
     WebConnector webConnector;
     String weatherString;
     WeatherInfo currentWeatherInfo;
+
+    Intent localIntent;
+    int a = 0;
+    LocalBroadcastManager lbcm;
 
     // Thread
     final class MyThreadClass implements Runnable
@@ -55,6 +61,10 @@ public class MyService extends Service
                         {
                             Log.d("Thread", "Weatherstring was not null");
                             weatherInfo = JsonParser.parseCityWeatherJsonWithGson(weatherString);
+
+                            a++;
+                            localIntent.putExtra("int", a);
+                            lbcm.sendBroadcast(localIntent);
                         }
                         Log.d("Thread", "Thread is running");
                         wait(1000);
@@ -84,6 +94,9 @@ public class MyService extends Service
     public void onCreate()
     {
         super.onCreate();
+        localIntent = new Intent("ACTION");
+
+        lbcm = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
