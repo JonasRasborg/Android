@@ -28,8 +28,11 @@ public class MyService extends Service
     WeatherInfo currentWeatherInfo;
 
     Intent localIntent;
+    Intent weatherIntent;
     int a = 0;
     LocalBroadcastManager lbcm;
+
+    Toast t;
 
     // Thread
     final class MyThreadClass implements Runnable
@@ -62,13 +65,19 @@ public class MyService extends Service
                             Log.d("Thread", "Weatherstring was not null");
                             weatherInfo = JsonParser.parseCityWeatherJsonWithGson(weatherString);
 
+                            weatherIntent.putExtra("description", weatherInfo.weather.get(0).description);
+                            weatherIntent.putExtra("name", weatherInfo.name);
+                            weatherIntent.putExtra("temp", weatherInfo.main.temp - 273.15);
+
                             a++;
                             localIntent.putExtra("int", a);
-                            lbcm.sendBroadcast(localIntent);
-                        }
-                        Log.d("Thread", "Thread is running");
-                        wait(1000);
 
+                            lbcm.sendBroadcast(localIntent);
+                            lbcm.sendBroadcast(weatherIntent);
+                        }
+
+                        Log.d("Thread", "Thread is running");
+                        wait(5000);
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -88,6 +97,7 @@ public class MyService extends Service
         Thread thread = new Thread(new MyThreadClass(startId,this));
         thread.start();
         return START_STICKY;
+
     }
 
     @Override
@@ -95,7 +105,7 @@ public class MyService extends Service
     {
         super.onCreate();
         localIntent = new Intent("ACTION");
-
+        weatherIntent = new Intent("weatherUpdate");
         lbcm = LocalBroadcastManager.getInstance(this);
     }
 
