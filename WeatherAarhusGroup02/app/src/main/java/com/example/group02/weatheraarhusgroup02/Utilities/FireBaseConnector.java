@@ -1,7 +1,11 @@
 package com.example.group02.weatheraarhusgroup02.Utilities;
 
 
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import com.example.group02.weatheraarhusgroup02.Model.Weather;
 import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
@@ -30,51 +34,20 @@ public class FireBaseConnector {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mChildRef;
 
+    private LocalBroadcastManager localBroadcastManager;
+    Intent intent;
+
+
     public  FireBaseConnector()
     {
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
         mChildRef=mRootRef.child("Weathers");
-        //firebaseDatabase = FirebaseDatabase.getInstance();
 
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
-    mRootRef.addChildEventListener(new ChildEventListener() {
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s)
-    {
-        ArrayList<WeatherInfo> weathers = new ArrayList<WeatherInfo>();
+        intent = new Intent("WeatherUpdate");
 
-        for (DataSnapshot thissnapshot:dataSnapshot.getChildren())
-        {
-            WeatherInfo weatherInfo = new WeatherInfo();
-            weatherInfo = ((WeatherInfo) thissnapshot.child("Weathers").getValue());
-            weathers.add(weatherInfo);
-
-        }
-
-        Log.d("FireBaseConnector", "datasnapshot EXISTS");
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
-    }
-});
 
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -91,9 +64,7 @@ public class FireBaseConnector {
                 }
 
                 Log.d("FireBaseConnector", "datasnapshot EXISTS");
-
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError)
@@ -108,8 +79,5 @@ public class FireBaseConnector {
     {
         mRootRef.push().setValue(weatherInfo);
     }
-
-
-
 
 }

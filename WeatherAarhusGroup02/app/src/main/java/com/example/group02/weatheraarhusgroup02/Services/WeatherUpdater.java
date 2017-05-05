@@ -3,7 +3,9 @@ package com.example.group02.weatheraarhusgroup02.Services;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -54,6 +56,7 @@ public class WeatherUpdater extends Service {
         Log.i(TAG, "onCreate, Thread name " + Thread.currentThread().getName());
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMesseageReciever,new IntentFilter("WeatherUpdate"));
         intent = new Intent("WeatherUpdate");
         new WeatherAsyncTask().execute();
 
@@ -68,6 +71,14 @@ public class WeatherUpdater extends Service {
         return START_REDELIVER_INTENT;
     }
 
+    private BroadcastReceiver mMesseageReciever = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Opdatering fra FireBase
+
+        }
+    };
 
     @Override
     public IBinder onBind(Intent intent) {
