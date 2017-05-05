@@ -32,10 +32,10 @@ public class WeatherUpdater extends Service {
 
     private String thisResponse;
     private WeatherInfo UIweatherInfo;
-    private WeatherInfo HistoricweatherInfo;
 
     private LocalBroadcastManager localBroadcastManager;
-    Intent intent;
+    Intent latestWeather;
+    Intent allWeathers;
 
     private FireBaseConnector fireBaseConnector;
 
@@ -51,13 +51,17 @@ public class WeatherUpdater extends Service {
 
         webConnector = new WebConnector();
         UIweatherInfo = new WeatherInfo();
-        HistoricweatherInfo = new WeatherInfo();
         networkChecker = new NetworkChecker();
         Log.i(TAG, "onCreate, Thread name " + Thread.currentThread().getName());
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMesseageReciever,new IntentFilter("WeatherUpdate"));
-        intent = new Intent("WeatherUpdate");
+        //BroadCastReceiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFireBase,new IntentFilter("AllWeathers"));
+
+        //BroadCastSenders
+        latestWeather = new Intent("LatestWeather");
+        allWeathers = new Intent("AllWeathers");
+
         new WeatherAsyncTask().execute();
 
         // TEST
@@ -71,12 +75,13 @@ public class WeatherUpdater extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    private BroadcastReceiver mMesseageReciever = new BroadcastReceiver()
+    private BroadcastReceiver mReceiveFromFireBase = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Opdatering fra FireBase
-
+            allWeathers = intent;
+            localBroadcastManager.sendBroadcast(allWeathers);
         }
     };
 
@@ -107,8 +112,6 @@ public class WeatherUpdater extends Service {
             fireBaseConnector.putData(UIweatherInfo);
 
             return UIweatherInfo;
-
-
         }
         else
         {
@@ -150,8 +153,8 @@ public class WeatherUpdater extends Service {
             super.onProgressUpdate(values);
 
             Toast.makeText(WeatherUpdater.this, values[0].name,Toast.LENGTH_SHORT).show();
-            intent.putExtra("weatherinfo",values[0]);
-            localBroadcastManager.sendBroadcast(intent);
+            latestWeather.putExtra("weatherinfo",values[0]);
+            localBroadcastManager.sendBroadcast(latestWeather);
 
 
         }

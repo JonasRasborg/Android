@@ -1,6 +1,7 @@
 package com.example.group02.weatheraarhusgroup02.Utilities;
 
 
+import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,14 +28,14 @@ import java.util.List;
 
 
 
-public class FireBaseConnector {
+public class FireBaseConnector extends Application {
 
     DatabaseReference mRootRef;
     private String FirebaseRoot = "https://weatherapp-d0836.firebaseio.com/";
     FirebaseDatabase firebaseDatabase;
     DatabaseReference mChildRef;
 
-    private LocalBroadcastManager localBroadcastManager;
+    LocalBroadcastManager localBroadcastManager;
     Intent intent;
 
 
@@ -42,11 +43,9 @@ public class FireBaseConnector {
     {
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
-        mChildRef=mRootRef.child("Weathers");
+        localBroadcastManager  = LocalBroadcastManager.getInstance(this);
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
-        intent = new Intent("WeatherUpdate");
+        intent = new Intent("AllWeathers");
 
 
         mRootRef.addValueEventListener(new ValueEventListener() {
@@ -62,6 +61,9 @@ public class FireBaseConnector {
                     weatherInfo = thissnapshot.getValue(WeatherInfo.class);
                     weathers.add(weatherInfo);
                 }
+
+                intent.putExtra("weathers", weathers);
+                localBroadcastManager.sendBroadcast(intent);
 
                 Log.d("FireBaseConnector", "datasnapshot EXISTS");
             }

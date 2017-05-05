@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         textviewDescription = (TextView) findViewById(R.id.textViewDescription);
         textviewCity = (TextView) findViewById(R.id.textViewCity);
         textviewTemp = (TextView) findViewById(R.id.textViewTemperature);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMesseageReciever,new IntentFilter("WeatherUpdate"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveLatest,new IntentFilter("LatestWeather"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAll,new IntentFilter("AllWeathers"));
         intent = new Intent(this, WeatherUpdater.class);
         startStartedService();
 
@@ -57,20 +58,26 @@ public class MainActivity extends AppCompatActivity {
                 currentWeatherInfo = weatherUpdater.GetLatestWeather();
                 RenderGUI(currentWeatherInfo);
                 Log.d("Main","Button Pushed");
-
-
-
             };
         });
     }
 
 
-    private BroadcastReceiver mMesseageReciever = new BroadcastReceiver()
+    private BroadcastReceiver mReceiveLatest = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
 
             RenderGUI((WeatherInfo) intent.getExtras().getSerializable("weatherinfo"));
+        }
+    };
+
+    private BroadcastReceiver mReceiveAll = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.d("Main", "List of ALL Weathers Received (Y)");
         }
     };
 
