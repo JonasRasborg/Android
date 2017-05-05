@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.group02.weatheraarhusgroup02.Model.Weather;
 import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
 import com.example.group02.weatheraarhusgroup02.Services.WeatherUpdater;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,37 +28,67 @@ public class FireBaseConnector {
     DatabaseReference mRootRef;
     private String FirebaseRoot = "https://weatherapp-d0836.firebaseio.com/";
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference mRoot
+    DatabaseReference mChildRef;
 
     public  FireBaseConnector()
     {
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
+        mChildRef=mRootRef.child("Weathers");
         //firebaseDatabase = FirebaseDatabase.getInstance();
 
 
+    mRootRef.addChildEventListener(new ChildEventListener() {
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s)
+    {
+        ArrayList<WeatherInfo> weathers = new ArrayList<WeatherInfo>();
+
+        for (DataSnapshot thissnapshot:dataSnapshot.getChildren())
+        {
+            WeatherInfo weatherInfo = new WeatherInfo();
+            weatherInfo = ((WeatherInfo) thissnapshot.child("Weathers").getValue());
+            weathers.add(weatherInfo);
+
+        }
+
+        Log.d("FireBaseConnector", "datasnapshot EXISTS");
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+});
 
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
 
-                /*ArrayList<WeatherInfo> weathers = new ArrayList<WeatherInfo>();
+                ArrayList<WeatherInfo> weathers = new ArrayList<WeatherInfo>();
 
                 for (DataSnapshot thissnapshot:dataSnapshot.getChildren())
                 {
                     WeatherInfo weatherInfo = new WeatherInfo();
-                    Log.d("FireBaseConnector", thissnapshot.child("name").getValue().toString());
-                    weatherInfo.name = thissnapshot.child("name").getValue().toString();
+                    weatherInfo = thissnapshot.getValue(WeatherInfo.class);
                     weathers.add(weatherInfo);
                 }
-
-
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    WeatherInfo message = messageSnapshot.getValue(WeatherInfo.class);
-                }
-                */
-
 
                 Log.d("FireBaseConnector", "datasnapshot EXISTS");
 

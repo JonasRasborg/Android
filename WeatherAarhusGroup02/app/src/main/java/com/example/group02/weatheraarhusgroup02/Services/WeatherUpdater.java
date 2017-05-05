@@ -55,7 +55,7 @@ public class WeatherUpdater extends Service {
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         intent = new Intent("WeatherUpdate");
-        //new WeatherAsyncTask().execute();
+        new WeatherAsyncTask().execute();
 
         // TEST
         fireBaseConnector = new FireBaseConnector();
