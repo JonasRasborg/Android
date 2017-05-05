@@ -4,6 +4,8 @@ package com.example.group02.weatheraarhusgroup02.Utilities;
 import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +65,9 @@ public class FireBaseConnector extends Application {
                     weathers.add(weatherInfo);
                 }
 
-                intent.putExtra("weathers", weathers);
+                Bundle b = new Bundle();
+                b.putSerializable("weathers", weathers);
+                intent.putExtra("weathers", b);
                 localBroadcastManager.sendBroadcast(intent);
 
                 Log.d("FireBaseConnector", "datasnapshot EXISTS");
