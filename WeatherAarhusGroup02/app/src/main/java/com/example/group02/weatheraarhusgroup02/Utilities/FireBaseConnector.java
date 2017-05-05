@@ -27,6 +27,7 @@ public class FireBaseConnector {
     DatabaseReference mRootRef;
     private String FirebaseRoot = "https://weatherapp-d0836.firebaseio.com/";
     FirebaseDatabase firebaseDatabase;
+    DatabaseReference mRoot
 
     public  FireBaseConnector()
     {
@@ -69,9 +70,6 @@ public class FireBaseConnector {
                 Log.d("FireBaseConnector", "datasnapshot doesnt exist");
             }
         });
-
-
-
 
     }
 
