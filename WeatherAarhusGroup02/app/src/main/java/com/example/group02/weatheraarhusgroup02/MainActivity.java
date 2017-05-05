@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         textviewCity = (TextView) findViewById(R.id.textViewCity);
         textviewTemp = (TextView) findViewById(R.id.textViewTemperature);
 
+        startStartedService();
 
         // At "update" button press
         btnUpdate.setOnClickListener(new View.OnClickListener(){
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Bind to LocalService
         Intent intent = new Intent(this, WeatherUpdater.class);
-        bindService(intent, mConnection, this.BIND_AUTO_CREATE);
+        //bindService(intent, mConnection, this.BIND_AUTO_CREATE);
         // weatherService.SendRequest();
     }
 
@@ -68,14 +69,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         // Unbind from the service
-        if (serviceBound) {
+        /*if (serviceBound) {
             unbindService(mConnection);
             serviceBound = false;
-        }
+        }*/
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
+    /* Defines callbacks for service binding, passed to bindService() */
+    /*private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -89,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName arg0) {
             serviceBound = false;
         }
-    };
+    };*/
+
+    public void startStartedService(){
+        Intent intent = new Intent(MainActivity.this, WeatherUpdater.class);
+        startService(intent);
+    }
 
 
 }
