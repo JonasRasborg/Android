@@ -2,22 +2,26 @@ package com.example.group02.weatheraarhusgroup02.Services;
 
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
+import com.example.group02.weatheraarhusgroup02.Utilities.FireBaseConnector;
 import com.example.group02.weatheraarhusgroup02.Utilities.JsonParser;
 import com.example.group02.weatheraarhusgroup02.Utilities.NetworkChecker;
 import com.example.group02.weatheraarhusgroup02.Utilities.WebConnector;
 
 public class WeatherUpdater extends Service {
 
-    //private final IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
 
     private static final String TAG = WeatherUpdater.class.getSimpleName();
 
@@ -28,6 +32,10 @@ public class WeatherUpdater extends Service {
     private WeatherInfo UIweatherInfo;
     private WeatherInfo HistoricweatherInfo;
 
+    private LocalBroadcastManager localBroadcastManager;
+    Intent intent;
+
+    private FireBaseConnector fireBaseConnector;
 
 
 
@@ -44,29 +52,37 @@ public class WeatherUpdater extends Service {
         HistoricweatherInfo = new WeatherInfo();
         networkChecker = new NetworkChecker();
         Log.i(TAG, "onCreate, Thread name " + Thread.currentThread().getName());
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        intent = new Intent("WeatherUpdate");
+        //new WeatherAsyncTask().execute();
+
+        // TEST
+        fireBaseConnector = new FireBaseConnector();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.d(TAG, "onStartCommand, Thread name " + Thread.currentThread().getName());
-
-        new WeatherAsyncTask().execute();
-
         return START_REDELIVER_INTENT;
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         //throw new UnsupportedOperationException("Not yet implemented");
-        return null;
+        return mBinder;
     }
-    /*public class LocalBinder extends Binder {
-        public WeatherUpdater getService() {
+
+    public class LocalBinder extends Binder {
+
+        public WeatherUpdater getService()
+        {
             return WeatherUpdater.this;
         }
-    }*/
+    }
 
     public WeatherInfo GetLatestWeather(){
 
@@ -76,12 +92,18 @@ public class WeatherUpdater extends Service {
             thisResponse = webConnector.sendRequest(this);
             // parse til Gson fil (DTO)
             UIweatherInfo = JsonParser.parseCityWeatherJsonWithGson(thisResponse);
+
+            fireBaseConnector.putData(UIweatherInfo);
+
             return UIweatherInfo;
+
+
         }
         else
         {
             return null;
         }
+
 
     }
 
@@ -94,12 +116,13 @@ public class WeatherUpdater extends Service {
         @Override
         protected Void doInBackground(Void... params) {
             int i = 0;
-            while(i < 20) {
+            while(true) {
                 WeatherInfo wi = GetLatestWeather();
                 Log.i(TAG,"TRYING TO GET WEATHER");
                 if (wi != null) {
                     publishProgress(wi);
                     Log.i(TAG,"WeatherInfo= " + wi.name);
+
                 }
                 try {
                     Thread.sleep(3000);
@@ -108,7 +131,7 @@ public class WeatherUpdater extends Service {
                 }
                 i++;
             }
-            return null;
+
         }
 
         @Override
@@ -116,6 +139,10 @@ public class WeatherUpdater extends Service {
             super.onProgressUpdate(values);
 
             Toast.makeText(WeatherUpdater.this, values[0].name,Toast.LENGTH_SHORT).show();
+            intent.putExtra("weatherinfo",values[0]);
+            localBroadcastManager.sendBroadcast(intent);
+
+
         }
 
         @Override

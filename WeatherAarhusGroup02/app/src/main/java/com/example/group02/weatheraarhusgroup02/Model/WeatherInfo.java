@@ -1,10 +1,11 @@
 package com.example.group02.weatheraarhusgroup02.Model;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class WeatherInfo {
+public class WeatherInfo implements Serializable{
 
     @SerializedName("coord")
     @Expose
