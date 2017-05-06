@@ -1,29 +1,21 @@
-package com.example.group02.weatheraarhusgroup02.Utilities;
+package com.weatheraarhusgroup02.Utilities;
 
 
 import android.app.Application;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
 
-import com.example.group02.weatheraarhusgroup02.Model.Weather;
-import com.example.group02.weatheraarhusgroup02.Model.WeatherInfo;
-import com.example.group02.weatheraarhusgroup02.Services.WeatherUpdater;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.ValueEventListener;
+import com.weatheraarhusgroup02.Model.WeatherInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Anders on 05/05/2017.
@@ -34,21 +26,61 @@ import java.util.List;
 public class FireBaseConnector extends Application {
 
     DatabaseReference mRootRef;
-    private String FirebaseRoot = "https://weatherapp-d0836.firebaseio.com/";
+    Boolean saved = null;
+    ArrayList<String> weatherList = new ArrayList<>();
+    private String FirebaseRoot = "https://weatherapp-7ad3b.firebaseio.com/";
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference mChildRef;
+
 
     LocalBroadcastManager localBroadcastManager;
     Intent intent;
 
 
-    public  FireBaseConnector()
+    public FireBaseConnector(DatabaseReference db) {
+        mRootRef = db;
+    }
+
+    public ArrayList<String> retrieve(){
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                fetchData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return weatherList;
+    }
+
+    public void fetchData(DataSnapshot dataSnapshot)
     {
-        mRootRef = FirebaseDatabase.getInstance().getReference();
+        weatherList.clear();
+        String description;
+        double celcious;
+        String temp;
+        Date time;
 
-        localBroadcastManager  = LocalBroadcastManager.getInstance(this);
+        for (DataSnapshot thissnapshot:dataSnapshot.getChildren())
+        {
 
-        intent = new Intent("AllWeathers");
+            description = thissnapshot.getValue(WeatherInfo.class).weather.get(0).description;
+            celcious = thissnapshot.getValue(WeatherInfo.class).main.temp + Globals.TO_CELCIOUS_FROM_KELVIN;
+            temp = Double.toString(celcious);
+            time = new Date((int)thissnapshot.getValue(WeatherInfo.class).dt*1000);
+
+
+            weatherList.add(description + " " + temp + "\n" + time);
+        }
+
+    }
+    /*
+
+        //localBroadcastManager  = LocalBroadcastManager.getInstance(this);
+
+        //intent = new Intent("AllWeathers");
 
 
         mRootRef.addValueEventListener(new ValueEventListener() {
@@ -65,12 +97,12 @@ public class FireBaseConnector extends Application {
                     weathers.add(weatherInfo);
                 }
 
-                /*
+
                 Bundle b = new Bundle();
                 b.putSerializable("weathers", weathers);
                 intent.putExtra("weathers", b);
                 localBroadcastManager.sendBroadcast(intent);
-                */
+
 
                 Log.d("FireBaseConnector", "datasnapshot EXISTS");
             }
@@ -83,7 +115,7 @@ public class FireBaseConnector extends Application {
         });
 
     }
-
+*/
     public void putData(WeatherInfo weatherInfo)
     {
         mRootRef.push().setValue(weatherInfo);
