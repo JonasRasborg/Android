@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import com.weatheraarhusgroup02.Utilities.Globals;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class WeatherInfo implements Serializable{
@@ -46,5 +48,7 @@ public class WeatherInfo implements Serializable{
     @SerializedName("cod")
     @Expose
     public Integer cod;
+    public Date time = new Date();
+
 
 }

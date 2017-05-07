@@ -7,6 +7,9 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Rune Rask on 03-05-2017.
  */
@@ -21,6 +24,7 @@ public class JsonParser {
         Gson gson = new GsonBuilder().create();
         WeatherInfo weatherInfo =  gson.fromJson(jsonString, WeatherInfo.class);
         if(weatherInfo != null) {
+            //weatherInfo.time = new Date();
             return weatherInfo;
         } else {
             return weatherInfo; //return "could not parse with gson";

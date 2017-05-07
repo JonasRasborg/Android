@@ -3,10 +3,13 @@ package com.weatheraarhusgroup02.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.weatheraarhusgroup02.Model.WeatherInfo;
@@ -73,6 +76,12 @@ public class WeatherUpdateService extends Service {
         return null;
     }
 
+    public class LocalBinder extends Binder {
+        public WeatherUpdateService getService(){
+            return WeatherUpdateService.this;
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -90,6 +99,11 @@ public class WeatherUpdateService extends Service {
         {
             webConnector.sendRequest(this);
         }
+    }
+
+    public void getLatestWeatherFromAPI(TextView txtvDes, TextView txtTemp)
+    {
+
     }
 
 
@@ -115,41 +129,5 @@ public class WeatherUpdateService extends Service {
 
         }
 
-    }
-
-    class MyAsyncTask extends android.os.AsyncTask<Void,String,Void>{
-
-        private final String TAG = MyAsyncTask.class.getSimpleName();
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            Log.i(TAG,"doInBackground, Thread name: " + Thread.currentThread().getName());
-
-            int i = 0;
-
-            while(i<=10){
-                Log.i(TAG,"doInBackground, Thread name: " + Thread.currentThread().getName());
-                publishProgress("The count is now: " + i);
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                i++;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-
-            Toast.makeText(WeatherUpdateService.this, values[0], Toast.LENGTH_SHORT).show();
-
-            Log.i(TAG, "onProgressUpdate, Thread name: " + Thread.currentThread().getName() + " Counter: " + values[0]);
-        }
     }
 }

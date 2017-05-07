@@ -53,5 +53,29 @@ public class WebConnector {
         queue.add(stringRequest);
 
     }
+    public void sendRequestForLatest(Service s){
+        //send request using Volley
+        if(queue==null){
+            queue = Volley.newRequestQueue(s);
+        }
+        String url = Globals.WEATHER_API_CALL;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        webResponse = response;
+                        weatherUpdate = JsonParser.parseCityWeatherJsonWithGson(webResponse);
+                        fireBaseConnector.putData(weatherUpdate);
+                        }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        queue.add(stringRequest);
+
+    }
 
 }
