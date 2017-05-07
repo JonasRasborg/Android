@@ -66,9 +66,9 @@ public class WeatherUpdateService extends Service {
         networkChecker = new NetworkChecker();
         webConnector = new WebConnector();
 
-        latestWeather = new Intent("latestWeather");
+        latestWeather = new Intent("latestFromService");
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromWeb, new IntentFilter("latestWeather"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromWeb, new IntentFilter("latestFromWeb"));
 
 
         mTimer.scheduleAtFixedRate(new MyTimerTask(), 0, TIMERTASK_INTERVAL);
@@ -81,7 +81,7 @@ public class WeatherUpdateService extends Service {
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            latestWeather = intent;
+            latestWeather.putExtra("latestWeather", (WeatherInfo)intent.getExtras().getSerializable("latestWeather"));
             localBroadcastManager.sendBroadcast(latestWeather);
         }
     };

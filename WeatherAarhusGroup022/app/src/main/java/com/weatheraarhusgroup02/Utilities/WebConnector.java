@@ -37,7 +37,7 @@ public class WebConnector extends Application {
 
     public WebConnector()
     {
-        latestWeather = new Intent("latestWeather");
+        latestWeather = new Intent("latestFromWeb");
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
     }
 

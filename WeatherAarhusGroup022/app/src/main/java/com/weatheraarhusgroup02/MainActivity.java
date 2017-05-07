@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         textViewDesc = (TextView)findViewById(R.id.textViewDescription);
         textViewTemp = (TextView)findViewById(R.id.textViewTemp);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("latestWeather"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("latestFromService"));
 
         serviceIntent = new Intent(MainActivity.this, WeatherUpdateService.class);
         startWeatherUpdateSerivce();
@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
         weatherListView.setAdapter(firebaseListAdapter);
         //adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fireBaseConnector.retrieve());
         //weatherListView.setAdapter(adapter);
-
-
     }
 
     private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
@@ -111,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             latestWeather = (WeatherInfo) intent.getExtras().getSerializable("latestWeather");
             textViewDesc.setText(latestWeather.weather.get(0).description);
-            textViewTemp.setText(latestWeather.main.temp.toString());
+            double currentTemp = latestWeather.main.temp-273.15;
+            textViewTemp.setText(String.valueOf(currentTemp));
         }
     };
 
