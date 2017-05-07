@@ -1,12 +1,16 @@
 package com.weatheraarhusgroup02.Services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -30,6 +34,8 @@ public class WeatherUpdateService extends Service {
 
     private static final String TAG = WeatherUpdateService.class.getSimpleName();
 
+    private final IBinder mBinder = new LocalBinder();
+
     private static final long TIMERTASK_INTERVAL = 10 * 1000; // Sætter intervallet mellem TimerTask bliver kaldt
 
     private Handler mHandler = new Handler(); //Opretter en handler til baggrundstråden
@@ -39,6 +45,10 @@ public class WeatherUpdateService extends Service {
     private NetworkChecker networkChecker;
 
     private WebConnector webConnector;
+
+    private Intent latestWeather;
+
+    private LocalBroadcastManager localBroadcastManager;
 
 
     @Override
@@ -56,11 +66,26 @@ public class WeatherUpdateService extends Service {
         networkChecker = new NetworkChecker();
         webConnector = new WebConnector();
 
+        latestWeather = new Intent("latestWeather");
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromWeb, new IntentFilter("latestWeather"));
+
 
         mTimer.scheduleAtFixedRate(new MyTimerTask(), 0, TIMERTASK_INTERVAL);
 
         //new MyAsyncTask().execute();
     }
+
+
+    private BroadcastReceiver mReceiveFromWeb = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            latestWeather = intent;
+            localBroadcastManager.sendBroadcast(latestWeather);
+        }
+    };
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -73,7 +98,7 @@ public class WeatherUpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG,"onBind, Thread name: " + Thread.currentThread().getName());
-        return null;
+        return mBinder;
     }
 
     public class LocalBinder extends Binder {
@@ -101,9 +126,12 @@ public class WeatherUpdateService extends Service {
         }
     }
 
-    public void getLatestWeatherFromAPI(TextView txtvDes, TextView txtTemp)
+    public void getLatestWeatherFromAPI()
     {
-
+        if(networkChecker.getNetworkStatus(this))
+        {
+            webConnector.sendRequestForLatest(this);
+        }
     }
 
 

@@ -1,6 +1,10 @@
 package com.weatheraarhusgroup02.Utilities;
 
+import android.app.Application;
 import android.app.Service;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -18,13 +22,24 @@ import com.weatheraarhusgroup02.Utilities.FireBaseConnector;
  * Created by Rune Rask on 03-05-2017.
  */
 
-public class WebConnector {
+public class WebConnector extends Application {
     RequestQueue queue;
     String webResponse;
     WeatherInfo weatherUpdate;
     DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
     FireBaseConnector fireBaseConnector = new FireBaseConnector(db);
+
+
+    private Intent latestWeather;
+
+    private LocalBroadcastManager localBroadcastManager;
+
+    public WebConnector()
+    {
+        latestWeather = new Intent("latestWeather");
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    }
 
 
 
@@ -66,7 +81,8 @@ public class WebConnector {
                     public void onResponse(String response) {
                         webResponse = response;
                         weatherUpdate = JsonParser.parseCityWeatherJsonWithGson(webResponse);
-                        fireBaseConnector.putData(weatherUpdate);
+                        latestWeather.putExtra("latestWeather", weatherUpdate);
+                        localBroadcastManager.sendBroadcast(latestWeather);
                         }
                 }, new Response.ErrorListener() {
             @Override

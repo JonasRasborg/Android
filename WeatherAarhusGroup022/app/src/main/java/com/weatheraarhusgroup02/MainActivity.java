@@ -1,10 +1,14 @@
 package com.weatheraarhusgroup02;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     WebConnector webConnector;
     boolean serviceBound = false;
     WeatherUpdateService weatherUpdateService;
+    WeatherInfo latestWeather;
     TextView textViewDesc;
     TextView textViewTemp;
 
@@ -52,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         textViewDesc = (TextView)findViewById(R.id.textViewDescription);
         textViewTemp = (TextView)findViewById(R.id.textViewTemp);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("latestWeather"));
+
         serviceIntent = new Intent(MainActivity.this, WeatherUpdateService.class);
         startWeatherUpdateSerivce();
 
@@ -61,12 +68,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //weatherUpdateService.getLatestWeatherFromAPI(textViewDesc,textViewTemp);
-
+                weatherUpdateService.getLatestWeatherFromAPI();
             }
         });
-
-
 
 
         weatherListView = (ListView) findViewById(R.id.ltv_weatherList);
@@ -100,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            latestWeather = (WeatherInfo) intent.getExtras().getSerializable("latestWeather");
+            textViewDesc.setText(latestWeather.weather.get(0).description);
+            textViewTemp.setText(latestWeather.main.temp.toString());
+        }
+    };
 
     @Override
     protected void onStop() {
@@ -135,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            serviceBound = false;
+            Log.d("Main","Service Disconnected");
         }
     };
 }
