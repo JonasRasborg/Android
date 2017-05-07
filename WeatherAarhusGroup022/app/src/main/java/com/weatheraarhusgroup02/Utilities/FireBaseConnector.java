@@ -37,6 +37,7 @@ public class FireBaseConnector extends Application {
 
 
     public FireBaseConnector(DatabaseReference db) {
+
         mRootRef = db;
     }
 

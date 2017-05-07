@@ -102,6 +102,7 @@ public class WeatherUpdateService extends Service {
             //final String theTime = getDateTime();
             GetLatestWeather();
 
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
