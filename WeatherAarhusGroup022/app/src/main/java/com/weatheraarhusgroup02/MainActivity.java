@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         weatherListView = (ListView) findViewById(R.id.ltv_weatherList);
 
         //SETUP FIREBASE
@@ -126,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         bindService(serviceIntent,mConnection,this.BIND_AUTO_CREATE);
@@ -149,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceBound = false;
-            Log.d("Main","Service Disconnected");
+            Log.i("Main","Service Disconnected");
         }
     };
 }

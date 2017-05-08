@@ -63,6 +63,11 @@ public class WeatherUpdateService extends Service {
             mTimer = new Timer();
         }
 
+        Toast.makeText(getApplicationContext(), "SERVICE ON CREATE", Toast.LENGTH_SHORT).show();
+
+
+
+
         networkChecker = new NetworkChecker();
         webConnector = new WebConnector();
 
@@ -92,7 +97,7 @@ public class WeatherUpdateService extends Service {
 
         Log.i(TAG,"onStartedCommand, Thread name: " + Thread.currentThread().getName());
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
@@ -110,6 +115,8 @@ public class WeatherUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        Toast.makeText(getApplicationContext(), "ON DESTROY", Toast.LENGTH_SHORT).show();
 
         Log.i(TAG, "onDestroy, Thread name: " + Thread.currentThread().getName());
     }
@@ -140,20 +147,17 @@ public class WeatherUpdateService extends Service {
 
         @Override
         public void run() {
-            Log.i(TAG,"beforeHandler, Thread name: " + Thread.currentThread().getName());
+            //Log.i(TAG,"beforeHandler, Thread name: " + Thread.currentThread().getName());
             //final String theTime = getDateTime();
             GetLatestWeather();
-
 
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "Weather downloaded", Toast.LENGTH_SHORT).show();
-                    Log.i("RUNNABLE","onRun, Thread name: " + Thread.currentThread().getName());
+                    //Log.i("RUNNABLE","onRun, Thread name: " + Thread.currentThread().getName());
                 }
             });
-
-
 
         }
 
