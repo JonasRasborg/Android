@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ import com.weatheraarhusgroup02.Utilities.Globals;
 import com.weatheraarhusgroup02.Utilities.WebConnector;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewDesc;
     TextView textViewTemp;
     TextView textViewCity;
-
-
 
 
     @Override
@@ -100,6 +100,21 @@ public class MainActivity extends AppCompatActivity {
                         + Double.toString(temp) + "\u2103 \n\n" + sdf.format(model.time) + "\n");
 
             }
+
+            @Override
+            public int getCount()
+            {
+                if (super.getCount()>5)
+                {
+                    return 5;
+                }
+                else
+                {
+                    return super.getCount();
+                }
+            }
+
+
         };
 
         weatherListView.setAdapter(firebaseListAdapter);
