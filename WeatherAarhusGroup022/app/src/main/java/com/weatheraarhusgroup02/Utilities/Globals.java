@@ -16,6 +16,6 @@ public class Globals {
 
     public static final double TO_CELCIOUS_FROM_KELVIN = -273.15;
 
-    public static final String FIREBASE_ROOT = "https://weatherapp-7ad3b.firebaseio.com/";
+    //public static final String FIREBASE_ROOT = "https://weatherapp-7ad3b.firebaseio.com/";
 
 }

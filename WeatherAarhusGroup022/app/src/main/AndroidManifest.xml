@@ -23,7 +23,8 @@
         <service
             android:name=".Services.WeatherUpdateService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false"
+            />
     </application>
 <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth, com.firebase.ui.database, com.firebase.ui.storage"></uses-sdk>
 </manifest>

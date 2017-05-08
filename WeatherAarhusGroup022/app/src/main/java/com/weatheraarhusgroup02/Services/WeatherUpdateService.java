@@ -36,7 +36,7 @@ public class WeatherUpdateService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
-    private static final long TIMERTASK_INTERVAL = 10 * 1000; // Sætter intervallet mellem TimerTask bliver kaldt
+    private static final long TIMERTASK_INTERVAL = 5 * 1000; // Sætter intervallet mellem TimerTask bliver kaldt
 
     private Handler mHandler = new Handler(); //Opretter en handler til baggrundstråden
 
@@ -56,17 +56,15 @@ public class WeatherUpdateService extends Service {
         super.onCreate();
         Log.i(TAG, "onCreate, Thread name: " + Thread.currentThread().getName());
 
+        /*
         if(mTimer != null){
             mTimer.cancel();
         }
         else{
             mTimer = new Timer();
         }
-
+        */
         Toast.makeText(getApplicationContext(), "SERVICE ON CREATE", Toast.LENGTH_SHORT).show();
-
-
-
 
         networkChecker = new NetworkChecker();
         webConnector = new WebConnector();
@@ -75,10 +73,11 @@ public class WeatherUpdateService extends Service {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromWeb, new IntentFilter("latestFromWeb"));
 
+        Thread thread = new Thread(new MyThreadClass(987,this));
+        thread.start();
 
-        mTimer.scheduleAtFixedRate(new MyTimerTask(), 0, TIMERTASK_INTERVAL);
+        //mTimer.scheduleAtFixedRate(new MyTimerTask(), 0, TIMERTASK_INTERVAL);
 
-        //new MyAsyncTask().execute();
     }
 
 
@@ -100,9 +99,12 @@ public class WeatherUpdateService extends Service {
         return START_STICKY;
     }
 
+
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG,"onBind, Thread name: " + Thread.currentThread().getName());
+        getLatestWeatherFromAPI();
+
         return mBinder;
     }
 
@@ -112,14 +114,14 @@ public class WeatherUpdateService extends Service {
         }
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         Toast.makeText(getApplicationContext(), "ON DESTROY", Toast.LENGTH_SHORT).show();
-
         Log.i(TAG, "onDestroy, Thread name: " + Thread.currentThread().getName());
     }
+
     private String getDateTime(){
         Log.i(TAG,"getDateTime, Thread name: " + Thread.currentThread().getName());
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
@@ -142,24 +144,68 @@ public class WeatherUpdateService extends Service {
     }
 
 
+
+
+    /*
     class MyTimerTask extends TimerTask {
         private final String TAG = MyTimerTask.class.getSimpleName();
 
         @Override
         public void run() {
-            //Log.i(TAG,"beforeHandler, Thread name: " + Thread.currentThread().getName());
-            //final String theTime = getDateTime();
-            GetLatestWeather();
 
+            GetLatestWeather();
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "Weather downloaded", Toast.LENGTH_SHORT).show();
-                    //Log.i("RUNNABLE","onRun, Thread name: " + Thread.currentThread().getName());
                 }
             });
 
         }
 
+    }
+    */
+
+    final class MyThreadClass implements Runnable
+    {
+        int service_id;
+        Service starterservice;
+        WebConnector ThreadWebConnector;
+        NetworkChecker networkChecker;
+        WeatherInfo weatherInfo;
+
+        MyThreadClass(int service_id, Service service)
+        {
+            this.service_id = service_id;
+            starterservice = service;
+            ThreadWebConnector = new WebConnector();
+            networkChecker = new NetworkChecker();
+            weatherInfo = new WeatherInfo();
+        }
+
+        @Override
+        public void run()
+        {
+            synchronized (this)
+            {
+                while (true) {
+                    try {
+
+                        Date date;
+                        date = new Date();
+                        if(date.getMinutes() == 00 || date.getMinutes() == 30|| date.getMinutes() == 9)
+                        {
+                            GetLatestWeather();
+                            wait(1000*28*60);
+                        }
+
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 }

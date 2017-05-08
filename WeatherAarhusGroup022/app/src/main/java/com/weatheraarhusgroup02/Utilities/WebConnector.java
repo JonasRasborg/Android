@@ -57,6 +57,8 @@ public class WebConnector extends Application {
                     public void onResponse(String response) {
                         webResponse = response;
                         weatherUpdate = JsonParser.parseCityWeatherJsonWithGson(webResponse);
+                        latestWeather.putExtra("latestWeather", weatherUpdate);
+                        localBroadcastManager.sendBroadcast(latestWeather);
                         fireBaseConnector.putData(weatherUpdate);
                     }
                 }, new Response.ErrorListener() {

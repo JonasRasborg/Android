@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     WeatherInfo latestWeather;
     TextView textViewDesc;
     TextView textViewTemp;
+    TextView textViewCity;
 
 
 
@@ -53,14 +55,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.i("Main", "onCreate");
+
 
         textViewDesc = (TextView)findViewById(R.id.textViewDescription);
         textViewTemp = (TextView)findViewById(R.id.textViewTemp);
+        textViewCity = (TextView)findViewById(R.id.textViewCity);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("latestFromService"));
 
         serviceIntent = new Intent(MainActivity.this, WeatherUpdateService.class);
-        startWeatherUpdateSerivce();
 
         webConnector = new WebConnector();
         fabupdate = (FloatingActionButton)findViewById(R.id.fabUpdate);
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 weatherUpdateService.getLatestWeatherFromAPI();
+                Toast.makeText(getApplicationContext(), "Weather Updated", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -87,12 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 TextView textView2 = (TextView) v.findViewById(android.R.id.text2);
 
                 Double temp = (double)Math.round(model.main.temp + Globals.TO_CELCIOUS_FROM_KELVIN);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
 
 
                 textView1.setText("\n" + model.weather.get(0).description + "                                "
                         + Double.toString(temp) + "\u2103 \n\n" + sdf.format(model.time) + "\n");
-                //textView2.setText(model.name);
 
             }
         };
@@ -108,8 +113,12 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             latestWeather = (WeatherInfo) intent.getExtras().getSerializable("latestWeather");
             textViewDesc.setText(latestWeather.weather.get(0).description);
-            double currentTemp = latestWeather.main.temp-273.15;
-            textViewTemp.setText(String.valueOf(currentTemp));
+
+            Double temp = (double)Math.round(latestWeather.main.temp + Globals.TO_CELCIOUS_FROM_KELVIN);
+
+            textViewTemp.setText(String.valueOf(temp) + "℃");
+            textViewCity.setText(latestWeather.name);
+
         }
     };
 
@@ -127,13 +136,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("Main", "onDestroy");
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         bindService(serviceIntent,mConnection,this.BIND_AUTO_CREATE);
+        startWeatherUpdateSerivce();
+
     }
+
 
     public void startWeatherUpdateSerivce(){
 
