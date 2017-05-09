@@ -96,28 +96,28 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
 
 
-                textView1.setText("\n" + model.weather.get(0).description + "                                "
-                        + Double.toString(temp) + "\u2103 \n\n" + sdf.format(model.time) + "\n");
+                textView1.setText("\n" + model.weather.get(0).description + "\n"
+                        + Double.toString(temp) + "\u2103 \n" + sdf.format(model.time) + "\n");
 
             }
+
+//            @Override
+//            public int getCount()
+//            {
+//                if (super.getCount()>5)
+//                {
+//                    return 5;
+//                }
+//                else
+//                {
+//                    return super.getCount();
+//                }
+//            }
 
             @Override
-            public int getCount()
-            {
-                if (super.getCount()>5)
-                {
-                    return 5;
-                }
-                else
-                {
-                    return super.getCount();
-                }
-            }
-
-            /*@Override
             public WeatherInfo getItem(int position) {
                 return super.getItem(getCount() - 1 - position);
-            }*/
+            }
         };
 
         weatherListView.setAdapter(firebaseListAdapter);

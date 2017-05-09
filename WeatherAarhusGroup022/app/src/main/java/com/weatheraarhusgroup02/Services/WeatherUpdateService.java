@@ -193,12 +193,11 @@ public class WeatherUpdateService extends Service {
 
                         Date date;
                         date = new Date();
-                        if(date.getMinutes() == 00 || date.getMinutes() == 30|| date.getMinutes() == 57 || date.getSeconds() == 30)
+                        if(date.getMinutes() == 00 || date.getMinutes() == 30)
                         {
                             GetLatestWeather();
-                            wait(1000*1*1);
+                            wait(1000*28*60);
                         }
-
                     }
                     catch (InterruptedException e)
                     {

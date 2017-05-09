@@ -36,14 +36,37 @@ public class FireBaseConnector {
     Intent intent;
 
 
+
     public FireBaseConnector(DatabaseReference db) {
 
         mRootRef = db;
+
+        mRootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                long i = dataSnapshot.getChildrenCount();
+                for(DataSnapshot d : dataSnapshot.getChildren()){
+                    if(i>48){
+                        dataSnapshot.child(d.getKey()).getRef().removeValue();
+                        i--;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void putData(WeatherInfo weatherInfo)
     {
         mRootRef.push().setValue(weatherInfo);
     }
+
+
 
 }
