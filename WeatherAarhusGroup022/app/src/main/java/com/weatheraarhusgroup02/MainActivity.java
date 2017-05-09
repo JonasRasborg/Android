@@ -114,7 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-
+            /*@Override
+            public WeatherInfo getItem(int position) {
+                return super.getItem(getCount() - 1 - position);
+            }*/
         };
 
         weatherListView.setAdapter(firebaseListAdapter);

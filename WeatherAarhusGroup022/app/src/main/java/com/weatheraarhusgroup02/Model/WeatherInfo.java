@@ -48,7 +48,8 @@ public class WeatherInfo implements Serializable{
     @SerializedName("cod")
     @Expose
     public Integer cod;
-    public Date time = new Date();
+    public long time = new Date().getTime();
+    public long iTime = -1 * new Date().getTime();
 
 
 }
