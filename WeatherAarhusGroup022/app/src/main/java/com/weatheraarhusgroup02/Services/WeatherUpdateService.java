@@ -36,12 +36,6 @@ public class WeatherUpdateService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
-    private static final long TIMERTASK_INTERVAL = 5 * 1000; // Sætter intervallet mellem TimerTask bliver kaldt
-
-    private Handler mHandler = new Handler(); //Opretter en handler til baggrundstråden
-
-    private Timer mTimer = null;
-
     private NetworkChecker networkChecker;
 
     private WebConnector webConnector;
@@ -56,16 +50,6 @@ public class WeatherUpdateService extends Service {
         super.onCreate();
         Log.i(TAG, "onCreate, Thread name: " + Thread.currentThread().getName());
 
-        /*
-        if(mTimer != null){
-            mTimer.cancel();
-        }
-        else{
-            mTimer = new Timer();
-        }
-        */
-        Toast.makeText(getApplicationContext(), "SERVICE ON CREATE", Toast.LENGTH_SHORT).show();
-
         networkChecker = new NetworkChecker();
         webConnector = new WebConnector();
 
@@ -75,8 +59,6 @@ public class WeatherUpdateService extends Service {
 
         Thread thread = new Thread(new MyThreadClass(987,this));
         thread.start();
-
-        //mTimer.scheduleAtFixedRate(new MyTimerTask(), 0, TIMERTASK_INTERVAL);
 
     }
 
@@ -118,7 +100,6 @@ public class WeatherUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(getApplicationContext(), "ON DESTROY", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onDestroy, Thread name: " + Thread.currentThread().getName());
     }
 
@@ -145,26 +126,6 @@ public class WeatherUpdateService extends Service {
 
 
 
-
-    /*
-    class MyTimerTask extends TimerTask {
-        private final String TAG = MyTimerTask.class.getSimpleName();
-
-        @Override
-        public void run() {
-
-            GetLatestWeather();
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Weather downloaded", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
-    }
-    */
 
     final class MyThreadClass implements Runnable
     {

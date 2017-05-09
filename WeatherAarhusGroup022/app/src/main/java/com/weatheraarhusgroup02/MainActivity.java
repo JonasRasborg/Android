@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textViewTemp;
     TextView textViewCity;
 
+    String savedCityName,savedDescription,savedTemperature;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             protected void populateView(View v, WeatherInfo model, int position) {
 
                 TextView textView1 = (TextView) v.findViewById(android.R.id.text1);
-                TextView textView2 = (TextView) v.findViewById(android.R.id.text2);
 
                 Double temp = (double)Math.round(model.main.temp + Globals.TO_CELCIOUS_FROM_KELVIN);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
@@ -118,11 +120,21 @@ public class MainActivity extends AppCompatActivity {
             public WeatherInfo getItem(int position) {
                 return super.getItem(getCount() - 1 - position);
             }
+
+
         };
 
         weatherListView.setAdapter(firebaseListAdapter);
         //adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,fireBaseConnector.retrieve());
         //weatherListView.setAdapter(adapter);
+
+        if(savedInstanceState != null){
+            savedDescription = savedInstanceState.getString("DESC");
+            savedCityName = savedInstanceState.getString("NAME");
+            savedTemperature = savedInstanceState.getString("TEMP");
+
+            setCurrentWeather();
+        }
     }
 
     private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
@@ -130,12 +142,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             latestWeather = (WeatherInfo) intent.getExtras().getSerializable("latestWeather");
-            textViewDesc.setText(latestWeather.weather.get(0).description);
+            savedDescription = latestWeather.weather.get(0).description;
 
             Double temp = (double)Math.round(latestWeather.main.temp + Globals.TO_CELCIOUS_FROM_KELVIN);
+            savedTemperature = String.valueOf(temp) + "℃";
+            savedCityName = latestWeather.name;
 
-            textViewTemp.setText(String.valueOf(temp) + "℃");
-            textViewCity.setText(latestWeather.name);
+            setCurrentWeather();
 
         }
     };
@@ -168,6 +181,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("TEMP",savedTemperature);
+        outState.putString("NAME",savedCityName);
+        outState.putString("DESC",savedDescription);
+        super.onSaveInstanceState(outState);
+    }
 
     public void startWeatherUpdateSerivce(){
 
@@ -190,4 +210,10 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Main","Service Disconnected");
         }
     };
+
+    public void setCurrentWeather(){
+        textViewTemp.setText(savedTemperature);
+        textViewCity.setText(savedCityName);
+        textViewDesc.setText(savedDescription);
+    }
 }
