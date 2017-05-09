@@ -51,6 +51,7 @@ public class FireBaseConnector {
                         dataSnapshot.child(d.getKey()).getRef().removeValue();
                         i--;
                     }
+
                 }
 
             }

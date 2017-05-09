@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
@@ -57,7 +58,7 @@ public class WeatherUpdateService extends Service {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromWeb, new IntentFilter("latestFromWeb"));
 
-        Thread thread = new Thread(new MyThreadClass(987,this));
+        Thread thread = new Thread(new MyThreadClass(1,this));
         thread.start();
 
     }
@@ -154,7 +155,7 @@ public class WeatherUpdateService extends Service {
 
                         Date date;
                         date = new Date();
-                        if(date.getMinutes() == 00 || date.getMinutes() == 30)
+                        if(date.getMinutes() == 00 && date.getSeconds()==0|| date.getMinutes() == 30 && date.getSeconds()==0)
                         {
                             GetLatestWeather();
                             wait(1000*28*60);
