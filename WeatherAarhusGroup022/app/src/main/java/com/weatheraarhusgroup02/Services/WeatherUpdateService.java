@@ -155,7 +155,7 @@ public class WeatherUpdateService extends Service {
 
                         Date date;
                         date = new Date();
-                        if(date.getMinutes() == 00 && date.getSeconds()==0|| date.getMinutes() == 30 && date.getSeconds()==0)
+                        if(date.getMinutes() == 00 && date.getSeconds()<6|| date.getMinutes() == 30 && date.getSeconds()<6)
                         {
                             GetLatestWeather();
                             wait(1000*28*60);
