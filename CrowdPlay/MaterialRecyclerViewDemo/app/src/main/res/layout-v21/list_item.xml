@@ -61,7 +61,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvVotes"
                 android:layout_width="62dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -81,7 +81,7 @@
 
 
             <ImageView
-                android:id="@+id/img_row_delete"
+                android:id="@+id/img_add"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -40,6 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         Log.i("RecyclerAdapter","onBindViewHolder "+position);
         Track current = mData.get(position);
         holder.setData(current, position);
+        holder.setListeners();
     }
 
     @Override
@@ -47,24 +48,63 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return mData.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    public void addAVote(int position){
+        mData.get(position).addVote();
+        notifyItemChanged(position);
+        checkPositions(position);
+    }
+
+    public void checkPositions(int position){
+        for (int i = position; i > 0; i--){
+            if(mData.get(i).getVotes()>mData.get(i-1).getVotes()){
+                Track a = mData.get(i);
+                Track b = mData.get(i-1);
+                mData.set(i-1,a);
+                mData.set(i,b);
+                notifyItemMoved(i,i-1);
+                notifyItemChanged(i-1);
+                notifyItemChanged(i);
+            }
+        }
+    }
+
+
+
+
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
-        ImageView imgThumb, imgDelete, imgAdd;
+        TextView votes;
+        ImageView imgThumb, imgAdd;
         int position;
         Track current;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title       = (TextView)  itemView.findViewById(R.id.tvTitle);
+            votes       = (TextView) itemView.findViewById(R.id.tvVotes);
             imgThumb    = (ImageView) itemView.findViewById(R.id.img_row);
-            imgDelete   = (ImageView) itemView.findViewById(R.id.img_row_delete);
+            imgAdd      = (ImageView) itemView.findViewById(R.id.img_add);
         }
 
         public void setData(Track current, int position) {
             this.title.setText(current.getTitle());
+            this.votes.setText(Integer.toString(current.getVotes()));
             this.imgThumb.setImageResource(current.getImageID());
             this.position = position;
             this.current = current;
+        }
+
+        public void setListeners(){
+            imgAdd.setOnClickListener(MyViewHolder.this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.img_add:
+                    addAVote(position);
+                    break;
+            }
         }
     }
 }

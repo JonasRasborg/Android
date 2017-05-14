@@ -13,6 +13,7 @@ public class Track {
     private int imageID;
     private String title;
     private String description;
+    private int votes;
 
     public int getImageID() {
         return imageID;
@@ -38,6 +39,12 @@ public class Track {
         this.description = description;
     }
 
+    public void setVotes(int votes){this.votes = votes;}
+
+    public int getVotes(){return votes;}
+
+    public void addVote(){votes++;}
+
     public static ArrayList<Track> getData() {
 
         ArrayList<Track> dataList = new ArrayList<>();
@@ -49,6 +56,8 @@ public class Track {
             Track track = new Track();
             track.setImageID(images[i]);
             track.setTitle("Track " + i);
+            track.setVotes(0);
+
 
             dataList.add(track);
         }

@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerAdapter adapter = new RecyclerAdapter(this, Track.getData());
         recyclerView.setAdapter(adapter);
 
+
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
