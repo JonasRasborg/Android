@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                         webResponse = response;
                         data = JSONParser.parseSearchWithJsonParser(webResponse);
 
+                        adapter.clear();
+
                         for (Item i : data.tracks.items)
                         {
                             adapter.add(i.artists.get(0).name + " - " + i.name);
