@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -21,8 +22,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import hartogsohn.crowdplayapitest.Model.Example;
+import hartogsohn.crowdplayapitest.Model.Image;
 import hartogsohn.crowdplayapitest.Model.Item;
 import hartogsohn.crowdplayapitest.Model.Tracks;
 
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     String webResponse;
 
     ArrayAdapter<String> adapter;
+
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
+        imageView = (ImageView)findViewById(R.id.imageView);
     }
 
 
@@ -88,6 +94,18 @@ public class MainActivity extends AppCompatActivity {
         sendRequest(url);
     }
 
+    public void setData()
+    {
+    adapter.clear();
+
+    for (Item i : data.tracks.items)
+    {
+        adapter.add(i.artists.get(0).name + " - " + i.name);
+
+        Picasso.with(this).load(i.album.images.get(0).url).into(imageView);
+    }
+
+    }
 
     public void sendRequest(String url) {
         //send request using Volley
@@ -102,14 +120,9 @@ public class MainActivity extends AppCompatActivity {
                         webResponse = response;
                         data = JSONParser.parseSearchWithJsonParser(webResponse);
 
-                        adapter.clear();
+                        setData();
 
-                        for (Item i : data.tracks.items)
-                        {
-                            adapter.add(i.artists.get(0).name + " - " + i.name);
-                        }
 
-                        //adapter.add(data.tracks.items.get(0).artists.get(0).name + data.tracks.items.get(0).name);
                     }
                 }, new Response.ErrorListener() {
             @Override
