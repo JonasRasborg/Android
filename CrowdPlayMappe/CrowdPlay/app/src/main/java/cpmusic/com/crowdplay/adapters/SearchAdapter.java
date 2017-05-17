@@ -29,12 +29,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         this.mData = data;
     }
 
-    public void addToList(Tracks tracks)
+    public void Update(Tracks tracks) //Skal testes...
     {
+        mData.clear();
+
     for (Track t : tracks.tracks)
     {
         mData.add(t);
     }
+
+    notifyDataSetChanged();
+
     }
 
     @Override
@@ -53,7 +58,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mData.size();
+        //return 0;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

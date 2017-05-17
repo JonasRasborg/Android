@@ -65,22 +65,18 @@ public class GuestActivity extends AppCompatActivity {
 
         tracks = new Tracks();
 
-        adapter = new SearchAdapter(this, tracks.tracks);
+       adapter = new SearchAdapter(this, tracks.tracks);
 
         recyclerView.setAdapter(adapter);
     }
 
-    private void setData()
-    {
-        adapter.addToList(tracks);
-    }
 
     private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
             tracks = (Tracks) intent.getExtras().getSerializable("tracks");
-            setData();
+            adapter.Update(tracks);
         }
     };
 
