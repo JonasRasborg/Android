@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.adapters.SearchAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
@@ -30,12 +32,12 @@ public class GuestActivity extends AppCompatActivity {
 
     EditText editSearch;
     FloatingActionButton fabSearch;
-    ListView listView;
+    RecyclerView recyclerView;
 
     NetworkChecker networkChecker;
     APIConnector apiConnector;
 
-    ArrayAdapter<String> adapter;
+    SearchAdapter adapter;
 
     Tracks tracks;
 
@@ -49,7 +51,7 @@ public class GuestActivity extends AppCompatActivity {
 
         editSearch = (EditText)findViewById(R.id.editSearch);
         fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
-        listView = (ListView)findViewById(R.id.listView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("SearchData"));
 
@@ -61,20 +63,16 @@ public class GuestActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        tracks = new Tracks();
 
-        listView.setAdapter(adapter);
+        adapter = new SearchAdapter(this, tracks.tracks);
+
+        recyclerView.setAdapter(adapter);
     }
 
     private void setData()
     {
-        adapter.clear();
-
-        for (Track track : tracks.tracks)
-        {
-            adapter.add(track.Artist.toString() + " - " + track.Title.toString());
-
-        }
+        adapter.addToList(tracks);
     }
 
     private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()

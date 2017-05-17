@@ -12,18 +12,19 @@
         style="@style/Widget.AppCompat.AutoCompleteTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="33dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textColor="@color/colorPrimaryLight"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Artist, Title, Album..."
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        tools:text="Artist, Title, Album..." />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabSearch"
@@ -42,15 +43,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="333dp"
-        android:layout_height="298dp"
-        android:layout_marginLeft="8dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="345dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="28dp"
         app:layout_constraintTop_toBottomOf="@+id/fabSearch" />
+
 </android.support.constraint.ConstraintLayout>
