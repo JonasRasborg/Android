@@ -20,7 +20,7 @@ import cpmusic.com.crowdplay.model.spotifyModel.Example;
  * Created by rrask on 17-05-2017.
  */
 
-public class APIConnector extends Application {
+public class APIConnector {
 
     RequestQueue queue;
     String webResponse;
@@ -29,10 +29,10 @@ public class APIConnector extends Application {
     private Intent dataIntent;
     private LocalBroadcastManager localBroadcastManager;
 
-    public APIConnector()
+    public APIConnector(Context c)
     {
         dataIntent = new Intent("SearchData");
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager = LocalBroadcastManager.getInstance(c);
     }
 
     public void Search(String search, Context c)
@@ -56,6 +56,8 @@ public class APIConnector extends Application {
                         webResponse = response;
                         data = JSONParser.parseSearchWithJsonParser(webResponse);
 
+                        dataIntent.putExtra("data", data);
+                        localBroadcastManager.sendBroadcast(dataIntent);
                     }
                 }, new Response.ErrorListener() {
             @Override
