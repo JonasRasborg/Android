@@ -20,9 +20,9 @@ import com.spotify.sdk.android.player.SpotifyPlayer;
 
 public class MainActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback{
 
-    // TODO: Replace with your client ID
+
     private static final String CLIENT_ID = "1c078fda78264a8e8372cc576a259a1a";
-    // TODO: Replace with your redirect URI
+
     private static final String REDIRECT_URI = "crowdplay://callback";
 
     private static final int REQUEST_CODE = 1337;
