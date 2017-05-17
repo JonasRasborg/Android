@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "539277719910",
+    "firebase_url": "https://crowdplay-1191b.firebaseio.com",
+    "project_id": "crowdplay-1191b",
+    "storage_bucket": "crowdplay-1191b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:539277719910:android:f1bd99124355d489",
+        "android_client_info": {
+          "package_name": "cpmusic.com.crowdplay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "539277719910-76j15m3nqm81tfk0mn3e85361hqku1uu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLZwxEJS0JIjQRow4r5pAfZonMHGtsiKQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
