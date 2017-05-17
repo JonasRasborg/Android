@@ -1,7 +1,10 @@
 package cpmusic.com.crowdplay.util;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,15 +20,24 @@ import cpmusic.com.crowdplay.model.spotifyModel.Example;
  * Created by rrask on 17-05-2017.
  */
 
-public class APIConnector {
+public class APIConnector extends Application {
 
     RequestQueue queue;
     String webResponse;
     Example data;
 
-    public void Search(String artist, String title, Context c)
+    private Intent dataIntent;
+    private LocalBroadcastManager localBroadcastManager;
+
+    public APIConnector()
     {
-        String url = "https://api.spotify.com/v1/search?q=" + artist + "+" + title + "&type=artist,track";
+        dataIntent = new Intent("SearchData");
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+    }
+
+    public void Search(String search, Context c)
+    {
+        String url = "https://api.spotify.com/v1/search?q=" + search + "&type=artist,track";
 
         sendRequest(url, c);
     }
@@ -43,6 +55,7 @@ public class APIConnector {
                     public void onResponse(String response) {
                         webResponse = response;
                         data = JSONParser.parseSearchWithJsonParser(webResponse);
+
                     }
                 }, new Response.ErrorListener() {
             @Override

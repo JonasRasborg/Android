@@ -1,5 +1,6 @@
 package cpmusic.com.crowdplay.activities;
 
+import android.app.Service;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,12 +37,18 @@ public class GuestActivity extends AppCompatActivity {
 
         fabSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //if(networkChecker.getNetworkStatus(this))
-                {
-                    //apiConnector.Search(editSearch.getText().toString(), this);
-                }
+            public void onClick(View v)
+            {
+                Search();
             }
         });
+    }
+
+    public void Search()
+    {
+        if(networkChecker.getNetworkStatus(this))
+        {
+            apiConnector.Search(editSearch.getText().toString(), this);
+        }
     }
 }
