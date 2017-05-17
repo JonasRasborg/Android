@@ -43,7 +43,12 @@
 
         <activity
             android:name=".activities.PartyFinderActivity"
-            android:label="@string/title_activity_party_finder"></activity>
+            android:label="@string/title_activity_party_finder" />
+
+        <service
+            android:name=".services.MusicPlayerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
