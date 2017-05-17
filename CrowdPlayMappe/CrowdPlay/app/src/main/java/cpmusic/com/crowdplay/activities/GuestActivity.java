@@ -19,6 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.firebaseModel.Track;
+import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
 import cpmusic.com.crowdplay.model.spotifyModel.Item;
 import cpmusic.com.crowdplay.util.APIConnector;
@@ -35,7 +37,7 @@ public class GuestActivity extends AppCompatActivity {
 
     ArrayAdapter<String> adapter;
 
-    Example data;
+    Tracks tracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +70,10 @@ public class GuestActivity extends AppCompatActivity {
     {
         adapter.clear();
 
-        for (Item i : data.tracks.items)
+        for (Track track : tracks.tracks)
         {
-            adapter.add(i.artists.get(0).name + " - " + i.name);
+            adapter.add(track.Artist.toString() + " - " + track.Title.toString());
 
-            //Picasso.with(this).load(i.album.images.get(0).url).into(imageView);
         }
     }
 
@@ -80,7 +81,7 @@ public class GuestActivity extends AppCompatActivity {
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            data = (Example) intent.getExtras().getSerializable("data");
+            tracks = (Tracks) intent.getExtras().getSerializable("tracks");
             setData();
         }
     };

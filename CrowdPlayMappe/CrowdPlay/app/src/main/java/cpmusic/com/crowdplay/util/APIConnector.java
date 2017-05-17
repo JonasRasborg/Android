@@ -14,7 +14,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cpmusic.com.crowdplay.model.firebaseModel.Track;
+import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
+import cpmusic.com.crowdplay.model.spotifyModel.Item;
 
 /**
  * Created by rrask on 17-05-2017.
@@ -25,6 +31,8 @@ public class APIConnector {
     RequestQueue queue;
     String webResponse;
     Example data;
+
+    Tracks tracks;
 
     private Intent dataIntent;
     private LocalBroadcastManager localBroadcastManager;
@@ -56,8 +64,9 @@ public class APIConnector {
                         webResponse = response;
                         data = JSONParser.parseSearchWithJsonParser(webResponse);
 
-                        dataIntent.putExtra("data", data);
-                        localBroadcastManager.sendBroadcast(dataIntent);
+                        SortData();
+
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -67,5 +76,28 @@ public class APIConnector {
 
         queue.add(stringRequest);
 
+    }
+
+    private void SortData()
+    {
+        Tracks tracks = new Tracks();
+        tracks.tracks = new ArrayList<>();
+
+        for (Item i : data.tracks.items)
+        {
+            Track track = new Track();
+
+            track.Title = i.name;
+            track.Artist = i.artists.get(0).name;
+            track.Album = i.album.name;
+            track.ImageURL = i.album.images.get(0).url;
+            track.URI = i.uri;
+            track.Votes = 0;
+
+            tracks.tracks.add(track);
+        }
+
+        dataIntent.putExtra("tracks", tracks);
+        localBroadcastManager.sendBroadcast(dataIntent);
     }
 }
