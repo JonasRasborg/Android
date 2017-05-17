@@ -37,9 +37,9 @@ public class GuestActivity extends AppCompatActivity {
         fabSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(networkChecker.getNetworkStatus(this))
+                //if(networkChecker.getNetworkStatus(this))
                 {
-                    apiConnector.Search(editSearch.getText().toString(), this);
+                    //apiConnector.Search(editSearch.getText().toString(), this);
                 }
             }
         });
