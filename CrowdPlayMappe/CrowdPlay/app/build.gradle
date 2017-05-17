@@ -19,6 +19,14 @@ android {
     }
 }
 
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -27,5 +35,16 @@ dependencies {
     apply plugin: 'com.google.gms.google-services'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    //Spotify Player
+    compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+
+    //Spotify auth
+    compile 'com.spotify.sdk:spotify-android-auth-1.0.0@aar'
+
     testCompile 'junit:junit:4.12'
 }

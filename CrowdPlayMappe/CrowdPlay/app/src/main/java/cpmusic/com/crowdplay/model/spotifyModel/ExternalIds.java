@@ -1,4 +1,4 @@
-package hartogsohn.crowdplayapitest.Model;
+package cpmusic.com.crowdplay.model.spotifyModel;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
