@@ -30,6 +30,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private static final String REDIRECT_URI = "crowdplay://callback";
     private static final int REQUEST_CODE = 1337;
 
+    DatabaseReference db;
+
+    FirebaseConnector firebaseConnector;
+
 
     private Player mPlayer;
 
@@ -49,7 +53,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-        
+
+        db = FirebaseDatabase.getInstance().getReference();
+
+        firebaseConnector = new FirebaseConnector(db);
+
     }
 
     @Override
@@ -84,6 +92,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         mPlayer.playUri(null, "spotify:track:33frkbGSt6bbfj2Nqo9i1p", 0, 0);
         mPlayer.setRepeat(null, true);
+
     }
 
     @Override

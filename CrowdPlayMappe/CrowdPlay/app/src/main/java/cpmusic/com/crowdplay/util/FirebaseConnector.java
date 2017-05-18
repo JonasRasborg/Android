@@ -21,8 +21,9 @@ public class FirebaseConnector {
 
     DatabaseReference mRootRef;
 
-    public FirebaseConnector(DatabaseReference db){
+    FirebaseDatabase firebaseDatabase;
 
+    public FirebaseConnector(DatabaseReference db){
 
         mRootRef = db;
     }
