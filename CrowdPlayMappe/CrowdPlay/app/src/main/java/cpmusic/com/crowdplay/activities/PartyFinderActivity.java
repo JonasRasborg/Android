@@ -28,8 +28,8 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     LatLng navitas = new LatLng(56.158897, 10.213706);
     LatLng party1 = new LatLng(56.1587, 10.213);
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
-    int minTime = 5000; // millisecs
-    int minDistance = 5; // meters
+    int minTime = 500; // millisecs
+    int minDistance = 1; // meters
     private Location userlocation;
     LocationManager locationManager;
 
