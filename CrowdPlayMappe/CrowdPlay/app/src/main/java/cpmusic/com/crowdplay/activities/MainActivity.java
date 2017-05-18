@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle args = new Bundle();
 
             args.putParcelable("Location",userLatLng);
-            intent.putExtra("Location", args);
+            intent.putExtra("bundle", args);
 
             startActivity(intent);
         }

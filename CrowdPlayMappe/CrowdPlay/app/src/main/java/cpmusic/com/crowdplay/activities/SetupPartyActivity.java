@@ -24,7 +24,6 @@ public class SetupPartyActivity extends AppCompatActivity {
     FirebaseConnector firebaseConnector;
     DatabaseReference db;
     private Bundle bundle;
-    Intent intent = getIntent();
 
 
     @Override
@@ -37,12 +36,13 @@ public class SetupPartyActivity extends AppCompatActivity {
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
         edtPartyCode = (EditText)findViewById(R.id.edtPartyCode);
         btnStartParty = (Button)findViewById(R.id.btnStartParty);
+
         btnStartParty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String name = edtPartyName.getText().toString();
-                LatLng latLong = intent.getParcelableExtra("Location");
+                LatLng latLong = bundle.getParcelable("Location");
                 Log.i("Setup",Double.toString(latLong.latitude));
                 String password = edtPartyCode.getText().toString();
                 Party newParty = new Party(name,password,latLong);
