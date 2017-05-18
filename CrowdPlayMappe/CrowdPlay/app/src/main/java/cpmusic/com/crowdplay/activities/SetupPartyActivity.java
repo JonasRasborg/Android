@@ -1,11 +1,14 @@
 package cpmusic.com.crowdplay.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,12 +23,15 @@ public class SetupPartyActivity extends AppCompatActivity {
     Button btnStartParty;
     FirebaseConnector firebaseConnector;
     DatabaseReference db;
+    private Bundle bundle;
+    Intent intent = getIntent();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_party);
+        bundle = getIntent().getParcelableExtra("bundle");
         db = FirebaseDatabase.getInstance().getReference();
         firebaseConnector = new FirebaseConnector(db, this);
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
@@ -36,8 +42,10 @@ public class SetupPartyActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String name = edtPartyName.getText().toString();
+                LatLng latLong = intent.getParcelableExtra("Location");
+                Log.i("Setup",Double.toString(latLong.latitude));
                 String password = edtPartyCode.getText().toString();
-                Party newParty = new Party(name,password);
+                Party newParty = new Party(name,password,latLong);
 
                 firebaseConnector.putNewParty(newParty);
             }
