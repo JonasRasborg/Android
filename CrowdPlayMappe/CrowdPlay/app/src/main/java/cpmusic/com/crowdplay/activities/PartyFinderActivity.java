@@ -48,7 +48,10 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             // onRequestPermissionsResult is automatically invoked now
         }
+
     }
+
+
 
     // When map async call returns (map is built on screen)
     @Override

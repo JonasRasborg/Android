@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import cpmusic.com.crowdplay.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Location userlocation;
     private LocationManager locationManager;
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         }
 
-       SaveMyLocationLocally(); // saves in userlocation member
+       SaveMyLocationLocally(); // saves location in userlocation member
 
 
         Button BtnDJ = (Button) findViewById(R.id.BtnDJ);
@@ -39,32 +42,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                OpenSetupPartyActivity();
             }
         });
 
         BtnGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenGestActivity();
+                OpenPartyFinderActivity();
             }
         });
 
-
-
-
     }
 
-    public void OpenGestActivity()
+    public void OpenPartyFinderActivity()
     {
         Intent intent = new Intent(this,PartyFinderActivity.class);
         startActivity(intent);
     }
 
-    public void OpenDJActivity()
+    public void OpenSetupPartyActivity()
     {
-        Intent intent = new Intent(this,SetupPartyActivity.class);
-        intent.putExtra("Location",userlocation);
-        startActivity(intent);
+        if (userlocation!=null) {
+            Intent intent = new Intent(this, SetupPartyActivity.class);
+            intent.putExtra("Location", userlocation);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(this,"Sorry, we could not find your location",Toast.LENGTH_SHORT).show();
     }
 
     // Invokes når der kommer svar på requestPermissions
@@ -102,8 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else {
-            String provider = LocationManager.GPS_PROVIDER;
-            userlocation = locationManager.getLastKnownLocation(provider);
+
+            String GPSprovider = LocationManager.GPS_PROVIDER;
+            userlocation = locationManager.getLastKnownLocation(GPSprovider);
+            if(userlocation==null)
+            {
+                String Networkprovider = LocationManager.NETWORK_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(Networkprovider);
+            }
         }
     }
 
