@@ -70,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
             userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
 
             Bundle args = new Bundle();
-            args.putParcelable("Location",userLatLng);
 
-            intent.putExtra("Location", userLatLng);
+            args.putParcelable("Location",userLatLng);
+            intent.putExtra("Location", args);
+
             startActivity(intent);
         }
         else
