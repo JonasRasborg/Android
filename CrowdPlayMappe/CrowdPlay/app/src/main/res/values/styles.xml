@@ -10,6 +10,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="ToolBarTheme" parent="ThemeOverlay.AppCompat.Light">
@@ -20,9 +21,18 @@
     </style>
 
     <style name="PopupTheme" parent="ThemeOverlay.AppCompat.Light">
-
         <item name="android:textColorPrimary">@color/colorSecondaryLight</item>
         <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+
+    <style name="ButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:color">@color/colorSecondary</item>
+        <item name="android:textColorPrimary">@color/colorSecondary</item>
+    </style>
+
+    <style name="EdtTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorPrimaryLight</item>
+        <item name="android:textColorHint">@color/colorPrimaryLight</item>
 
     </style>
 </resources>
