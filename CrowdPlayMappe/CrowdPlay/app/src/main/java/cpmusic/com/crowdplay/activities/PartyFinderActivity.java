@@ -3,6 +3,7 @@ package cpmusic.com.crowdplay.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.MessagePattern;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,8 +22,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 public class PartyFinderActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,7 +45,13 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     private Location userlocation;
     LocationManager locationManager;
 
-    // Firebase
+    ArrayList<Party> parties;
+
+    // Firebase instances
+    private DatabaseReference mDatabase;
+    ValueEventListener partylistener;
+
+
 
 
     @Override
@@ -76,8 +91,32 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
+        // Firebase get all parties
+       /* parties = new ArrayList<Party>();
 
-        //FirebaseConnector firebaseConnector = new FirebaseConnector();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot i:dataSnapshot.getChildren())
+                {
+                   //Party p = i.getValue(Party.class);
+                    Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
+                    parties.add(p);
+                    Log.d("main","lol");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+
+
+
 
 
 

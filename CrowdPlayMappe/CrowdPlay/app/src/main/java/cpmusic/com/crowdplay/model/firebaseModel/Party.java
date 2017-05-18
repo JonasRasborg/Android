@@ -11,8 +11,12 @@ public class Party {
     public String name;
     public String password;
     public Tracks tracks;
-    public Location location;
     public LatLng latLong;
+
+    public Party()
+    {
+
+    }
 
     public Party(String _name, String _password, LatLng _latLong){
         name = _name;
@@ -20,4 +24,6 @@ public class Party {
         latLong = _latLong;
         tracks = new Tracks();
     }
+
+
 }
