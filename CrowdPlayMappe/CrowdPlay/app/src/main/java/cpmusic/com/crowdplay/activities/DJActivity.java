@@ -70,8 +70,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         db = FirebaseDatabase.getInstance().getReference();
 
-        firebaseConnector = new FirebaseConnector(db, this);
-
         tracks = new Tracks();
         tracks.tracks = new ArrayList<>();
 
@@ -80,6 +78,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         adapter = new PlayListAdapter(this, tracks.tracks);
 
         listView.setAdapter(adapter);
+
+        firebaseConnector = new FirebaseConnector(db, this);
     }
 
 
@@ -88,9 +88,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
+            //Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
 
-            adapter.add(newTrack);
+            //adapter.add(newTrack);
 
         }
     };

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Adapter;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
@@ -11,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -18,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
+import cpmusic.com.crowdplay.adapters.PlayListAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
@@ -28,25 +31,22 @@ import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 
 public class FirebaseConnector {
 
-    private String FirebaseRoot = "https://crowdplay-1191b.firebaseio.com/";
-
     DatabaseReference mRootRef;
 
-    FirebaseDatabase firebaseDatabase;
+    DatabaseReference mChildTracks;
 
     private Intent newTrackIntent;
 
     private LocalBroadcastManager localBroadcastManager;
 
-    ArrayList<Track> newTracks;
-
 
     public FirebaseConnector(DatabaseReference db, Context context){
 
         mRootRef = db;
+        mChildTracks = mRootRef.child("-KkQnOjYOZWhdkxt2lpB").child("Tracks");
+
         newTrackIntent = new Intent("trackAdded");
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        newTracks = new ArrayList<>();
 
         mRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -63,12 +63,11 @@ public class FirebaseConnector {
 
 
 
-        mRootRef.addChildEventListener(new ChildEventListener() {
+        mChildTracks.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                     Track newTrack = dataSnapshot.getValue(Track.class);
-
                     newTrackIntent.putExtra("newTrack", newTrack);
                     localBroadcastManager.sendBroadcast(newTrackIntent);
 
@@ -105,7 +104,7 @@ public class FirebaseConnector {
 
 
     public void putNewTrack(Track track){
-        mRootRef.push().setValue(track);
+        mChildTracks.push().setValue(track);
     }
 
 }
