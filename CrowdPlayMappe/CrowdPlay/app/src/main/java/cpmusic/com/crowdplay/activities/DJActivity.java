@@ -61,6 +61,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         Log.i(TAG,"OnCreate");
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming"});
@@ -82,15 +83,26 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         firebaseConnector = new FirebaseConnector(db, this);
     }
 
+    private BroadcastReceiver mReceiveAllTracks = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            ArrayList<Track> tracks = (ArrayList<Track>) intent.getExtras().getSerializable("allTracks");
+
+            adapter.addAll(tracks);
+
+        }
+    };
 
     private BroadcastReceiver mReceiveFromFirebase = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            //Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
+            Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
 
-            //adapter.add(newTrack);
+            adapter.add(newTrack);
 
         }
     };

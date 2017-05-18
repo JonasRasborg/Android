@@ -36,8 +36,13 @@ public class FirebaseConnector {
     DatabaseReference mChildTracks;
 
     private Intent newTrackIntent;
+    private Intent allTracksIntent;
 
     private LocalBroadcastManager localBroadcastManager;
+
+    ArrayList<Track> newTracks;
+
+    boolean dataRetrieved = false;
 
 
     public FirebaseConnector(DatabaseReference db, Context context){
@@ -46,13 +51,25 @@ public class FirebaseConnector {
         mChildTracks = mRootRef.child("-KkQnOjYOZWhdkxt2lpB").child("Tracks");
 
         newTrackIntent = new Intent("trackAdded");
+        allTracksIntent = new Intent("allTracks");
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
 
-        mRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        newTracks = new ArrayList<>();
+
+        mChildTracks.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                for (DataSnapshot d : dataSnapshot.getChildren())
+                {
+                    Track newTrack = d.getValue(Track.class);
+                    newTracks.add(newTrack);
+                }
 
+                allTracksIntent.putExtra("allTracks", newTracks);
+                localBroadcastManager.sendBroadcast(allTracksIntent);
+
+                dataRetrieved = true;
             }
 
             @Override
@@ -67,10 +84,12 @@ public class FirebaseConnector {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
+                if (dataRetrieved)
+                {
                     Track newTrack = dataSnapshot.getValue(Track.class);
                     newTrackIntent.putExtra("newTrack", newTrack);
                     localBroadcastManager.sendBroadcast(newTrackIntent);
-
+                }
             }
 
             @Override
