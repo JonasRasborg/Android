@@ -70,8 +70,8 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
         // Add parties to map .... should be Firebase code here
         mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
         mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
 
 
         // Listener for marker (Pin) click

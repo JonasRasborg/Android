@@ -13,15 +13,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import cpmusic.com.crowdplay.R;
 
 public class MainActivity extends AppCompatActivity {
 
     private Location userlocation;
+    private LatLng userLatLng;
     private LocationManager locationManager;
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
-    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
     {
         if (userlocation!=null) {
             Intent intent = new Intent(this, SetupPartyActivity.class);
-            intent.putExtra("Location", userlocation);
+            userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
+            intent.putExtra("Location", userLatLng);
             startActivity(intent);
         }
         else
