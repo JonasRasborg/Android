@@ -66,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
     {
         if (userlocation!=null) {
             Intent intent = new Intent(this, SetupPartyActivity.class);
+
             userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
+
+            Bundle args = new Bundle();
+            args.putParcelable("Location",userLatLng);
+
             intent.putExtra("Location", userLatLng);
             startActivity(intent);
         }

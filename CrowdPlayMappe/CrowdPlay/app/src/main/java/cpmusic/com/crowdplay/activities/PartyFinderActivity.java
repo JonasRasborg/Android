@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 public class PartyFinderActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -34,6 +35,9 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     int minDistance = 1; // meters
     private Location userlocation;
     LocationManager locationManager;
+
+    // Firebase
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,9 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         // Add parties to map .... should be Firebase code here
         mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+        //FirebaseConnector firebaseConnector = new FirebaseConnector();
 
 
 
