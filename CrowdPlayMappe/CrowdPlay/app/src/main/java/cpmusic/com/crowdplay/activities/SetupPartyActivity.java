@@ -24,12 +24,15 @@ public class SetupPartyActivity extends AppCompatActivity {
     FirebaseConnector firebaseConnector;
     DatabaseReference db;
     private Bundle bundle;
+    Intent intentDJ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_party);
+
+        intentDJ = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
         db = FirebaseDatabase.getInstance().getReference();
         firebaseConnector = new FirebaseConnector(db, this);
@@ -43,11 +46,11 @@ public class SetupPartyActivity extends AppCompatActivity {
 
                 String name = edtPartyName.getText().toString();
                 LatLng latLong = bundle.getParcelable("Location");
-                Log.i("Setup",Double.toString(latLong.latitude));
                 String password = edtPartyCode.getText().toString();
                 Party newParty = new Party(name,password,latLong);
 
                 firebaseConnector.putNewParty(newParty);
+                startActivity(intentDJ);
             }
         });
     }

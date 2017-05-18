@@ -48,7 +48,7 @@ public class FirebaseConnector {
     public FirebaseConnector(DatabaseReference db, Context context){
 
         mRootRef = db;
-        mChildTracks = mRootRef.child("-KkQnOjYOZWhdkxt2lpB").child("Tracks");
+        mChildTracks = mRootRef.child("-KkRVi_ajPpp3Hqx9HP0").child("Tracks");
 
         newTrackIntent = new Intent("trackAdded");
         allTracksIntent = new Intent("allTracks");
