@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ public class Tracks implements Serializable
 {
     @SerializedName("tracks")
     @Expose
-    public List<Track> tracks;
+    public ArrayList<Track> tracks;
 }
