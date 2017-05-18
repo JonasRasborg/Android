@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
-        android:weightSum="1"
-        android:paddingBottom="2dp">
+        android:paddingBottom="2dp"
+        android:weightSum="1">
 
         <ImageView
             android:id="@+id/img_album"
@@ -38,18 +38,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_margin="7dp"
+                android:layout_weight="0.32"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_weight="0.32" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvArtist"
                 android:layout_width="183dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="15sp"
@@ -71,21 +71,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_weight="0.25">
 
 
-            <ImageView
-                android:id="@+id/img_add"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:contentDescription="@string/delete_image"
-                android:foregroundGravity="center"
-                android:src="@drawable/ic_add4"
-                android:tint="@color/colorSecondary" />
-
-
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="0.38"
+                android:clickable="true"
+                card_view:fabSize="mini"
+                card_view:srcCompat="@android:drawable/ic_input_add" />
         </LinearLayout>
 
     </LinearLayout>

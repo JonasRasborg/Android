@@ -1,6 +1,7 @@
 package cpmusic.com.crowdplay.adapters;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import java.util.List;
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
+import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 /**
  * Created by Jonas R. Hartogsohn on 17-05-2017.
@@ -29,12 +34,15 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
 
     private List<Track> dataSet;
     Context mContext;
+    FirebaseConnector firebaseConnector;
+    DatabaseReference db;
 
     // View lookup cache
     private static class ViewHolder {
         TextView tvTitle;
         TextView tvArtist;
         ImageView img_album;
+        FloatingActionButton fabSearch;
     }
 
     public SearchAdapter(Context context, ArrayList<Track> data) {
@@ -42,6 +50,8 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
         this.dataSet = data;
         this.mContext=context;
 
+        db = FirebaseDatabase.getInstance().getReference();
+        firebaseConnector = new FirebaseConnector(db);
     }
 
     @Override
@@ -65,7 +75,7 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Track dataModel = getItem(position);
+        final Track dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -79,6 +89,15 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
             viewHolder.tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
             viewHolder.img_album = (ImageView) convertView.findViewById(R.id.img_album);
+            viewHolder.fabSearch = (FloatingActionButton)convertView.findViewById(R.id.fabSearch);
+
+            viewHolder.fabSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, dataModel.Title + " Added", Toast.LENGTH_SHORT).show();
+                    firebaseConnector.putNewTrack(dataModel);
+                }
+            });
 
             result=convertView;
 
