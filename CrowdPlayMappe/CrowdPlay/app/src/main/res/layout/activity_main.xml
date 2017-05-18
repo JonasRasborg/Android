@@ -10,6 +10,7 @@
     <Button
         android:id="@+id/BtnDJ"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="375dp"
         android:layout_height="110dp"
         android:layout_marginBottom="8dp"
@@ -26,6 +27,7 @@
     <Button
         android:id="@+id/BtnGuest"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_marginBottom="8dp"
