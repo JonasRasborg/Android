@@ -1,9 +1,14 @@
 package cpmusic.com.crowdplay.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -17,6 +22,12 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
+
+import java.util.ArrayList;
+
+import cpmusic.com.crowdplay.adapters.PlayListAdapter;
+import cpmusic.com.crowdplay.adapters.SearchAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 
@@ -39,6 +50,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private Tracks tracks;
 
+    ListView listView;
+    PlayListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +60,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming"});
@@ -56,9 +70,28 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         db = FirebaseDatabase.getInstance().getReference();
 
-        firebaseConnector = new FirebaseConnector(db);
+        firebaseConnector = new FirebaseConnector(db, this);
 
+        tracks = new Tracks();
+        tracks.tracks = new ArrayList<>();
+
+        listView = (ListView)findViewById(R.id.listView);
+
+        adapter = new PlayListAdapter(this, tracks.tracks);
+
+        listView.setAdapter(adapter);
     }
+
+
+    private BroadcastReceiver mReceiveFromFirebase = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Track track = (Track) intent.getExtras().getSerializable("newTrack");
+            adapter.add(track);
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

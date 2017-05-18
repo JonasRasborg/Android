@@ -2,13 +2,9 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,35 +19,30 @@ import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 /**
- * Created by Jonas R. Hartogsohn on 17-05-2017.
+ * Created by Jonas R. Hartogsohn on 18-05-2017.
  */
 
-public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickListener{
+public class PlayListAdapter extends ArrayAdapter<Track> implements View.OnClickListener{
 
     private List<Track> dataSet;
     Context mContext;
-    FirebaseConnector firebaseConnector;
-    DatabaseReference db;
 
     // View lookup cache
     private class ViewHolder {
         TextView tvTitle;
         TextView tvArtist;
+        TextView tvVotes;
         ImageView img_album;
-        FloatingActionButton fabSearch;
+        FloatingActionButton fabUpvote;
     }
 
-    public SearchAdapter(Context context, ArrayList<Track> data) {
-        super(context, R.layout.list_item_search, data);
+    public PlayListAdapter(Context context, ArrayList<Track> data) {
+        super(context, R.layout.list_item, data);
         this.dataSet = data;
         this.mContext=context;
-
-        db = FirebaseDatabase.getInstance().getReference();
-        firebaseConnector = new FirebaseConnector(db, mContext);
     }
 
 
@@ -86,11 +77,12 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item_search, parent, false);
+            convertView = inflater.inflate(R.layout.list_item, parent, false);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
             viewHolder.tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
+            viewHolder.tvVotes = (TextView) convertView.findViewById(R.id.tvVotes);
             viewHolder.img_album = (ImageView) convertView.findViewById(R.id.img_album);
-            viewHolder.fabSearch = (FloatingActionButton)convertView.findViewById(R.id.fabSearch);
+            viewHolder.fabUpvote = (FloatingActionButton)convertView.findViewById(R.id.fabUpvote);
 
 
 
@@ -108,13 +100,13 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
 
         viewHolder.tvTitle.setText(dataModel.Title);
         viewHolder.tvArtist.setText(dataModel.Artist);
+        viewHolder.tvVotes.setText(String.valueOf(dataModel.Votes));
         Picasso.with(mContext).load(dataModel.ImageURL).into(viewHolder.img_album);
 
-        viewHolder.fabSearch.setOnClickListener(new View.OnClickListener() {
+        viewHolder.fabUpvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, dataModel.Title + " Added", Toast.LENGTH_SHORT).show();
-                firebaseConnector.putNewTrack(dataModel);
+                Toast.makeText(mContext, dataModel.Title + " Upvoted", Toast.LENGTH_SHORT).show();
             }
         });
 

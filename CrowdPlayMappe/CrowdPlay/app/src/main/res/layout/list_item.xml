@@ -17,7 +17,7 @@
         android:weightSum="1">
 
         <ImageView
-            android:id="@+id/img_row"
+            android:id="@+id/img_album"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="7dp"
@@ -41,7 +41,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvDescription"
+                android:id="@+id/tvArtist"
                 android:layout_width="183dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -79,18 +79,15 @@
             android:weightSum="1">
 
 
-            <ImageView
-                android:id="@+id/img_add"
-                android:layout_width="40dp"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabUpvote"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:contentDescription="@string/delete_image"
-                android:foregroundGravity="center"
-                android:src="@drawable/ic_add4"
-                android:tint="@color/colorSecondary" />
-
-
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                card_view:fabSize="mini"
+                card_view:srcCompat="@android:drawable/stat_sys_upload_done" />
         </LinearLayout>
 
     </LinearLayout>
