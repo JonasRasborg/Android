@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
@@ -32,7 +33,7 @@ public class GuestActivity extends AppCompatActivity {
 
     EditText editSearch;
     FloatingActionButton fabSearch;
-    RecyclerView recyclerView;
+    ListView listView;
 
     NetworkChecker networkChecker;
     APIConnector apiConnector;
@@ -51,7 +52,7 @@ public class GuestActivity extends AppCompatActivity {
 
         editSearch = (EditText)findViewById(R.id.editSearch);
         fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        listView = (ListView) findViewById(R.id.listView);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("SearchData"));
 
@@ -64,10 +65,11 @@ public class GuestActivity extends AppCompatActivity {
         });
 
         tracks = new Tracks();
+        tracks.tracks = new ArrayList<>();
 
        adapter = new SearchAdapter(this, tracks.tracks);
 
-        recyclerView.setAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 
 
@@ -76,7 +78,8 @@ public class GuestActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             tracks = (Tracks) intent.getExtras().getSerializable("tracks");
-            adapter.Update(tracks);
+            adapter.clear();
+            adapter.addAll(tracks.tracks);
         }
     };
 
