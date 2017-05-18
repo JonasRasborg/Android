@@ -88,8 +88,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Track track = (Track) intent.getExtras().getSerializable("newTrack");
-            adapter.add(track);
+            Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
+
+            adapter.add(newTrack);
+
         }
     };
 
