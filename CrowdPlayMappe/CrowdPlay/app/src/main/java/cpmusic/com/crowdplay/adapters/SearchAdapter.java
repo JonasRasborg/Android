@@ -54,6 +54,7 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
         firebaseConnector = new FirebaseConnector(db);
     }
 
+
     @Override
     public void onClick(View v) {
 
@@ -91,13 +92,7 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
             viewHolder.img_album = (ImageView) convertView.findViewById(R.id.img_album);
             viewHolder.fabSearch = (FloatingActionButton)convertView.findViewById(R.id.fabSearch);
 
-            viewHolder.fabSearch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, dataModel.Title + " Added", Toast.LENGTH_SHORT).show();
-                    firebaseConnector.putNewTrack(dataModel);
-                }
-            });
+
 
             result=convertView;
 
@@ -114,6 +109,14 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
         viewHolder.tvTitle.setText(dataModel.Title);
         viewHolder.tvArtist.setText(dataModel.Artist);
         Picasso.with(mContext).load(dataModel.ImageURL).into(viewHolder.img_album);
+
+        viewHolder.fabSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, dataModel.Title + " Added", Toast.LENGTH_SHORT).show();
+                firebaseConnector.putNewTrack(dataModel);
+            }
+        });
 
 
         // Return the completed view to render on screen

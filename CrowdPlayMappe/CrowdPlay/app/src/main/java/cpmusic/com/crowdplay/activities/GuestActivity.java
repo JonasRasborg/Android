@@ -67,19 +67,24 @@ public class GuestActivity extends AppCompatActivity {
         tracks = new Tracks();
         tracks.tracks = new ArrayList<>();
 
-       adapter = new SearchAdapter(this, tracks.tracks);
+        adapter = new SearchAdapter(this, tracks.tracks);
 
         listView.setAdapter(adapter);
     }
 
+    public void setData()
+    {
+        adapter.clear();
+        adapter.addAll(tracks.tracks);
+    }
 
     private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
             tracks = (Tracks) intent.getExtras().getSerializable("tracks");
-            adapter.clear();
-            adapter.addAll(tracks.tracks);
+
+            setData();
         }
     };
 
