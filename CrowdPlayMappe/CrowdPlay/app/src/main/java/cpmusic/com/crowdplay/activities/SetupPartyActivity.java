@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.firebaseModel.Party;
+import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 public class SetupPartyActivity extends AppCompatActivity {
@@ -18,6 +20,7 @@ public class SetupPartyActivity extends AppCompatActivity {
     Button btnStartParty;
     FirebaseConnector firebaseConnector;
     DatabaseReference db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,12 @@ public class SetupPartyActivity extends AppCompatActivity {
         btnStartParty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseConnector.
+
+                String name = edtPartyName.getText().toString();
+                String password = edtPartyCode.getText().toString();
+                Party newParty = new Party(name,password);
+
+                firebaseConnector.putNewParty(newParty);
             }
         });
     }

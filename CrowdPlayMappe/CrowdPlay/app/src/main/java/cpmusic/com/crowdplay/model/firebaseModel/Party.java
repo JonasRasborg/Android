@@ -9,4 +9,11 @@ public class Party {
     public String password;
     public Tracks tracks;
     public Location location;
+
+    public Party(String _name, String _password){
+        name = _name;
+        password = _password;
+        location = new Location();
+        tracks = new Tracks();
+    }
 }

@@ -7,4 +7,9 @@ package cpmusic.com.crowdplay.model.firebaseModel;
 public class Location {
     public int Long;
     public int Lat;
+
+    public Location(){
+        Lat = 12345;
+        Long = 54321;
+    }
 }
