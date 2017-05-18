@@ -11,17 +11,17 @@ public class Party {
     public String name;
     public String password;
     public Tracks tracks;
-    public LatLng latLong;
+    public CustomLatLng clatLong;
 
     public Party()
     {
 
     }
 
-    public Party(String _name, String _password, LatLng _latLong){
+    public Party(String _name, String _password, CustomLatLng _latLong){
         name = _name;
         password = _password;
-        latLong = _latLong;
+        clatLong = _latLong;
         tracks = new Tracks();
     }
 

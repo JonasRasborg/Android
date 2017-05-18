@@ -42,17 +42,12 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
     int minTime = 500; // millisecs
     int minDistance = 1; // meters
-    private Location userlocation;
     LocationManager locationManager;
 
     ArrayList<Party> parties;
 
     // Firebase instances
     private DatabaseReference mDatabase;
-    ValueEventListener partylistener;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +82,10 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         // Start listening for user location updates - if changed enough map is updated
         ListenForUserLocationUpdates();
 
-        // Add parties to map .... should be Firebase code here
-        mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+      
 
         // Firebase get all parties
-       /* parties = new ArrayList<Party>();
+        parties = new ArrayList<Party>();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -103,8 +96,9 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 {
                    //Party p = i.getValue(Party.class);
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
-                    parties.add(p);
-                    Log.d("main","lol");
+                    LatLng thisLatLng = new LatLng(p.clatLong.getLatitude(),p.clatLong.getLongtitude());
+                    mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
                 }
 
             }
@@ -113,11 +107,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
-
-
-
-
+        });
 
 
         // Listener for marker (Pin) click
