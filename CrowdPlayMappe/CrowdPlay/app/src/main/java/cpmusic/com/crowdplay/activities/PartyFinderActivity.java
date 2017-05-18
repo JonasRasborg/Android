@@ -16,7 +16,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -57,6 +59,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.partymapstyle));
 
 
         // put user location on map
@@ -66,8 +69,9 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         ListenForUserLocationUpdates();
 
         // Add parties to map .... should be Firebase code here
-        mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party"));
-        mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party"));
+        mMap.addMarker(new MarkerOptions().position(navitas).title("Navitas Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        mMap.addMarker(new MarkerOptions().position(party1).title("Pølse Party").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
 
         // Listener for marker (Pin) click
