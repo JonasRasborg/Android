@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,10 +23,8 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
-
 import java.util.ArrayList;
-
-import cpmusic.com.crowdplay.adapters.RecyclerAdapter;
+import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 
@@ -45,13 +44,14 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     ArrayList<Track> newTracks;
 
+    ToggleButton togglePlay;
 
     private Player mPlayer;
 
     private Tracks tracks;
 
     RecyclerView recyclerView;
-    RecyclerAdapter adapter;
+    RecycleViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,28 +116,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     }
 
-    /*private BroadcastReceiver mReceiveAllTracks = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            ArrayList<Track> tracks = (ArrayList<Track>) intent.getExtras().getSerializable("allTracks");
-
-            adapter.addAll(tracks);
-        }
-    };
-
-    private BroadcastReceiver mReceiveFromFirebase = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            Track newTrack = (Track) intent.getExtras().getSerializable("newTrack");
-
-            adapter.add(newTrack);
-
-        }
-    };*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -198,7 +176,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     public void onPlaybackEvent(PlayerEvent playerEvent) {
         Log.d(TAG, "Playback event received: " + playerEvent.name());
         switch (playerEvent) {
-            // Handle event type as necessary
+
+            case kSpPlaybackNotifyTrackDelivered:
+                mPlayer.queue(null,adapter.getTopTrack().URI);
+
+
             default:
                 break;
         }
@@ -209,6 +191,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         Log.d(TAG, "Playback error received: " + error.name());
         switch (error) {
             // Handle error type as necessary
+
             default:
                 break;
         }
@@ -217,7 +200,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecyclerAdapter(this, newTracks);
+        adapter = new RecycleViewAdapter(this, newTracks);
         recyclerView.setAdapter(adapter);
 
 
