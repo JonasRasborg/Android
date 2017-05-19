@@ -98,7 +98,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         @Override
         public void onClick(View v)
         {
-            mTracksRef.child(current.Title).setValue(current);
+            mTracksRef.child(current.URI).setValue(current);
             Toast.makeText(mContext, current.Title + " Added to playlist", Toast.LENGTH_SHORT).show();
         }
     }
