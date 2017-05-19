@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,6 +26,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
@@ -40,10 +49,15 @@ public class MainActivity extends AppCompatActivity {
     // Facebook
     CallbackManager mCallbackManager;
 
+    // Firebase
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
 
         if (locationManager == null) {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -70,7 +84,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //LoginFacebook();
+        LoginFacebook();
+
+
+
+
 
     }
 
@@ -117,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -153,10 +169,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                Profile profile = Profile.getCurrentProfile();
                 Toast.makeText(MainActivity.this,"User ID: "+loginResult.getAccessToken().getUserId(),Toast.LENGTH_LONG).show();
-                FacebookProfile facebookProfile = new FacebookProfile(profile.getId(),profile.getName(),profile.getProfilePictureUri(200,200).toString());
-
+                handleFacebookAccessToken(loginResult.getAccessToken());
 
 
             }
@@ -181,10 +195,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
+
+        // Pass the activity result back to the Facebook SDK
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(MainActivity.this,"Firebase authentication failed",Toast.LENGTH_LONG).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
 
 
 }
