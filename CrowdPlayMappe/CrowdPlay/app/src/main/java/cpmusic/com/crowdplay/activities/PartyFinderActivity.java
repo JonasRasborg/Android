@@ -32,7 +32,6 @@ import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
-import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 public class PartyFinderActivity extends FragmentActivity implements OnMapReadyCallback {
 
