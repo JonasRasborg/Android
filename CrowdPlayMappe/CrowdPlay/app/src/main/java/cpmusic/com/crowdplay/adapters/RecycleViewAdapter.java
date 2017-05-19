@@ -70,17 +70,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     public void resetVotes(Track track){
-        for (int i = 0; i<mData.size();i++)
-        {
-            if (mData.get(i).URI == track.URI)
-            {
-                mData.get(i).Votes=0;
-                mTracksRef.child(track.URI).child("Votes").setValue(0);
-                notifyItemChanged(i);
-                checkPositions(i);
 
-            }
-        }
+            Track current = mData.get(0);
+            current.Votes=0;
+            notifyItemChanged(0);
+            mData.add((mData.size()), current);
+            mData.remove(0);
+
+            mTracksRef.child(track.URI).child("Votes").setValue(0);
     }
 
     public Track getTopTrack(){

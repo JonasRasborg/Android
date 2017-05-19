@@ -194,7 +194,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         switch (playerEvent) {
 
             case kSpPlaybackNotifyTrackChanged:
-                adapter.resetVotes(adapter.getTopTrack());
                 mPlayer.queue(null,adapter.getTopTrack().URI);
 
                 break;
