@@ -1,6 +1,7 @@
 package cpmusic.com.crowdplay.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.text.MessagePattern;
@@ -10,7 +11,9 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,6 +51,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
     // Firebase instances
     private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +97,12 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot i:dataSnapshot.getChildren())
                 {
-                   //Party p = i.getValue(Party.class);
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
                     LatLng thisLatLng = new LatLng(p.clatLong.getLatitude(),p.clatLong.getLongtitude());
-                    //mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                     Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                     // Tilføjer database key key til Markers "Tag"
                     marker.setTag(dataSnapshot.child(i.getKey()).getKey());
+
                 }
 
             }
@@ -128,17 +131,83 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
+            public void onInfoWindowClick(final Marker marker) {
 
-                intent.putExtra("ID",marker.getTag().toString());
-                startActivity(intent);
+                // Alert dialog for entering party password
+                AlertDialog.Builder alert = new AlertDialog.Builder(PartyFinderActivity.this);
+
+                alert.setMessage("Enter password for Party");
+
+                final EditText passwordEditText = new EditText(PartyFinderActivity.this);
+
+                alert.setView(passwordEditText);
+
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(PartyFinderActivity.this, "If you dont know the password, ask your host for it", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String correctPassword;
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                String correctPassword = dataSnapshot.child(marker.getTag().toString()).child("password").getValue(String.class);
+                                String typedPassword = passwordEditText.getText().toString();
+
+                                if (correctPassword.equals(typedPassword))
+                                {
+                                    Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
+                                    intent.putExtra("ID",marker.getTag().toString());
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+                });
+
+
+
+                alert.show();
+
+
+
 
 
             }
         });
 
+
+
+
+
+
     }
+
+
+
+
+
+
 
     public void ListenForUserLocationUpdates()
     {
