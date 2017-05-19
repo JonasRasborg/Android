@@ -87,7 +87,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 card_view:fabSize="mini"
-                card_view:srcCompat="@android:drawable/stat_sys_upload_done" />
+                card_view:srcCompat="@drawable/ic_upvote_icon" />
         </LinearLayout>
 
     </LinearLayout>
