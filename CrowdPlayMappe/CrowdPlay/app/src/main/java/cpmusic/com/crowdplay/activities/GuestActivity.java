@@ -47,12 +47,17 @@ public class GuestActivity extends AppCompatActivity {
     ArrayList<Track> tracks;
 
     FirebaseDatabase database;
-    DatabaseReference mRootRef;
+    DatabaseReference mPartyRef;
+
+    String partyID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
+
+        Intent partyIntent = getIntent();
+        partyID = partyIntent.getStringExtra("ID");
 
         networkChecker = new NetworkChecker();
         apiConnector = new APIConnector(this);
@@ -73,7 +78,7 @@ public class GuestActivity extends AppCompatActivity {
         tracks = new ArrayList<>();
 
         database = FirebaseDatabase.getInstance();
-        mRootRef = database.getReference();
+        mPartyRef = database.getReference().child(partyID);
 
         setUpRecyclerView();
     }
@@ -99,7 +104,7 @@ public class GuestActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new SearchAdapter(this, tracks, mRootRef);
+        adapter = new SearchAdapter(this, tracks, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)

@@ -36,8 +36,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         inflater = LayoutInflater.from(context);
         this.mData = data;
         mContext = context;
-
-        mTracksRef = root.child("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
+        mTracksRef = root.child("Tracks");
     }
 
     @Override
