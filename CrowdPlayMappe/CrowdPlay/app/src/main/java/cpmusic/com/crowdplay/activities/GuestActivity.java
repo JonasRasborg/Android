@@ -1,53 +1,39 @@
 package cpmusic.com.crowdplay.activities;
 
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.SearchAdapter;
+import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
-import cpmusic.com.crowdplay.model.spotifyModel.Example;
-import cpmusic.com.crowdplay.model.spotifyModel.Item;
-import cpmusic.com.crowdplay.util.APIConnector;
 import cpmusic.com.crowdplay.util.NetworkChecker;
 
 public class GuestActivity extends AppCompatActivity {
 
-    EditText editSearch;
-    FloatingActionButton fabSearch;
-
     NetworkChecker networkChecker;
-    APIConnector apiConnector;
 
-    SearchAdapter adapter;
+    PlaylistAdapter adapter;
 
     RecyclerView recyclerView;
 
     ArrayList<Track> tracks;
 
     FirebaseDatabase database;
-    DatabaseReference mPartyRef;
+    DatabaseReference mTracksRef;
 
     String partyID;
 
@@ -60,51 +46,51 @@ public class GuestActivity extends AppCompatActivity {
         partyID = partyIntent.getStringExtra("ID");
 
         networkChecker = new NetworkChecker();
-        apiConnector = new APIConnector(this);
-
-        editSearch = (EditText)findViewById(R.id.editSearch);
-        fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("SearchData"));
-
-        fabSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Search();
-            }
-        });
 
         tracks = new ArrayList<>();
 
-        database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child(partyID);
-
         setUpRecyclerView();
+
+        database = FirebaseDatabase.getInstance();
+        mTracksRef = database.getReference().child(partyID).child("Tracks");
+
+        mTracksRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Track newTrack = dataSnapshot.getValue(Track.class);
+                adapter.addTrack(newTrack);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
-
-    private BroadcastReceiver mReceiveFromService = new BroadcastReceiver()
-    {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            tracks = (ArrayList<Track>) intent.getExtras().getSerializable("tracks");
-            adapter.addTrack(tracks);
-        }
-    };
-
-    public void Search()
-    {
-        if(networkChecker.getNetworkStatus(this))
-        {
-            apiConnector.Search(editSearch.getText().toString(), this);
-        }
-    }
 
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new SearchAdapter(this, tracks, mPartyRef);
+        adapter = new PlaylistAdapter(this, tracks);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
@@ -115,5 +101,22 @@ public class GuestActivity extends AppCompatActivity {
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.getItemAnimator().setRemoveDuration(200);
         recyclerView.getItemAnimator().setAddDuration(300);
+    }
+
+
+    public static class MyAdapter extends FragmentPagerAdapter {
+        public MyAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+           // return NUM_ITEMS;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return ArrayListFragment.newInstance(position);
+        }
     }
 }

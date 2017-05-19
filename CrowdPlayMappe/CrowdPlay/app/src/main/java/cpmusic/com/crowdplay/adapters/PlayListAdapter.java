@@ -2,113 +2,115 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 /**
- * Created by Jonas R. Hartogsohn on 18-05-2017.
+ * Created by Jonas R. Hartogsohn on 19-05-2017.
  */
 
-public class PlayListAdapter extends ArrayAdapter<Track> implements View.OnClickListener{
-
-    private List<Track> dataSet;
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
+    List<Track> mData;
+    private LayoutInflater inflater;
     Context mContext;
 
-    // View lookup cache
-    private class ViewHolder {
-        TextView tvTitle;
-        TextView tvArtist;
-        TextView tvVotes;
-        ImageView img_album;
-        FloatingActionButton fabUpvote;
+    public PlaylistAdapter(Context context, List<Track> data) {
+        inflater = LayoutInflater.from(context);
+        this.mData = data;
+        mContext = context;
     }
-
-    public PlayListAdapter(Context context, ArrayList<Track> data) {
-        super(context, R.layout.list_item, data);
-        this.dataSet = data;
-        this.mContext=context;
-    }
-
 
     @Override
-    public void onClick(View v) {
-
-        int position=(Integer) v.getTag();
-        Object object= getItem(position);
-        Track dataModel=(Track)object;
-
-        switch (v.getId())
-        {
-/*            case R.id.item_info:
-                Snackbar.make(v, "Release date " +dataModel.getFeature(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
-                break;*/
-        }
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.list_item, parent, false);
+        MyViewHolder holder = new MyViewHolder(view);
+        return holder;
     }
 
-    private int lastPosition = -1;
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        Log.i("RecyclerAdapter","onBindViewHolder "+position);
+        Track current = mData.get(position);
+        holder.setData(current, position);
+        holder.setListeners();
+    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        final Track dataModel = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+    public int getItemCount() {
+        return mData.size();
+    }
 
-        final View result;
+    public void addAVote(int position){
+        mData.get(position).Votes++;
+        notifyItemChanged(position);
+        checkPositions(position);
+    }
 
-        if (convertView == null) {
-
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item, parent, false);
-            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-            viewHolder.tvArtist = (TextView) convertView.findViewById(R.id.tvArtist);
-            viewHolder.tvVotes = (TextView) convertView.findViewById(R.id.tvVotes);
-            viewHolder.img_album = (ImageView) convertView.findViewById(R.id.img_album);
-            viewHolder.fabUpvote = (FloatingActionButton)convertView.findViewById(R.id.fabUpvote);
-
-
-
-            result=convertView;
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-            result=convertView;
-        }
-
-        //Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        //result.startAnimation(animation);
-        lastPosition = position;
-
-        viewHolder.tvTitle.setText(dataModel.Title);
-        viewHolder.tvArtist.setText(dataModel.Artist);
-        viewHolder.tvVotes.setText(String.valueOf(dataModel.Votes));
-        Picasso.with(mContext).load(dataModel.ImageURL).into(viewHolder.img_album);
-
-        viewHolder.fabUpvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, dataModel.Title + " Upvoted", Toast.LENGTH_SHORT).show();
+    public void checkPositions(int position){
+        for (int i = position; i > 0; i--){
+            if(mData.get(i).Votes>mData.get(i-1).Votes){
+                Track a = mData.get(i);
+                Track b = mData.get(i-1);
+                mData.set(i-1,a);
+                mData.set(i,b);
+                notifyItemMoved(i,i-1);
+                notifyItemChanged(i-1);
+                notifyItemChanged(i);
             }
-        });
+        }
+    }
+
+    public void addTrack(Track newTrack){
+        mData.add(newTrack);
+        notifyDataSetChanged();
+    }
 
 
-        // Return the completed view to render on screen
-        return convertView;
+
+
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView title;
+        TextView votes;
+        ImageView imgThumb;
+        int position;
+        Track current;
+        FloatingActionButton fabVote;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            title       = (TextView)  itemView.findViewById(R.id.tvTitle);
+            votes       = (TextView) itemView.findViewById(R.id.tvVotes);
+            imgThumb    = (ImageView) itemView.findViewById(R.id.img_album);
+            fabVote     = (FloatingActionButton) itemView.findViewById(R.id.fabUpvote);
+        }
+
+        public void setData(Track current, int position) {
+            this.title.setText(current.Title);
+            this.votes.setText(Integer.toString(current.Votes));
+            Picasso.with(mContext).load(current.ImageURL).into(this.imgThumb);
+            this.position = position;
+            this.current = current;
+        }
+
+        public void setListeners(){
+            fabVote.setOnClickListener(MyViewHolder.this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 }
