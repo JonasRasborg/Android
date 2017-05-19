@@ -78,6 +78,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     }
                     else{
                         mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
+                        adapter.resetVotes(adapter.getTopTrack());
                     }
                 }
                 else{
@@ -192,8 +193,12 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         Log.d(TAG, "Playback event received: " + playerEvent.name());
         switch (playerEvent) {
 
-            case kSpPlaybackNotifyTrackDelivered:
+            case kSpPlaybackNotifyTrackChanged:
+                adapter.resetVotes(adapter.getTopTrack());
                 mPlayer.queue(null,adapter.getTopTrack().URI);
+
+                break;
+
 
 
             default:
