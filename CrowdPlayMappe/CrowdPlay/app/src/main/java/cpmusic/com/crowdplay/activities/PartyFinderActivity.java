@@ -44,7 +44,8 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     int minDistance = 1; // meters
     LocationManager locationManager;
 
-    ArrayList<Party> parties;
+
+
 
     // Firebase instances
     private DatabaseReference mDatabase;
@@ -85,7 +86,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
       
 
         // Firebase get all parties
-        parties = new ArrayList<Party>();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -97,8 +97,10 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                    //Party p = i.getValue(Party.class);
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
                     LatLng thisLatLng = new LatLng(p.clatLong.getLatitude(),p.clatLong.getLongtitude());
-                    mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
+                    //mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    // Tilføjer database key key til Markers "Tag"
+                    marker.setTag(dataSnapshot.child(i.getKey()).getKey());
                 }
 
             }
@@ -111,17 +113,17 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
 
         // Listener for marker (Pin) click
-       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Intent intent = new Intent(MapsActivity.this,PartyActivity.class);
-                Log.d("Title: ",marker.getTitle());
-                intent.putExtra("PartyTitle",marker.getTitle());
+                Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
+
+                intent.putExtra("ID",marker.getTag().toString());
                 startActivity(intent);
                 return true;
             }
-        });*/
+        });
 
     }
 
