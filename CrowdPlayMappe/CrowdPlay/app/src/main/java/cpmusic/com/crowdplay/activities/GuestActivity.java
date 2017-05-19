@@ -54,8 +54,6 @@ public class GuestActivity extends AppCompatActivity {
 
         tracks = new ArrayList<>();
 
-        setUpRecyclerView();
-
         fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
         fabSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +99,7 @@ public class GuestActivity extends AppCompatActivity {
             }
         });
 
+        setUpRecyclerView();
     }
 
 
