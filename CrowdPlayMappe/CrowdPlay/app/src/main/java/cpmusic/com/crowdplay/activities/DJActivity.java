@@ -88,7 +88,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-        setUpRecyclerView();
+
 
 
 
@@ -123,6 +123,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             }
         });
 
+        setUpRecyclerView();
+        
     }
 
 
