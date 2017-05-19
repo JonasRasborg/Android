@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class GuestActivity extends AppCompatActivity {
 
     ArrayList<Track> tracks;
 
+    FirebaseDatabase database;
+    DatabaseReference mRootRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +72,10 @@ public class GuestActivity extends AppCompatActivity {
 
         tracks = new ArrayList<>();
 
-        setUpRecyclerView();
+        database = FirebaseDatabase.getInstance();
+        mRootRef = database.getReference();
 
+        setUpRecyclerView();
     }
 
 
@@ -92,11 +99,8 @@ public class GuestActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new SearchAdapter(this, tracks);
+        adapter = new SearchAdapter(this, tracks, mRootRef);
         recyclerView.setAdapter(adapter);
-
-
-
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
@@ -106,7 +110,5 @@ public class GuestActivity extends AppCompatActivity {
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.getItemAnimator().setRemoveDuration(200);
         recyclerView.getItemAnimator().setAddDuration(300);
-
-        //recyclerView.setItemAnimator(new DefaultItemAnimator()); // Even if we dont use it then also our items shows default animation. #Check Docs
     }
 }

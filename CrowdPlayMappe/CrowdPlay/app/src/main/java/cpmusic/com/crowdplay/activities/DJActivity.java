@@ -1,25 +1,17 @@
 package cpmusic.com.crowdplay.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -32,13 +24,9 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import cpmusic.com.crowdplay.adapters.PlayListAdapter;
 import cpmusic.com.crowdplay.adapters.RecyclerAdapter;
-import cpmusic.com.crowdplay.adapters.SearchAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.FirebaseConnector;
 
 
 import cpmusic.com.crowdplay.R;
@@ -54,8 +42,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     DatabaseReference localDB;
 
     FirebaseDatabase database;
-
-    FirebaseConnector firebaseConnector;
 
     ArrayList<Track> newTracks;
 
@@ -92,7 +78,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         database = FirebaseDatabase.getInstance();
         localDB = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
-        firebaseConnector = new FirebaseConnector(localDB);
 
         localDB.addChildEventListener(new ChildEventListener() {
             @Override
