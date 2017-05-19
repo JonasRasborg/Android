@@ -12,10 +12,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+import java.util.Arrays;
+
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.firebaseModel.FacebookProfile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private LatLng userLatLng;
     private LocationManager locationManager;
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
+
+    // Facebook
+    CallbackManager mCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         }
 
-       SaveMyLocationLocally(); // saves location in userlocation member
+       SaveMyLocationLocally(); // saves location in userLatLng member
 
 
         Button BtnDJ = (Button) findViewById(R.id.BtnDJ);
@@ -53,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 OpenPartyFinderActivity();
             }
         });
+
+        LoginFacebook();
 
     }
 
@@ -123,6 +141,48 @@ public class MainActivity extends AppCompatActivity {
                 String Networkprovider = LocationManager.NETWORK_PROVIDER;
                 userlocation = locationManager.getLastKnownLocation(Networkprovider);
             }
+        }
+    }
+
+    public void LoginFacebook()
+    {
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        mCallbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                Profile profile = Profile.getCurrentProfile();
+                Toast.makeText(MainActivity.this,"User ID: "+loginResult.getAccessToken().getUserId(),Toast.LENGTH_LONG).show();
+                FacebookProfile facebookProfile = new FacebookProfile(profile.getId(),profile.getName(),profile.getProfilePictureUri(200,200).toString());
+
+
+
+            }
+
+            @Override
+            public void onCancel() {
+
+                Toast.makeText(MainActivity.this,"You cant use this app without logging into FaceBook",Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
+
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(mCallbackManager.onActivityResult(requestCode, resultCode, data)) {
+            return;
         }
     }
 
