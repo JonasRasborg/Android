@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -66,6 +67,21 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         tracks.tracks = new ArrayList<>();
         newTracks = new ArrayList<Track>();
 
+        togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
+        togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if(mPlayer.getPlaybackState().isPlaying){
+                        mPlayer.pause(null);
+                    }
+                    else{
+                        mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
+                    }
+                }
+            }
+        });
+
         //Spotify SDK:
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming"});
@@ -82,15 +98,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         localDB.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                long value = dataSnapshot.getChildrenCount();
-                Log.i(TAG,"Nr. of children: " + value);
-
                 Track newTrack = dataSnapshot.getValue(Track.class);
-                //newTracks.add(newTrack);
                 adapter.addTrack(newTrack);
-
-                //GenericTypeIndicator<List<Track>> genericTypeIndicator = new GenericTypeIndicator<List<Track>>() {};
-                //List<Track> trackList = dataSnapshot.getValue(genericTypeIndicator);
             }
 
             @Override
@@ -147,9 +156,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
 
-        mPlayer.playUri(null, "spotify:track:33frkbGSt6bbfj2Nqo9i1p", 0, 0);
-        mPlayer.setRepeat(null, true);
-
     }
 
     @Override
@@ -200,7 +206,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, newTracks);
+        adapter = new RecycleViewAdapter(this, newTracks, localDB);
         recyclerView.setAdapter(adapter);
 
 
