@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -33,14 +34,15 @@ public class GuestActivity extends AppCompatActivity {
 
     EditText editSearch;
     FloatingActionButton fabSearch;
-    ListView listView;
 
     NetworkChecker networkChecker;
     APIConnector apiConnector;
 
     SearchAdapter adapter;
 
-    Tracks tracks;
+    RecyclerView recyclerView;
+
+    ArrayList<Track> tracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,6 @@ public class GuestActivity extends AppCompatActivity {
 
         editSearch = (EditText)findViewById(R.id.editSearch);
         fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
-        listView = (ListView) findViewById(R.id.listView);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromService, new IntentFilter("SearchData"));
 
@@ -64,12 +65,10 @@ public class GuestActivity extends AppCompatActivity {
             }
         });
 
-        tracks = new Tracks();
-        tracks.tracks = new ArrayList<>();
+        tracks = new ArrayList<>();
 
-        adapter = new SearchAdapter(this, tracks.tracks);
+        setUpRecyclerView();
 
-        listView.setAdapter(adapter);
     }
 
 
@@ -77,9 +76,8 @@ public class GuestActivity extends AppCompatActivity {
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            tracks = (Tracks) intent.getExtras().getSerializable("tracks");
-            adapter.clear();
-            adapter.addAll(tracks.tracks);
+            tracks = (ArrayList<Track>) intent.getExtras().getSerializable("tracks");
+            adapter.addTrack(tracks);
         }
     };
 
@@ -89,5 +87,26 @@ public class GuestActivity extends AppCompatActivity {
         {
             apiConnector.Search(editSearch.getText().toString(), this);
         }
+    }
+
+    private void setUpRecyclerView() {
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        adapter = new SearchAdapter(this, tracks);
+        recyclerView.setAdapter(adapter);
+
+
+
+
+        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
+        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
+
+        recyclerView.getItemAnimator().setChangeDuration(400);
+        recyclerView.getItemAnimator().setMoveDuration(300);
+        recyclerView.getItemAnimator().setRemoveDuration(200);
+        recyclerView.getItemAnimator().setAddDuration(300);
+
+        //recyclerView.setItemAnimator(new DefaultItemAnimator()); // Even if we dont use it then also our items shows default animation. #Check Docs
     }
 }

@@ -32,7 +32,6 @@ public class APIConnector {
     String webResponse;
     Example data;
 
-    Tracks tracks;
 
     private Intent dataIntent;
     private LocalBroadcastManager localBroadcastManager;
@@ -80,8 +79,7 @@ public class APIConnector {
 
     private void SortData()
     {
-        Tracks tracks = new Tracks();
-        tracks.tracks = new ArrayList<>();
+        ArrayList<Track> tracks = new ArrayList<>();
 
         for (Item i : data.tracks.items)
         {
@@ -94,7 +92,7 @@ public class APIConnector {
             track.URI = i.uri;
             track.Votes = 0;
 
-            tracks.tracks.add(track);
+            tracks.add(track);
         }
 
         dataIntent.putExtra("tracks", tracks);

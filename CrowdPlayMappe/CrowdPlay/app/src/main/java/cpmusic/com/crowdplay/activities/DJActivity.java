@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.adapters.PlayListAdapter;
+import cpmusic.com.crowdplay.adapters.RecyclerAdapter;
 import cpmusic.com.crowdplay.adapters.SearchAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
@@ -61,8 +64,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private Tracks tracks;
 
-    ListView listView;
-    PlayListAdapter adapter;
+    RecyclerView recyclerView;
+    RecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +86,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-        listView = (ListView)findViewById(R.id.listView);
-
-        adapter = new PlayListAdapter(this, newTracks);
-
-        listView.setAdapter(adapter);
-
+        setUpRecyclerView();
 
 
 
@@ -103,8 +101,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                 Log.i(TAG,"Nr. of children: " + value);
 
                 Track newTrack = dataSnapshot.getValue(Track.class);
-                newTracks.add(newTrack);
-                adapter.notifyDataSetChanged();
+                //newTracks.add(newTrack);
+                adapter.addTrack(newTrack);
 
                 //GenericTypeIndicator<List<Track>> genericTypeIndicator = new GenericTypeIndicator<List<Track>>() {};
                 //List<Track> trackList = dataSnapshot.getValue(genericTypeIndicator);
@@ -229,5 +227,24 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             default:
                 break;
         }
+    }
+
+    private void setUpRecyclerView() {
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        adapter = new RecyclerAdapter(this, newTracks);
+        recyclerView.setAdapter(adapter);
+
+
+        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
+        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
+
+        recyclerView.getItemAnimator().setChangeDuration(400);
+        recyclerView.getItemAnimator().setMoveDuration(300);
+        recyclerView.getItemAnimator().setRemoveDuration(200);
+        recyclerView.getItemAnimator().setAddDuration(300);
+
+        //recyclerView.setItemAnimator(new DefaultItemAnimator()); // Even if we dont use it then also our items shows default animation. #Check Docs
     }
 }
