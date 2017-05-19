@@ -113,7 +113,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
 
         // Listener for marker (Pin) click
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
@@ -122,6 +122,20 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 intent.putExtra("ID",marker.getTag().toString());
                 startActivity(intent);
                 return true;
+            }
+        });*/
+
+        //Listener for marker inforWindow click
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
+
+                intent.putExtra("ID",marker.getTag().toString());
+                startActivity(intent);
+
+
             }
         });
 
