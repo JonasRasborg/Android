@@ -62,6 +62,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         {
             if (mData.get(i).URI == track.URI)
             {
+                mData.get(i).Votes=track.Votes;
                 notifyItemChanged(i);
                 checkPositions(i);
             }
@@ -88,7 +89,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public void addTrack(Track newTrack){
         mData.add(newTrack);
-        notifyDataSetChanged();
+        checkPositions(mData.size()-1);
     }
 
 
