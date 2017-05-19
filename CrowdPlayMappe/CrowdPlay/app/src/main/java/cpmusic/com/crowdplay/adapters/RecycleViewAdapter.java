@@ -58,7 +58,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public void addAVote(Track track)
     {
-        for (int i = 0; i<mData.size()-1;i++)
+        for (int i = 0; i<mData.size();i++)
         {
             if (mData.get(i).URI == track.URI)
             {
