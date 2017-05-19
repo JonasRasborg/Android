@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
+import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
 
@@ -26,7 +26,7 @@ public class GuestActivity extends AppCompatActivity {
 
     NetworkChecker networkChecker;
 
-    PlaylistAdapter adapter;
+    RecycleViewAdapter adapter;
 
     RecyclerView recyclerView;
 
@@ -90,7 +90,7 @@ public class GuestActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new PlaylistAdapter(this, tracks);
+        adapter = new RecycleViewAdapter(this, tracks);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
@@ -101,22 +101,5 @@ public class GuestActivity extends AppCompatActivity {
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.getItemAnimator().setRemoveDuration(200);
         recyclerView.getItemAnimator().setAddDuration(300);
-    }
-
-
-    public static class MyAdapter extends FragmentPagerAdapter {
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-           // return NUM_ITEMS;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return ArrayListFragment.newInstance(position);
-        }
     }
 }
