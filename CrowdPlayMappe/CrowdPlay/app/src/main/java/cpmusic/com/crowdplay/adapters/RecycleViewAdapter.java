@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -25,11 +27,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     List<Track> mData;
     private LayoutInflater inflater;
     Context mContext;
+    DatabaseReference mTracksRef;
 
-    public RecycleViewAdapter(Context context, List<Track> data) {
+    public RecycleViewAdapter(Context context, List<Track> data, DatabaseReference root) {
         inflater = LayoutInflater.from(context);
         this.mData = data;
         mContext = context;
+        mTracksRef = root.child("Tracks");
     }
 
     @Override
@@ -86,6 +90,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
+        TextView artist;
         TextView votes;
         ImageView imgThumb;
         int position;
@@ -95,6 +100,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public MyViewHolder(View itemView) {
             super(itemView);
             title       = (TextView)  itemView.findViewById(R.id.tvTitle);
+            artist       = (TextView)  itemView.findViewById(R.id.tvArtist);
             votes       = (TextView) itemView.findViewById(R.id.tvVotes);
             imgThumb    = (ImageView) itemView.findViewById(R.id.img_album);
             fabVote     = (FloatingActionButton) itemView.findViewById(R.id.fabUpvote);
@@ -102,6 +108,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         public void setData(Track current, int position) {
             this.title.setText(current.Title);
+            this.artist.setText(current.Artist);
             this.votes.setText(Integer.toString(current.Votes));
             Picasso.with(mContext).load(current.ImageURL).into(this.imgThumb);
             this.position = position;
@@ -109,7 +116,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
         public void setListeners(){
-            fabVote.setOnClickListener(MyViewHolder.this);
+            fabVote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
+                    current.Votes++;
+                    mTracksRef.child(current.URI).child("Votes").setValue(current.Votes);
+                }
+            });
         }
 
         @Override

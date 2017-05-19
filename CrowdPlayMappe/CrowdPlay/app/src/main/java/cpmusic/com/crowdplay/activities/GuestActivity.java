@@ -36,6 +36,7 @@ public class GuestActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference mTracksRef;
+    DatabaseReference mPartyRef;
 
     String partyID;
 
@@ -66,7 +67,9 @@ public class GuestActivity extends AppCompatActivity {
         });
 
         database = FirebaseDatabase.getInstance();
-        mTracksRef = database.getReference().child(partyID).child("Tracks");
+
+        mPartyRef = database.getReference().child(partyID);
+        mTracksRef = mPartyRef.child("Tracks");
 
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -104,7 +107,7 @@ public class GuestActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, tracks);
+        adapter = new RecycleViewAdapter(this, tracks, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)

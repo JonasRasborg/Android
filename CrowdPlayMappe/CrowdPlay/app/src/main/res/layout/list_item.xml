@@ -25,15 +25,15 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.55"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="0.35">
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_margin="7dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
@@ -42,8 +42,8 @@
 
             <TextView
                 android:id="@+id/tvArtist"
-                android:layout_width="183dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
