@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guest);
+        setContentView(R.layout.activity_search);
 
         Intent partyIntent = getIntent();
         partyID = partyIntent.getStringExtra("ID");
@@ -96,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new SearchAdapter(this, tracks, mPartyRef);
+        adapter = new SearchAdapter(this, tracks, mPartyRef, this);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)

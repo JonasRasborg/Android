@@ -1,5 +1,6 @@
 package cpmusic.com.crowdplay.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -30,13 +31,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
     Context mContext;
 
     DatabaseReference mTracksRef;
+    Activity searchActivity;
 
 
-    public SearchAdapter(Context context, List<Track> data, DatabaseReference root) {
+    public SearchAdapter(Context context, List<Track> data, DatabaseReference root, Activity activity) {
         inflater = LayoutInflater.from(context);
         this.mData = data;
         mContext = context;
         mTracksRef = root.child("Tracks");
+        searchActivity = activity;
     }
 
     @Override
@@ -100,6 +103,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         {
             mTracksRef.child(current.URI).setValue(current);
             Toast.makeText(mContext, current.Title + " Added to playlist", Toast.LENGTH_SHORT).show();
+            searchActivity.finish();
         }
     }
 }

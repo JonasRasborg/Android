@@ -3,11 +3,13 @@ package cpmusic.com.crowdplay.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +39,8 @@ public class GuestActivity extends AppCompatActivity {
 
     String partyID;
 
+    FloatingActionButton fabSearch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,16 @@ public class GuestActivity extends AppCompatActivity {
         tracks = new ArrayList<>();
 
         setUpRecyclerView();
+
+        fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
+        fabSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GuestActivity.this, SearchActivity.class);
+                intent.putExtra("ID", partyID);
+                startActivity(intent);
+            }
+        });
 
         database = FirebaseDatabase.getInstance();
         mTracksRef = database.getReference().child(partyID).child("Tracks");
