@@ -88,7 +88,7 @@ public class APIConnector {
             track.Title = i.name;
             track.Artist = i.artists.get(0).name;
             track.Album = i.album.name;
-            track.ImageURL = i.album.images.get(0).url;
+            if (i.album.images.size() != 0) {track.ImageURL = i.album.images.get(0).url;}
             track.URI = i.uri;
             track.Votes = 0;
 

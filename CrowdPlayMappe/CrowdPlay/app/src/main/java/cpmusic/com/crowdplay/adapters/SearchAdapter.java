@@ -41,7 +41,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
 
     @Override
     public MySearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_item, parent, false);
+        View view = inflater.inflate(R.layout.list_item_search, parent, false);
         MySearchViewHolder holder = new MySearchViewHolder(view);
         return holder;
     }
@@ -70,7 +70,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
     class MySearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView artist;
-        TextView votes;
         ImageView imgThumb;
         int position;
         Track current;
@@ -80,15 +79,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
             super(itemView);
             title       = (TextView)  itemView.findViewById(R.id.tvTitle);
             artist       = (TextView)  itemView.findViewById(R.id.tvArtist);
-            votes       = (TextView) itemView.findViewById(R.id.tvVotes);
             imgThumb    = (ImageView) itemView.findViewById(R.id.img_album);
-            fabVote     = (FloatingActionButton) itemView.findViewById(R.id.fabUpvote);
+            fabVote     = (FloatingActionButton) itemView.findViewById(R.id.fabSearch);
         }
 
         public void setData(Track current, int position) {
             this.title.setText(current.Title);
             this.artist.setText(current.Artist);
-            this.votes.setText(Integer.toString(current.Votes));
             Picasso.with(mContext).load(current.ImageURL).into(this.imgThumb);
             this.position = position;
             this.current = current;

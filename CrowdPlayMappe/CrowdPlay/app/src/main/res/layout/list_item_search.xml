@@ -27,17 +27,17 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="233dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.55"
             android:orientation="vertical"
             android:weightSum="1">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
+                android:layout_height="40dp"
                 android:layout_margin="7dp"
+                android:layout_weight="0.57"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="16sp"
@@ -45,10 +45,10 @@
 
             <TextView
                 android:id="@+id/tvArtist"
-                android:layout_width="183dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="0.67"
+                android:layout_weight="0.10"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="15sp"
@@ -57,14 +57,6 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -80,7 +72,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="16dp"
-                android:layout_weight="0.38"
                 android:clickable="true"
                 card_view:fabSize="mini"
                 card_view:srcCompat="@android:drawable/ic_input_add" />
