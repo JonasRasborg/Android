@@ -39,9 +39,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private static final String REDIRECT_URI = "crowdplay://callback";
     private static final int REQUEST_CODE = 1337;
 
-    DatabaseReference localDB;
-
     FirebaseDatabase database;
+
+    DatabaseReference mTracksRef;
+    DatabaseReference mPartyRef;
 
     ArrayList<Track> newTracks;
 
@@ -72,12 +73,16 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    if(mPlayer.getPlaybackState().isPlaying){
-                        mPlayer.pause(null);
+                    if(mPlayer.getPlaybackState().isActiveDevice){
+                        mPlayer.resume(null);
                     }
                     else{
                         mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
                     }
+                }
+                else{
+                    mPlayer.pause(null);
+
                 }
             }
         });
@@ -93,9 +98,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
 
         database = FirebaseDatabase.getInstance();
-        localDB = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
+        mPartyRef = database.getReference().child("-KkS3kuJdL4tOH_zDjCR");
+        mTracksRef = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
 
-        localDB.addChildEventListener(new ChildEventListener() {
+        mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Track newTrack = dataSnapshot.getValue(Track.class);
@@ -104,7 +110,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Track track = dataSnapshot.getValue(Track.class);
+                adapter.addAVote(track);
             }
 
             @Override
@@ -124,7 +131,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         });
 
         setUpRecyclerView();
-        
+
     }
 
 
@@ -208,7 +215,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, newTracks, localDB);
+        adapter = new RecycleViewAdapter(this, newTracks, mPartyRef);
         recyclerView.setAdapter(adapter);
 
 
