@@ -79,8 +79,10 @@ public class GuestActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                Track track = dataSnapshot.getValue(Track.class);
+                adapter.addAVote(track);
             }
 
             @Override

@@ -56,10 +56,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return mData.size();
     }
 
-    public void addAVote(int position){
-        mData.get(position).Votes++;
-        notifyItemChanged(position);
-        checkPositions(position);
+    public void addAVote(Track track)
+    {
+        for (int i = 0; i<mData.size()-1;i++)
+        {
+            if (mData.get(i).URI == track.URI)
+            {
+                notifyItemChanged(i);
+                checkPositions(i);
+            }
+        }
     }
 
     public Track getTopTrack(){
