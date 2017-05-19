@@ -45,12 +45,12 @@ public class FirebaseConnector {
     boolean dataRetrieved = false;
 
 
-    public FirebaseConnector(DatabaseReference db, Context context){
+    public FirebaseConnector(DatabaseReference db){
 
         mRootRef = db;
-        mChildTracks = mRootRef.child("-KkRVi_ajPpp3Hqx9HP0").child("Tracks");
+        mChildTracks = mRootRef.child("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
 
-        newTrackIntent = new Intent("trackAdded");
+        /*newTrackIntent = new Intent("trackAdded");
         allTracksIntent = new Intent("allTracks");
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
 
@@ -113,7 +113,7 @@ public class FirebaseConnector {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     public void putNewParty(Party party)

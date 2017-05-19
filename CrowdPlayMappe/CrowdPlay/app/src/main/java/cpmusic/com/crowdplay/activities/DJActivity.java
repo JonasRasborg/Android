@@ -9,9 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -24,6 +30,7 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cpmusic.com.crowdplay.adapters.PlayListAdapter;
 import cpmusic.com.crowdplay.adapters.SearchAdapter;
@@ -41,9 +48,13 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private static final String REDIRECT_URI = "crowdplay://callback";
     private static final int REQUEST_CODE = 1337;
 
-    DatabaseReference db;
+    DatabaseReference localDB;
+
+    FirebaseDatabase database;
 
     FirebaseConnector firebaseConnector;
+
+    ArrayList<Track> newTracks;
 
 
     private Player mPlayer;
@@ -60,30 +71,69 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
+        tracks = new Tracks();
+        tracks.tracks = new ArrayList<>();
+        newTracks = new ArrayList<Track>();
 
+        //Spotify SDK:
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming"});
         AuthenticationRequest request = builder.build();
-
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-
-        db = FirebaseDatabase.getInstance().getReference();
-
-        tracks = new Tracks();
-        tracks.tracks = new ArrayList<>();
 
         listView = (ListView)findViewById(R.id.listView);
 
-        adapter = new PlayListAdapter(this, tracks.tracks);
+        adapter = new PlayListAdapter(this, newTracks);
 
         listView.setAdapter(adapter);
 
-        firebaseConnector = new FirebaseConnector(db, this);
+
+
+
+        database = FirebaseDatabase.getInstance();
+        localDB = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
+        firebaseConnector = new FirebaseConnector(localDB);
+
+        localDB.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                long value = dataSnapshot.getChildrenCount();
+                Log.i(TAG,"Nr. of children: " + value);
+
+                Track newTrack = dataSnapshot.getValue(Track.class);
+                newTracks.add(newTrack);
+                adapter.notifyDataSetChanged();
+
+                //GenericTypeIndicator<List<Track>> genericTypeIndicator = new GenericTypeIndicator<List<Track>>() {};
+                //List<Track> trackList = dataSnapshot.getValue(genericTypeIndicator);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
-    private BroadcastReceiver mReceiveAllTracks = new BroadcastReceiver()
+    /*private BroadcastReceiver mReceiveAllTracks = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -91,7 +141,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             ArrayList<Track> tracks = (ArrayList<Track>) intent.getExtras().getSerializable("allTracks");
 
             adapter.addAll(tracks);
-
         }
     };
 
@@ -105,7 +154,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             adapter.add(newTrack);
 
         }
-    };
+    };*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

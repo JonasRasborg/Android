@@ -51,7 +51,7 @@ public class SearchAdapter extends ArrayAdapter<Track> implements View.OnClickLi
         this.mContext=context;
 
         db = FirebaseDatabase.getInstance().getReference();
-        firebaseConnector = new FirebaseConnector(db, mContext);
+        firebaseConnector = new FirebaseConnector(db);
     }
 
 

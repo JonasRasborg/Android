@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.firebaseModel.CustomLatLng;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 import cpmusic.com.crowdplay.util.FirebaseConnector;
@@ -35,7 +36,7 @@ public class SetupPartyActivity extends AppCompatActivity {
         intentDJ = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
         db = FirebaseDatabase.getInstance().getReference();
-        firebaseConnector = new FirebaseConnector(db, this);
+        firebaseConnector = new FirebaseConnector(db);
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
         edtPartyCode = (EditText)findViewById(R.id.edtPartyCode);
         btnStartParty = (Button)findViewById(R.id.btnStartParty);
@@ -47,7 +48,9 @@ public class SetupPartyActivity extends AppCompatActivity {
                 String name = edtPartyName.getText().toString();
                 LatLng latLong = bundle.getParcelable("Location");
                 String password = edtPartyCode.getText().toString();
-                Party newParty = new Party(name,password,latLong);
+
+                CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
+                Party newParty = new Party(name,password,newLatLng);
 
                 firebaseConnector.putNewParty(newParty);
                 startActivity(intentDJ);
