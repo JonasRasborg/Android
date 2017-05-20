@@ -28,7 +28,7 @@
                 android:id="@+id/textView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guests"
+                android:text="Tracks"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="18sp" />
@@ -58,7 +58,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tracks"
+                android:text="Guests"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="18sp" />

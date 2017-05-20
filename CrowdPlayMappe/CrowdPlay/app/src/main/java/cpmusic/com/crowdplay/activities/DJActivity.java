@@ -81,19 +81,21 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if(mPlayer.getPlaybackState().isActiveDevice){
-                        mPlayer.resume(null);
+                if(mPlayer!=null){
+                    if(isChecked){
+                        if(mPlayer.getPlaybackState().isActiveDevice){
+                            mPlayer.resume(null);
+                        }
+                        else{
+                            mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
+                            //adapter.resetVotes(adapter.getTopTrack());
+
+                        }
                     }
                     else{
-                        mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
-                        //adapter.resetVotes(adapter.getTopTrack());
+                        mPlayer.pause(null);
 
                     }
-                }
-                else{
-                    mPlayer.pause(null);
-
                 }
             }
         });
@@ -225,7 +227,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, newTracks, mPartyRef);
+        adapter = new RecycleViewAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
 

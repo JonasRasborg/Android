@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
@@ -29,9 +30,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     Context mContext;
     DatabaseReference mTracksRef;
 
-    public RecycleViewAdapter(Context context, List<Track> data, DatabaseReference root) {
+    public RecycleViewAdapter(Context context, DatabaseReference root) {
         inflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = new ArrayList<>();
         mContext = context;
         mTracksRef = root.child("Tracks");
     }

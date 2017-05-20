@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -18,49 +19,38 @@ import cpmusic.com.crowdplay.model.firebaseModel.Party;
  * Created by ander on 20/05/2017.
  */
 
-public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyViewAdapter.MyPartyViewHolder> {
+public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyViewAdapter.MyViewHolder> {
 
 
     private List<Party> parties;
     private LayoutInflater inflater;
     Context mContext;
-    Activity PartyActivity;
 
-    public class MyPartyViewHolder extends RecyclerView.ViewHolder{
-        TextView txtGuests;
-        TextView txtTracks;
-        TextView txtPartyName;
 
-        public MyPartyViewHolder(View itemView)
-        {super(itemView);
-            txtGuests = (TextView) itemView.findViewById(R.id.textViewGuests);
-            txtTracks = (TextView) itemView.findViewById(R.id.textViewTracks);
-            txtPartyName = (TextView) itemView.findViewById(R.id.textViewPartyName);
-        }
-    }
-
-    public RecyclePartyViewAdapter(Context context, List<Party> _parties, Activity activity)
+    public RecyclePartyViewAdapter(Context context)
     {
         mContext = context;
-        parties = _parties;
+        parties = new ArrayList<>();
         inflater = LayoutInflater.from(context);
-        PartyActivity = activity;
     }
     @Override
-    public MyPartyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.list_item_party, parent, false);
-        MyPartyViewHolder holder = new MyPartyViewHolder(view);
-        return null;
+        MyViewHolder holder = new MyViewHolder(view);
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(MyPartyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
 
         Party party = parties.get(position);
-        holder.txtGuests.setText("many");
-        holder.txtPartyName.setText(party.name);
-        holder.txtTracks.setText(party.Tracks.size());
+        holder.setData(party, position);
 
+    }
+
+    public void addParty(Party party){
+        parties.add(party);
+        notifyItemChanged(parties.size()-1);
     }
 
     public void AddParties(List<Party> _parties)
@@ -71,9 +61,37 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
 
     @Override
     public int getItemCount() {
-        return 0;
+        return parties.size();
     }
 
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+        TextView txtGuests;
+        TextView txtTracks;
+        TextView txtPartyName;
+        int position;
+        Party current;
+
+        public MyViewHolder(View itemView)
+        {super(itemView);
+            txtGuests = (TextView) itemView.findViewById(R.id.textViewGuests);
+            txtTracks = (TextView) itemView.findViewById(R.id.textViewTracks);
+            txtPartyName = (TextView) itemView.findViewById(R.id.textViewPartyName);
+        }
+        public void setData(Party current, int position){
+            int nrOfTracks;
+            if(current.Tracks==null){
+                nrOfTracks = 0;
+            }
+            else{
+                nrOfTracks = current.Tracks.size();
+            }
+
+            this.txtPartyName.setText(current.name);
+            this.txtTracks.setText(Integer.toString(nrOfTracks));
+            this.txtGuests.setText("14");
+            this.current = current;
+        }
+    }
 
 
 

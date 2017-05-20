@@ -105,17 +105,15 @@ public class SetupPartyActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot d: dataSnapshot.getChildren()){
+
                     Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
                     if(p.userID.equals(sharedPreferencesData.getFacebookUID(SetupPartyActivity.this))){
-                        partyList.add(p);
+                        adapter.addParty(p);
                         Log.d("SetupPartyActivity","party from this DJ found");
                         Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
                     }
                 }
-                if(partyList!=null)
-                {
-                    setUpRecyclerView(partyList);
-                }
+
             }
 
             @Override
@@ -126,22 +124,21 @@ public class SetupPartyActivity extends AppCompatActivity {
 
 
 
+        setUpRecyclerView();
 
 
 
     }
 
-    private void setUpRecyclerView(List<Party> parties) {
+    private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
-        adapter = new RecyclePartyViewAdapter(this,parties,this);
+        adapter = new RecyclePartyViewAdapter(this);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
-
-        adapter.notifyDataSetChanged();
 
     }
 
