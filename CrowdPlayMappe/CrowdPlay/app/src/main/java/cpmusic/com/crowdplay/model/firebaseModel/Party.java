@@ -17,19 +17,21 @@ public class Party {
     public HashMap<String,Guest> Guests;
     public CustomLatLng location;
     public String userID;
+    public String partyID;
 
     public Party()
     {
 
     }
 
-    public Party(String _name, String _password, CustomLatLng _latLong, String _userID){
+    public Party(String _name, String _password, CustomLatLng _latLong, String _userID, String _partyID){
         name = _name;
         password = _password;
         location = _latLong;
         Tracks = new HashMap<>();
         userID = _userID;
         Guests = new HashMap<>();
+        partyID = _partyID;
     }
 
 

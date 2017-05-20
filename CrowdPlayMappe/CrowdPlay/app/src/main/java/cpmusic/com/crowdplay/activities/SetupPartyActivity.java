@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -84,11 +85,11 @@ public class SetupPartyActivity extends AppCompatActivity {
                 String name = edtPartyName.getText().toString();
                 LatLng latLong = bundle.getParcelable("Location");
                 String password = edtPartyCode.getText().toString();
+                String partyKey = UUID.randomUUID().toString();
 
                 CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
-                Party newParty = new Party(name,password,newLatLng, facebookID);
+                Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
 
-                String partyKey = UUID.randomUUID().toString();
 
                 mRoot.child(partyKey).setValue(newParty);
 
@@ -135,6 +136,7 @@ public class SetupPartyActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
         adapter = new RecyclePartyViewAdapter(this);
         recyclerView.setAdapter(adapter);
+
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);

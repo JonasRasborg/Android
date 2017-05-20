@@ -2,7 +2,11 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.activities.DJActivity;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 
 /**
@@ -24,7 +29,10 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
 
     private List<Party> parties;
     private LayoutInflater inflater;
+
     Context mContext;
+    private Bundle bundle;
+    Intent intentDJ;
 
 
     public RecyclePartyViewAdapter(Context context)
@@ -32,6 +40,7 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
         mContext = context;
         parties = new ArrayList<>();
         inflater = LayoutInflater.from(context);
+        intentDJ = new Intent(context, DJActivity.class);
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,6 +54,7 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
 
         Party party = parties.get(position);
         holder.setData(party, position);
+        holder.setListeners();
 
     }
 
@@ -64,18 +74,20 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
         return parties.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtGuests;
         TextView txtTracks;
         TextView txtPartyName;
         int position;
         Party current;
 
+
         public MyViewHolder(View itemView)
         {super(itemView);
             txtGuests = (TextView) itemView.findViewById(R.id.textViewGuests);
             txtTracks = (TextView) itemView.findViewById(R.id.textViewTracks);
             txtPartyName = (TextView) itemView.findViewById(R.id.textViewPartyName);
+
         }
         public void setData(Party current, int position){
             int nrOfTracks;
@@ -99,8 +111,18 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
             this.txtGuests.setText(Integer.toString(nrOfGuests));
             this.current = current;
         }
+
+        public void setListeners(){
+            itemView.setOnClickListener(MyViewHolder.this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+                    intentDJ.putExtra("PartyKey",current.partyID);
+                    mContext.startActivity(intentDJ);
+                    Log.i("onClick","View clicked");
+        }
     }
-
-
 
 }
