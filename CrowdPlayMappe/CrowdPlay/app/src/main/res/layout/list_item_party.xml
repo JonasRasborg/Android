@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="1dp"
@@ -36,8 +37,13 @@
                 android:id="@+id/textViewTracks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.54"
-                android:text="TextView" />
+                android:layout_weight="0.50"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondaryLight"
+                android:gravity="center_vertical"
+                android:textSize="50sp"
+                tools:text="150" />
 
         </LinearLayout>
 
@@ -62,7 +68,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.50"
-                android:text="TextView" />
+                android:text="99"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondaryLight"
+                android:textSize="50sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -75,9 +85,13 @@
                 android:id="@+id/textViewPartyName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/colorPrimeryText"
+                android:text="Pølsefest"
+                android:gravity="center_vertical"
 
-                />
+
+
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondaryLight" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
