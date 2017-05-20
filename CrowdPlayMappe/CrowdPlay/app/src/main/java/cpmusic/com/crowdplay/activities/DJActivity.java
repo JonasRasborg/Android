@@ -52,6 +52,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private Tracks tracks;
 
+    private Bundle bundle;
+
+    String partyKey;
+
     RecyclerView recyclerView;
     RecycleViewAdapter adapter;
 
@@ -62,11 +66,16 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
+
+
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
         tracks = new Tracks();
         tracks.tracks = new ArrayList<>();
         newTracks = new ArrayList<Track>();
+
+        bundle = getIntent().getExtras();
+        partyKey = bundle.getString("PartyKey");
 
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -97,8 +106,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
 
         database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child("-KkaDQ2fbiu-EcWTCQkA");
-        mTracksRef = database.getReference("-KkaDQ2fbiu-EcWTCQkA").child("Tracks");
+        mPartyRef = database.getReference().child(partyKey);
+        mTracksRef = database.getReference(partyKey).child("Tracks");
 
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override

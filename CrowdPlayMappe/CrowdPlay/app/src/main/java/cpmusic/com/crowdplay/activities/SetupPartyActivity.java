@@ -9,8 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.CustomLatLng;
@@ -23,6 +29,7 @@ public class SetupPartyActivity extends AppCompatActivity {
     Button btnStartParty;
     private Bundle bundle;
     Intent intentDJ;
+    ArrayList<Party> partyList;
 
     String facebookID;
 
@@ -39,6 +46,9 @@ public class SetupPartyActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         mRoot = database.getReference();
+        partyList = new ArrayList<>();
+
+
 
         sharedPreferencesData = new SharedPreferencesData();
 
@@ -63,11 +73,37 @@ public class SetupPartyActivity extends AppCompatActivity {
                 CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
                 Party newParty = new Party(name,password,newLatLng, facebookID);
 
-                mRoot.push().setValue(newParty);
+                String partyKey = UUID.randomUUID().toString();
+
+                mRoot.child(partyKey).setValue(newParty);
+
+                //mRoot.push().setValue(newParty);
+
+                intentDJ.putExtra("PartyKey",partyKey);
 
 
                 startActivity(intentDJ);
             }
         });
+
+        mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()){
+                    Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
+                    if(p.userID.equals(facebookID)){
+                        partyList.add(p);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
+
+
 }
