@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.CustomLatLng;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
+import cpmusic.com.crowdplay.util.SharedPreferencesData;
 
 public class SetupPartyActivity extends AppCompatActivity {
 
@@ -22,6 +23,10 @@ public class SetupPartyActivity extends AppCompatActivity {
     Button btnStartParty;
     private Bundle bundle;
     Intent intentDJ;
+
+    String facebookID;
+
+    SharedPreferencesData sharedPreferencesData;
 
     DatabaseReference mRoot;
     FirebaseDatabase database;
@@ -34,6 +39,11 @@ public class SetupPartyActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         mRoot = database.getReference();
+
+        sharedPreferencesData = new SharedPreferencesData();
+
+        facebookID = sharedPreferencesData.getFacebookUID(SetupPartyActivity.this);
+
 
         intentDJ = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
@@ -51,7 +61,7 @@ public class SetupPartyActivity extends AppCompatActivity {
                 String password = edtPartyCode.getText().toString();
 
                 CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
-                Party newParty = new Party(name,password,newLatLng);
+                Party newParty = new Party(name,password,newLatLng, facebookID);
 
                 mRoot.push().setValue(newParty);
 

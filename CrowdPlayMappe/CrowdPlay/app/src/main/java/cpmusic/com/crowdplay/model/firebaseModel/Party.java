@@ -14,20 +14,20 @@ public class Party {
     public String name;
     public String password;
     public HashMap<String,Track> Tracks;
-    public CustomLatLng clatLong;
-    public String djFacebookUID;
+    public CustomLatLng location;
+    public String userID;
 
     public Party()
     {
 
     }
 
-    public Party(String _name, String _password, CustomLatLng _latLong, String _djFacebookUID){
+    public Party(String _name, String _password, CustomLatLng _latLong, String _userID){
         name = _name;
         password = _password;
-        clatLong = _latLong;
+        location = _latLong;
         Tracks = new HashMap<>();
-        djFacebookUID = _djFacebookUID;
+        userID = _userID;
     }
 
 
