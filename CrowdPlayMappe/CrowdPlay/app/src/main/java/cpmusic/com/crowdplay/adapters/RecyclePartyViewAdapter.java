@@ -79,6 +79,7 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
         }
         public void setData(Party current, int position){
             int nrOfTracks;
+            int nrOfGuests;
             if(current.Tracks==null){
                 nrOfTracks = 0;
             }
@@ -86,9 +87,16 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
                 nrOfTracks = current.Tracks.size();
             }
 
+            if(current.Guests==null){
+                nrOfGuests = 0;
+            }
+            else{
+                nrOfGuests = current.Guests.size();
+            }
+
             this.txtPartyName.setText(current.name);
             this.txtTracks.setText(Integer.toString(nrOfTracks));
-            this.txtGuests.setText("14");
+            this.txtGuests.setText(Integer.toString(nrOfGuests));
             this.current = current;
         }
     }
