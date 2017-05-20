@@ -4,6 +4,7 @@ package cpmusic.com.crowdplay.model.firebaseModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by rrask on 18-05-2017.
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class Party {
     public String name;
     public String password;
-    public ArrayList<Track> tracks;
+    public HashMap<String,Track> Tracks;
     public CustomLatLng clatLong;
 
     public Party()
@@ -24,8 +25,9 @@ public class Party {
         name = _name;
         password = _password;
         clatLong = _latLong;
-        tracks = new ArrayList<>();
+        Tracks = new HashMap<>();
     }
+
 
 
 }
