@@ -6,21 +6,30 @@ import com.facebook.FacebookSdk;
  * Created by ander on 19/05/2017.
  */
 
-public class FacebookProfile
+public class Guest
 {
+
+
     String userID;
     String name;
-    String profilepicURI;
 
-    public FacebookProfile()
+    public Guest()
     {
 
     }
 
-    public FacebookProfile(String _userid, String _name, String _profilepicURI)
+    public Guest(String _userid, String _name)
     {
         userID = _userid;
         name = _name;
-        profilepicURI = _profilepicURI;
     }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }

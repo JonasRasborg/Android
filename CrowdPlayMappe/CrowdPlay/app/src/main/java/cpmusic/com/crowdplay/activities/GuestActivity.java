@@ -16,13 +16,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
+import cpmusic.com.crowdplay.util.SharedPreferencesData;
 
 public class GuestActivity extends AppCompatActivity {
 
@@ -35,15 +38,25 @@ public class GuestActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference mTracksRef;
     DatabaseReference mPartyRef;
+    DatabaseReference mGuestsRef;
 
     String partyID;
 
     FloatingActionButton fabSearch;
 
+    SharedPreferencesData sharedPreferencesData;
+    String UserID;
+    boolean Allreadyloggedin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
+
+        // SHaredPreferences
+        sharedPreferencesData = new SharedPreferencesData();
+        UserID = sharedPreferencesData.getFacebookUID(this);
+        Allreadyloggedin = false;
 
         Intent partyIntent = getIntent();
         partyID = partyIntent.getStringExtra("ID");
@@ -98,6 +111,7 @@ public class GuestActivity extends AppCompatActivity {
         });
 
         setUpRecyclerView();
+        addGuestToParty();
     }
 
 
@@ -115,5 +129,37 @@ public class GuestActivity extends AppCompatActivity {
         recyclerView.getItemAnimator().setMoveDuration(300);
         recyclerView.getItemAnimator().setRemoveDuration(200);
         recyclerView.getItemAnimator().setAddDuration(300);
+    }
+
+
+    private void addGuestToParty()
+    {
+        mGuestsRef = mPartyRef.child("Guests");
+
+        mGuestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot i:dataSnapshot.getChildren())
+                {
+                    Guest g = dataSnapshot.child(i.getKey()).getValue(Guest.class);
+                    if(g.getUserID().equals(UserID))
+                    {
+                       Allreadyloggedin = true;
+                    }
+                }
+                if(Allreadyloggedin == false)
+                {
+                    String thisUserName = sharedPreferencesData.getFacebookFullName(GuestActivity.this);
+                    String thisUserID = sharedPreferencesData.getFacebookUID(GuestActivity.this);
+                    mGuestsRef.push().setValue(new Guest(thisUserID,thisUserName));
+                    Allreadyloggedin = true;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

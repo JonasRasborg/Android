@@ -14,6 +14,7 @@ public class Party {
     public String name;
     public String password;
     public HashMap<String,Track> Tracks;
+    public HashMap<String,Guest> Guests;
     public CustomLatLng location;
     public String userID;
 
@@ -28,6 +29,7 @@ public class Party {
         location = _latLong;
         Tracks = new HashMap<>();
         userID = _userID;
+        Guests = new HashMap<>();
     }
 
 
