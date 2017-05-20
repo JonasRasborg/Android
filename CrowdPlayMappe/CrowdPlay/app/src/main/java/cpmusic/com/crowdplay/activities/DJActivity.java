@@ -78,7 +78,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     }
                     else{
                         mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
-                        adapter.resetVotes(adapter.getTopTrack());
+                        //adapter.resetVotes(adapter.getTopTrack());
+
                     }
                 }
                 else{
@@ -93,9 +94,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         builder.setScopes(new String[]{"user-read-private", "streaming"});
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-
-
-
 
 
         database = FirebaseDatabase.getInstance();
@@ -195,9 +193,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
             case kSpPlaybackNotifyTrackChanged:
                 mPlayer.queue(null,adapter.getTopTrack().URI);
-
+                adapter.resetVotes(adapter.getTopTrack());
                 break;
-
 
 
             default:
