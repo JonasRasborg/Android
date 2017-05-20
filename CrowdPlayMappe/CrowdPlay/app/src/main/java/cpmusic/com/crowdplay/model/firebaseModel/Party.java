@@ -3,6 +3,8 @@ package cpmusic.com.crowdplay.model.firebaseModel;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 /**
  * Created by rrask on 18-05-2017.
  */
@@ -10,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class Party {
     public String name;
     public String password;
-    public Tracks tracks;
+    public ArrayList<Track> tracks;
     public CustomLatLng clatLong;
 
     public Party()
@@ -22,7 +24,7 @@ public class Party {
         name = _name;
         password = _password;
         clatLong = _latLong;
-        tracks = new Tracks();
+        tracks = new ArrayList<>();
     }
 
 

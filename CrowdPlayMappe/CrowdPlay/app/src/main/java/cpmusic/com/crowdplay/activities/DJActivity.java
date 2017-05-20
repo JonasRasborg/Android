@@ -97,8 +97,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
 
         database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child("-KkS3kuJdL4tOH_zDjCR");
-        mTracksRef = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
+        mPartyRef = database.getReference().child("-KkaDQ2fbiu-EcWTCQkA");
+        mTracksRef = database.getReference("-KkaDQ2fbiu-EcWTCQkA").child("Tracks");
 
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
