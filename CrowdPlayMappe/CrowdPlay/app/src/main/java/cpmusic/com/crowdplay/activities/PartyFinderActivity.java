@@ -49,7 +49,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
 
 
-    // Firebase instances
+    // Firebase database instances
     private DatabaseReference mDatabase;
 
 
