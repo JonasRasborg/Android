@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
@@ -29,9 +30,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     Context mContext;
     DatabaseReference mTracksRef;
 
-    public RecycleViewAdapter(Context context, List<Track> data, DatabaseReference root) {
+    public RecycleViewAdapter(Context context, DatabaseReference root) {
         inflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = new ArrayList<>();
         mContext = context;
         mTracksRef = root.child("Tracks");
     }
@@ -70,17 +71,22 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     public void resetVotes(Track track){
-        for (int i = 0; i<mData.size();i++)
-        {
-            if (mData.get(i).URI == track.URI)
-            {
-                mData.get(i).Votes=0;
-                mTracksRef.child(track.URI).child("Votes").setValue(0);
-                notifyItemChanged(i);
-                checkPositions(i);
 
-            }
+        mData.remove(0);
+        mData.add(track);
+
+        //notifyItemMoved(0,mData.size());
+        for(int i = 0; i<mData.size()-1;i++){
+            notifyItemMoved(i+1,i);
         }
+
+        //Track current = mData.get(0);
+            //current.Votes=0;
+            //notifyItemChanged(0);
+            //mData.add((mData.size()), current);
+            //mData.remove(0);
+
+            mTracksRef.child(track.URI).child("Votes").setValue(0);
     }
 
     public Track getTopTrack(){
@@ -103,6 +109,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public void addTrack(Track newTrack){
         mData.add(newTrack);
+        notifyItemChanged(mData.size()-1);
         checkPositions(mData.size()-1);
     }
 

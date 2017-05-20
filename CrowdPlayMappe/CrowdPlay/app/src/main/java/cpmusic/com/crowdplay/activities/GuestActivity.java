@@ -32,8 +32,6 @@ public class GuestActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
-    ArrayList<Track> tracks;
-
     FirebaseDatabase database;
     DatabaseReference mTracksRef;
     DatabaseReference mPartyRef;
@@ -51,8 +49,6 @@ public class GuestActivity extends AppCompatActivity {
         partyID = partyIntent.getStringExtra("ID");
 
         networkChecker = new NetworkChecker();
-
-        tracks = new ArrayList<>();
 
         fabSearch = (FloatingActionButton)findViewById(R.id.fabSearch);
         fabSearch.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +104,7 @@ public class GuestActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, tracks, mPartyRef);
+        adapter = new RecycleViewAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)

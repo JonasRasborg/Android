@@ -49,7 +49,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
 
 
-    // Firebase instances
+    // Firebase database instances
     private DatabaseReference mDatabase;
 
 
@@ -98,7 +98,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 for(DataSnapshot i:dataSnapshot.getChildren())
                 {
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
-                    LatLng thisLatLng = new LatLng(p.clatLong.getLatitude(),p.clatLong.getLongtitude());
+                    LatLng thisLatLng = new LatLng(p.location.getLatitude(),p.location.getLongtitude());
                     Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                     // Tilføjer database key key til Markers "Tag"
                     marker.setTag(dataSnapshot.child(i.getKey()).getKey());

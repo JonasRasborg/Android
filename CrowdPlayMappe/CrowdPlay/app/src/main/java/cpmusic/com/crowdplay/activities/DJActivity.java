@@ -52,6 +52,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private Tracks tracks;
 
+    private Bundle bundle;
+
+    String partyKey;
+
     RecyclerView recyclerView;
     RecycleViewAdapter adapter;
 
@@ -62,28 +66,36 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
+
+
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
         tracks = new Tracks();
         tracks.tracks = new ArrayList<>();
         newTracks = new ArrayList<Track>();
 
+        bundle = getIntent().getExtras();
+        partyKey = bundle.getString("PartyKey");
+
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    if(mPlayer.getPlaybackState().isActiveDevice){
-                        mPlayer.resume(null);
+                if(mPlayer!=null){
+                    if(isChecked){
+                        if(mPlayer.getPlaybackState().isActiveDevice){
+                            mPlayer.resume(null);
+                        }
+                        else{
+                            mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
+                            //adapter.resetVotes(adapter.getTopTrack());
+
+                        }
                     }
                     else{
-                        mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
-                        adapter.resetVotes(adapter.getTopTrack());
-                    }
-                }
-                else{
-                    mPlayer.pause(null);
+                        mPlayer.pause(null);
 
+                    }
                 }
             }
         });
@@ -95,12 +107,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
 
-
-
-
         database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child("-KkS3kuJdL4tOH_zDjCR");
-        mTracksRef = database.getReference("-KkS3kuJdL4tOH_zDjCR").child("Tracks");
+        mPartyRef = database.getReference().child(partyKey);
+        mTracksRef = database.getReference(partyKey).child("Tracks");
 
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -194,11 +203,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         switch (playerEvent) {
 
             case kSpPlaybackNotifyTrackChanged:
-                adapter.resetVotes(adapter.getTopTrack());
                 mPlayer.queue(null,adapter.getTopTrack().URI);
-
+                adapter.resetVotes(adapter.getTopTrack());
                 break;
-
 
 
             default:
@@ -220,7 +227,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, newTracks, mPartyRef);
+        adapter = new RecycleViewAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
 
