@@ -3,13 +3,13 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
     android:layout_marginTop="4dp"
     card_view:cardCornerRadius="4dp">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/layoutParty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,53 +20,124 @@
 
         <TextView
             android:id="@+id/textViewPartyName"
-            android:layout_width="95dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.93"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
 
 
-            android:gravity="center_vertical"
-            android:text="Pølsefest"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="8dp"
+            android:gravity="left"
+            android:text="Pølse fest fest"
             android:textColor="@color/colorSecondary"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintHorizontal_bias="1.0"
+            card_view:layout_constraintLeft_toLeftOf="parent"
+            card_view:layout_constraintRight_toLeftOf="@+id/guideline8"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="0.27"
             android:text="Tracks:"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintLeft_toLeftOf="@+id/guideline7"
+            card_view:layout_constraintRight_toLeftOf="@+id/guideline5"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textViewTracks"
-            android:layout_width="47dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:text="TextView"
             android:textColor="@color/colorSecondary"
             android:textSize="18sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintHorizontal_bias="1.0"
+            card_view:layout_constraintLeft_toLeftOf="@+id/guideline5"
+            card_view:layout_constraintRight_toRightOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
             tools:text="150" />
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="67dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="0.12"
             android:text="Guests:"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
+            card_view:layout_constraintLeft_toLeftOf="@+id/guideline8"
+            card_view:layout_constraintRight_toLeftOf="@+id/guideline6"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.509" />
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline5"
+            android:orientation="vertical"
+            card_view:layout_constraintGuide_percent="0.89" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            card_view:layout_constraintGuide_percent="0.27" />
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline6"
+            android:orientation="vertical"
+            card_view:layout_constraintGuide_percent="0.52" />
+
+        <android.support.constraint.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline7"
+            android:orientation="vertical"
+            card_view:layout_constraintGuide_percent="0.65" />
 
         <TextView
             android:id="@+id/textViewGuests"
-            android:layout_width="47dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="0.36"
             android:gravity="center_vertical"
             android:text="99"
             android:textColor="@color/colorSecondary"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintLeft_toLeftOf="@+id/guideline6"
+            card_view:layout_constraintRight_toLeftOf="@+id/guideline7"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

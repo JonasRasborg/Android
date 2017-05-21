@@ -44,7 +44,7 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_item_party_constraint, parent, false);
+        View view = inflater.inflate(R.layout.list_item_party, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
