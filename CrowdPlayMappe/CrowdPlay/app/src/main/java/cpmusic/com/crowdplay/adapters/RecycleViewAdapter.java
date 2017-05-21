@@ -49,7 +49,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         sharedPreferencesData = new SharedPreferencesData();
         thisUserID = sharedPreferencesData.getFacebookUID(mContext);
         thisUserFullName = sharedPreferencesData.getFacebookFullName(mContext);
-        thisUserPicURI = sharedPreferencesData.getFacebookUID(mContext);
+        thisUserPicURI = sharedPreferencesData.getFacebookProfilepicUri(mContext);
     }
 
     @Override
@@ -111,23 +111,45 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     public void checkPositions(int position){
-        for (int i = position; i > 0; i--){
 
-    try{
-    if(mData.get(i).Voters.size()>mData.get(i-1).Voters.size()){
-        Track a = mData.get(i);
-        Track b = mData.get(i-1);
-        mData.set(i-1,a);
-        mData.set(i,b);
-        notifyItemMoved(i,i-1);
-        notifyItemChanged(i-1);
-        notifyItemChanged(i);
-    }
-    }
-    catch (Exception e)
-    {
-        Log.d("checkpositions: ","No votes on track");
-    }
+        int TrackVotesThis =0;
+        int TrackVoteslast =0;
+
+
+
+       for (int i = position; i > 0; i--)
+       {
+           // Handling firebase null pointer (Votes is empty)
+                if (mData.get(i).Voters==null)
+                {
+                    TrackVotesThis = 0;
+                }
+                if(mData.get(i).Voters!=null)
+                {
+                    TrackVotesThis = mData.get(i).Voters.size();
+                }
+
+                if(mData.get(i-1).Voters==null)
+                {
+                    TrackVoteslast =0;
+                }
+
+               if(mData.get(i-1).Voters!=null)
+               {
+                   TrackVoteslast = mData.get(i-1).Voters.size();
+               }
+
+                // Asserrt on local int
+           if(TrackVotesThis>TrackVoteslast)
+         {
+            Track a = mData.get(i);
+            Track b = mData.get(i-1);
+            mData.set(i-1,a);
+            mData.set(i,b);
+            notifyItemMoved(i,i-1);
+            notifyItemChanged(i-1);
+            notifyItemChanged(i);
+         }
 
         }
     }
@@ -223,7 +245,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                 AllreadyVoted = true;
 
                                 // Local Update in class
-                                current.Voters.put("lol", thisVotingGuest);
+                                //current.Voters.put("lol", thisVotingGuest);
 
                                 // Make fab button greyed oyt here
                             }
