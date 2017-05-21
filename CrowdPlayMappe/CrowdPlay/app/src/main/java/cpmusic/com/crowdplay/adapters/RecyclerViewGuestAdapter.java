@@ -69,6 +69,7 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
 
         public void setData(Guest current) {
             this.title.setText(current.name);
+
             if (current.picURI != null)
             {
                 Picasso.with(mContext).load(current.picURI).into(this.imgThumb);
