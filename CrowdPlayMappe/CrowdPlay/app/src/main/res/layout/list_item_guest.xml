@@ -29,6 +29,18 @@
             android:textAlignment="center"
             android:textColor="@color/colorPrimeryText" />
 
+
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/circle"
+        android:text="5"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary" />
+
 
 </android.support.v7.widget.CardView>
