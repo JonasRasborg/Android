@@ -75,15 +75,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     {
         mData.remove(0);
         mData.add(track);
+        for(int i = 0; i<mData.size()-1;i++){
+            notifyItemMoved(i+1,i);
+        }
     }
 
     public void resetVotes(Track track){
 
         moveTrackToLast(track);
 
-        for(int i = 0; i<mData.size()-1;i++){
-            notifyItemMoved(i+1,i);
-        }
+
 
             mTracksRef.child(track.URI).child("Votes").setValue(0);
     }
