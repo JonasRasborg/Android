@@ -149,9 +149,19 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         });
 
         setUpRecyclerView();
-
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //Spotify.destroyPlayer(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //Spotify.destroyPlayer(this);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -182,7 +192,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     @Override
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
-
     }
 
     public void setupProgressBar(){
@@ -202,7 +211,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             }
         };
         countDownTimer.start();
-
     }
 
     @Override
