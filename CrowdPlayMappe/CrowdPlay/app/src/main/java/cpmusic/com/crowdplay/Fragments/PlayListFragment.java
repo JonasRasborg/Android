@@ -90,7 +90,6 @@ public class PlayListFragment extends Fragment
 
                 Track newTrack = dataSnapshot.getValue(Track.class);
                 adapter.addTrack(newTrack);
-
             }
 
             @Override

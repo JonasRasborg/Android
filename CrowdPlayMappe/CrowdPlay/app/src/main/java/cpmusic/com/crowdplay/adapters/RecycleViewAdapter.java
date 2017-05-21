@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
@@ -39,6 +40,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     String thisUserFullName;
     String thisUserPicURI;
     DatabaseReference mCurrentTrackVotersRef;
+    MyViewHolder holder;
 
 
     public RecycleViewAdapter(Context context, DatabaseReference root) {
@@ -55,7 +57,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.list_item, parent, false);
-        MyViewHolder holder = new MyViewHolder(view);
+        holder = new MyViewHolder(view);
         return holder;
     }
 
@@ -65,7 +67,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         Track current = mData.get(position);
         holder.setData(current, position);
         holder.setListeners();
+        holder.setFabVote();
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -97,8 +102,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         for(int i = 0; i<mData.size()-1;i++){
             notifyItemMoved(i+1,i);
         }
-
     }
+
 
     public void resetVotes(Track track){
 
@@ -160,9 +165,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         mData.add(newTrack);
         notifyItemChanged(mData.size()-1);
         checkPositions(mData.size()-1);
+       // holder.setFabVote();
     }
-
-
 
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -197,19 +201,40 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             Picasso.with(mContext).load(current.ImageURL).into(this.imgThumb);
             this.position = position;
             this.current = current;
+
         }
+
+        public void setFabVote()
+        {
+            if (current!= null && current.Voters != null)
+            {
+                for (HashMap.Entry<String, Guest> entry : current.Voters.entrySet())
+                {
+                    Guest g = entry.getValue();
+
+                    if (g.userID.equals(thisUserID))
+                    {
+                        holder.fabVote.setAlpha(50);
+                    }
+                }
+            }
+        }
+
 
         public void setListeners(){
             fabVote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                    VoteOnTrack();
+                    fabVote.setAlpha(50);
                 }
             });
         }
 
+
         @Override
-        public void onClick(View v) {
+        public void onClick(View v)
+        {
 
         }
 
@@ -222,7 +247,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             mCurrentTrackVotersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 boolean AllreadyVoted = false;
                 Guest thisVotingGuest = new Guest(thisUserID,thisUserFullName,thisUserPicURI);
-
 
 
                 @Override
