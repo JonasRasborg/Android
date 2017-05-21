@@ -25,10 +25,9 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="216dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.35">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -61,7 +60,7 @@
 
             <TextView
                 android:id="@+id/tvVotes"
-                android:layout_width="62dp"
+                android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="7"
@@ -81,8 +80,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabUpvote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:clickable="true"
