@@ -36,22 +36,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="Guests:"
+        android:textAlignment="textEnd"
         android:textColor="@color/colorPrimeryText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
+        app:layout_constraintRight_toLeftOf="@+id/textViewGuests"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.51" />
+        app:layout_constraintVertical_bias="0.478" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline2"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.53" />
+        app:layout_constraintGuide_percent="0.57" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -65,25 +69,26 @@
         android:layout_height="wrap_content"
         android:id="@+id/guideline4"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.84" />
+        app:layout_constraintGuide_percent="0.89" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="Tracks:"
+        android:textAlignment="textEnd"
         android:textColor="@color/colorPrimeryText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline3"
         app:layout_constraintRight_toLeftOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.51" />
+        app:layout_constraintVertical_bias="0.478" />
 
     <TextView
         android:id="@+id/textViewGuests"
@@ -94,6 +99,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
         android:text="999"
+        android:textAlignment="textStart"
         android:textColor="@color/colorSecondary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,6 +116,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="999"
+        android:textAlignment="textStart"
         android:textColor="@color/colorSecondary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
