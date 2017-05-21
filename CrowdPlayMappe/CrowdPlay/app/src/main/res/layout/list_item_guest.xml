@@ -34,13 +34,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvPoints"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/circle"
-        android:text="5"
+        android:text="0"
         android:textAlignment="center"
         android:textColor="@color/colorSecondary" />
 
