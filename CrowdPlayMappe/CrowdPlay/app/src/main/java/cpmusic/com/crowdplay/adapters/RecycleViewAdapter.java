@@ -216,6 +216,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                 // Push this Guest on voters list
                                 mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
                                 Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
+                                AllreadyVoted = true;
 
                                 // Local Update in class
                                 current.Voters.put("lol", thisVotingGuest);
