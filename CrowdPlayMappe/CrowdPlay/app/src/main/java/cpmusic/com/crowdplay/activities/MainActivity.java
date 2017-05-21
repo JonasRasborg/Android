@@ -3,8 +3,11 @@ package cpmusic.com.crowdplay.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferencesData sharedPreferencesData;
 
     FloatingActionButton fabDJ, fabGuest;
+
 
 
     // Firebase
@@ -161,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
 
-
             if(userlocation==null)
             {
                 String provider = LocationManager.GPS_PROVIDER;
@@ -176,6 +179,35 @@ public class MainActivity extends AppCompatActivity {
             {
                 String provider = LocationManager.PASSIVE_PROVIDER;
                 userlocation = locationManager.getLastKnownLocation(provider);
+            }
+            if(userlocation == null)
+            {
+                final LocationListener locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        Toast.makeText(MainActivity.this,"We found your location",Toast.LENGTH_LONG).show();
+                        userlocation = location;
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                };
+                Looper looper = Looper.getMainLooper();
+
+                String someprovider = LocationManager.GPS_PROVIDER;
+                locationManager.requestSingleUpdate(someprovider,locationListener,looper);
             }
         }
     }
