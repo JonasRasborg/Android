@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
@@ -23,10 +25,12 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
 
     private List<Guest> mData;
     private LayoutInflater mInflater;
+    Context mContext;
 
     public RecyclerViewGuestAdapter(Context context, List<Guest> data) {
         this.mData = data;
         this.mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     public void addTrack(Guest newGuest){
@@ -65,7 +69,10 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
 
         public void setData(Guest current) {
             this.title.setText(current.name);
-            //this.imgThumb.setImageResource(current.getImageId());
+            if (current.picURI != null)
+            {
+                Picasso.with(mContext).load(current.picURI).into(this.imgThumb);
+            }
         }
     }
 }
