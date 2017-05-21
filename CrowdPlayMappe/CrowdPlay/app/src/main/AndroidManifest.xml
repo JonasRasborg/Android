@@ -30,7 +30,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.DJActivity" />
-        <activity android:name=".activities.GuestActivity" />
 
         //Facebook
 
@@ -73,7 +72,7 @@
             android:exported="true" />
 
         <activity android:name=".activities.SetupPartyActivity"></activity>
-        <activity android:name=".activities.SearchActivity"></activity>
+        <activity android:name=".activities.GuestMainActivity"></activity>
     </application>
 
 </manifest>

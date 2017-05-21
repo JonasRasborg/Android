@@ -2,20 +2,14 @@ package cpmusic.com.crowdplay.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,15 +18,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.activities.GuestActivity;
-import cpmusic.com.crowdplay.activities.SearchActivity;
 import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.APIConnector;
 import cpmusic.com.crowdplay.util.NetworkChecker;
 import cpmusic.com.crowdplay.util.SharedPreferencesData;
 
