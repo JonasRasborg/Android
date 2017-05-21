@@ -53,6 +53,7 @@ public class PlayListFragment extends Fragment
 
     SharedPreferencesData sharedPreferencesData;
     String UserID;
+    String facebookPicUri;
     boolean Allreadyloggedin;
 
     ArrayList<Guest> guests;
@@ -72,6 +73,8 @@ public class PlayListFragment extends Fragment
         // SHaredPreferences
         sharedPreferencesData = new SharedPreferencesData();
         UserID = sharedPreferencesData.getFacebookUID(mContext);
+        facebookPicUri = sharedPreferencesData.getFacebookProfilepicUri(mContext);
+
         Allreadyloggedin = false;
 
         networkChecker = new NetworkChecker();
@@ -169,7 +172,7 @@ public class PlayListFragment extends Fragment
                 for(DataSnapshot i:dataSnapshot.getChildren())
                 {
                     Guest g = dataSnapshot.child(i.getKey()).getValue(Guest.class);
-                    if(g.getUserID().equals(UserID))
+                    if(g.userID.equals(UserID))
                     {
                         Allreadyloggedin = true;
                         mGuestsRef.removeEventListener(this);
@@ -179,7 +182,7 @@ public class PlayListFragment extends Fragment
                 {
                     String thisUserName = sharedPreferencesData.getFacebookFullName(mContext);
                     String thisUserID = sharedPreferencesData.getFacebookUID(mContext);
-                    mGuestsRef.push().setValue(new Guest(thisUserID,thisUserName));
+                    mGuestsRef.push().setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
                     Allreadyloggedin = true;
                     mGuestsRef.removeEventListener(this);
                 }

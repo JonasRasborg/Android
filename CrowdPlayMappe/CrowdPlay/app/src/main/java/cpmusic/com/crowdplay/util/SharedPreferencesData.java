@@ -14,6 +14,7 @@ public class SharedPreferencesData
     static final String FACEBOOK_FIRST_NAME = "logged_in_firstname";
     static final String FACEBOOK_LOGGED_IN_STATUS = "logged in status";
     static final String FACEBOOK_FULL_NAME = "logged_in_fullname";
+    static final String FACEBOOK_PROFILEPIC_URI = "logged_in_pic_uri";
 
 
     public static SharedPreferences getSharedPreferences(Context ctx) {
@@ -63,6 +64,17 @@ public class SharedPreferencesData
     public static  String getFacebookFullName(Context ctx)
     {
         return getSharedPreferences(ctx).getString(FACEBOOK_FULL_NAME,"");
+    }
+
+    public static void setFacebookProfilePicURI(Context ctx, String facebook_Pic_URI) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(FACEBOOK_PROFILEPIC_URI,facebook_Pic_URI);
+        editor.commit();
+    }
+
+    public static  String getFacebookProfilepicUri(Context ctx)
+    {
+        return getSharedPreferences(ctx).getString(FACEBOOK_PROFILEPIC_URI,"");
     }
 
 }

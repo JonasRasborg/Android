@@ -10,26 +10,21 @@ public class Guest
 {
 
 
-    String userID;
-    String name;
+    public String userID;
+    public String name;
+    public String picURI;
 
     public Guest()
     {
 
     }
 
-    public Guest(String _userid, String _name)
+    public Guest(String _userid, String _name, String _picURI)
     {
         userID = _userid;
         name = _name;
+        picURI = _picURI;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public String getName() {
-        return name;
-    }
 
 }

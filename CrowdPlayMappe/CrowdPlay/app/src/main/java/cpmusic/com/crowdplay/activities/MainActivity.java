@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferencesData.setFacebookUID(MainActivity.this,newProfile.getId());
                         sharedPreferencesData.setFacebookFirstName(MainActivity.this,newProfile.getFirstName());
                         sharedPreferencesData.setFacebookFullName(MainActivity.this,newProfile.getName());
+                        sharedPreferencesData.setFacebookProfilePicURI(MainActivity.this,newProfile.getProfilePictureUri(200,200).toString());
                         Toast.makeText(MainActivity.this,"Welcome "+newProfile.getFirstName(),Toast.LENGTH_SHORT).show();
 
                     }

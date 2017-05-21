@@ -64,7 +64,7 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
         }
 
         public void setData(Guest current) {
-            this.title.setText(current.getName());
+            this.title.setText(current.name);
             //this.imgThumb.setImageResource(current.getImageId());
         }
     }

@@ -37,6 +37,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     SharedPreferencesData sharedPreferencesData;
     String thisUserID;
     String thisUserFullName;
+    String thisUserPicURI;
     DatabaseReference mCurrentTrackVotersRef;
 
 
@@ -48,6 +49,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         sharedPreferencesData = new SharedPreferencesData();
         thisUserID = sharedPreferencesData.getFacebookUID(mContext);
         thisUserFullName = sharedPreferencesData.getFacebookFullName(mContext);
+        thisUserPicURI = sharedPreferencesData.getFacebookUID(mContext);
     }
 
     @Override
@@ -195,7 +197,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             // Get snapshot of Voters
             mCurrentTrackVotersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 boolean AllreadyVoted = false;
-                Guest thisVotingGuest = new Guest(thisUserID,thisUserFullName);
+                Guest thisVotingGuest = new Guest(thisUserID,thisUserFullName,thisUserPicURI);
+
+
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -209,7 +213,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         for (DataSnapshot i : dataSnapshot.getChildren()) {
                             // Check if guest allready voted on track
                             Guest g = dataSnapshot.child(i.getKey()).getValue(Guest.class);
-                            if (g.getUserID().equals(thisUserID)) {
+                            if (g.userID.equals(thisUserID)) {
                                 AllreadyVoted = true;
                             }
                             if (AllreadyVoted == false) {
