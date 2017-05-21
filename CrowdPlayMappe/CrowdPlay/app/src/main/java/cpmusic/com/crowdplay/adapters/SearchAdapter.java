@@ -104,7 +104,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         {
             mTracksRef.child(current.URI).setValue(current);
             Toast.makeText(mContext, current.Title + " Added to playlist", Toast.LENGTH_SHORT).show();
-            searchActivity.finish();
         }
     }
 }
