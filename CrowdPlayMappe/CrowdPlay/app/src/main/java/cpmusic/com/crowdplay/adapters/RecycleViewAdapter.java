@@ -86,12 +86,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
 
+
     public void moveTrackToLast(Track track)
     {
         mData.remove(0);
         // Remove voters locally
         track.Voters.clear();
         mData.add(track);
+
         for(int i = 0; i<mData.size()-1;i++){
             notifyItemMoved(i+1,i);
         }

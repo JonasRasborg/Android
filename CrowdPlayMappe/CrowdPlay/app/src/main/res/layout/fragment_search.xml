@@ -8,8 +8,9 @@
     tools:context="cpmusic.com.crowdplay.activities.SearchActivity">
 
     <EditText
+        style="@style/Widget.AppCompat.EditText"
         android:id="@+id/editSearch"
-        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:theme="@style/EdtTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

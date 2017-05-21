@@ -1,5 +1,6 @@
 package cpmusic.com.crowdplay.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -26,6 +29,10 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
@@ -45,6 +52,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     DatabaseReference mTracksRef;
     DatabaseReference mPartyRef;
+    Context mContext;
 
     ArrayList<Track> newTracks;
 
@@ -59,6 +67,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private Tracks tracks;
 
     private Bundle bundle;
+    private TextView txtArtist, txtTrack;
+    private ImageView imgAlbum;
 
     String partyKey;
 
@@ -83,6 +93,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         bundle = getIntent().getExtras();
         partyKey = bundle.getString("PartyKey");
 
+        txtArtist = (TextView)findViewById(R.id.txtArtist);
+        txtTrack = (TextView)findViewById(R.id.txtTrack);
+        imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
+        mContext = this;
+
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
@@ -95,14 +110,18 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                             mPlayer.resume(null);
                         }
                         else{
-                            mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
-                            adapter.resetVotes(adapter.getTopTrack());
+                            Track topTrack = adapter.getTopTrack();
+                            adapter.resetVotes(topTrack);
+                            recyclerView.scrollToPosition(0);
+                            txtArtist.setText(topTrack.Artist);
+                            txtTrack.setText(topTrack.Title);
+                            Picasso.with(mContext).load(topTrack.ImageURL).into(imgAlbum);
+                            mPlayer.playUri(null,topTrack.URI,0,0);
                             setupProgressBar();
                         }
                     }
                     else{
                         mPlayer.pause(null);
-
                     }
                 }
             }
@@ -243,6 +262,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     Track topTrack = adapter.getTopTrack();
                     adapter.resetVotes(topTrack);
                     mPlayer.playUri(null,topTrack.URI,0,0);
+                    txtArtist.setText(topTrack.Artist);
+                    txtTrack.setText(topTrack.Title);
+                    Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
+
                     setupProgressBar();
                     break;
                 }
