@@ -1,12 +1,14 @@
 package cpmusic.com.crowdplay.activities;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.ChildEventListener;
@@ -46,7 +48,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     ArrayList<Track> newTracks;
 
+
     ToggleButton togglePlay;
+    ProgressBar progressBar;
+    CountDownTimer countDownTimer;
+    int timerTicker = 0;
 
     private Player mPlayer;
 
@@ -77,6 +83,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         bundle = getIntent().getExtras();
         partyKey = bundle.getString("PartyKey");
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -88,8 +96,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                         }
                         else{
                             mPlayer.playUri(null,adapter.getTopTrack().URI,0,0);
-                            //adapter.resetVotes(adapter.getTopTrack());
-
+                            adapter.resetVotes(adapter.getTopTrack());
+                            setupProgressBar();
                         }
                     }
                     else{
@@ -121,7 +129,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Track track = dataSnapshot.getValue(Track.class);
-                adapter.addAVote(track);
+                adapter.changeVote(track);
             }
 
             @Override
@@ -177,6 +185,26 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     }
 
+    public void setupProgressBar(){
+
+        progressBar.setProgress(timerTicker);
+        countDownTimer = new CountDownTimer(100000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timerTicker++;
+                progressBar.setProgress(timerTicker);
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+        countDownTimer.start();
+
+    }
+
     @Override
     public void onLoggedOut() {
         Log.d(TAG, "User logged out");
@@ -203,10 +231,15 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         switch (playerEvent) {
 
             case kSpPlaybackNotifyTrackChanged:
-                mPlayer.queue(null,adapter.getTopTrack().URI);
-                adapter.resetVotes(adapter.getTopTrack());
-                break;
+                if(!mPlayer.getPlaybackState().isPlaying){
+                    Track topTrack = adapter.getTopTrack();
+                    adapter.resetVotes(topTrack);
+                    mPlayer.playUri(null,topTrack.URI,0,0);
+                    setupProgressBar();
+                    break;
+                }
 
+            case kSpPlaybackEventAudioFlush:
 
             default:
                 break;

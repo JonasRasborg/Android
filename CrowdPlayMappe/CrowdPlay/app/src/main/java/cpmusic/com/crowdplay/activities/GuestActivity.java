@@ -1,10 +1,7 @@
 package cpmusic.com.crowdplay.activities;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,8 +14,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
@@ -91,7 +86,12 @@ public class GuestActivity extends AppCompatActivity {
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
             {
                 Track track = dataSnapshot.getValue(Track.class);
-                adapter.addAVote(track);
+                adapter.changeVote(track);
+
+                if (track.Votes == 0)
+                {
+                    adapter.moveTrackToLast(track);
+                }
             }
 
             @Override

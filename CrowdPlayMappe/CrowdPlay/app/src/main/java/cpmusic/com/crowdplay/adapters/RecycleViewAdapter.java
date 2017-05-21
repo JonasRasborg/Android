@@ -57,7 +57,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return mData.size();
     }
 
-    public void addAVote(Track track)
+    public void changeVote(Track track)
     {
         for (int i = 0; i<mData.size();i++)
         {
@@ -70,21 +70,20 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
     }
 
-    public void resetVotes(Track track){
 
+    public void moveTrackToLast(Track track)
+    {
         mData.remove(0);
         mData.add(track);
+    }
 
-        //notifyItemMoved(0,mData.size());
+    public void resetVotes(Track track){
+
+        moveTrackToLast(track);
+
         for(int i = 0; i<mData.size()-1;i++){
             notifyItemMoved(i+1,i);
         }
-
-        //Track current = mData.get(0);
-            //current.Votes=0;
-            //notifyItemChanged(0);
-            //mData.add((mData.size()), current);
-            //mData.remove(0);
 
             mTracksRef.child(track.URI).child("Votes").setValue(0);
     }
