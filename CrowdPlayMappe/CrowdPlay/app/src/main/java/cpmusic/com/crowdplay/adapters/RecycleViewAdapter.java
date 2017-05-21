@@ -225,34 +225,38 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    AllreadyVoted = false;
+
                     // If not voters on track at all
-                    if(dataSnapshot.hasChildren()==false)
+                    if(dataSnapshot.getValue()==null)
                     {
                         mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
                     }
 
                     else {
                         for (DataSnapshot i : dataSnapshot.getChildren()) {
+
                             // Check if guest allready voted on track
                             Guest g = dataSnapshot.child(i.getKey()).getValue(Guest.class);
                             if (g.userID.equals(thisUserID)) {
                                 AllreadyVoted = true;
                             }
-                            if (AllreadyVoted == false) {
-                                // Push this Guest on voters list
-                                mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
-                                Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
-                                AllreadyVoted = true;
-
-                                // Local Update in class
-                                //current.Voters.put("lol", thisVotingGuest);
-
-                                // Make fab button greyed oyt here
-                            }
-                            if (AllreadyVoted == true) {
-                                Toast.makeText(mContext, "Your allready voted on " + current.Title, Toast.LENGTH_SHORT).show();
-                            }
                         }
+
+                        // After For loop asserting
+                        if (AllreadyVoted == false) {
+                            // Push this Guest on voters list
+                            mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
+                            Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
+                            AllreadyVoted = true;
+
+                            // Make fab button greyed oyt here
+                        }
+                        else
+                        {
+                            Toast.makeText(mContext, "Your allready voted on " + current.Title, Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 }
 
