@@ -18,8 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
+import cpmusic.com.crowdplay.adapters.RecyclerViewGuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
@@ -36,8 +39,10 @@ public class PlayListFragment extends Fragment
     NetworkChecker networkChecker;
 
     RecycleViewAdapter adapter;
+    RecyclerViewGuestAdapter adapterGuests;
 
     RecyclerView recyclerView;
+    RecyclerView recyclerViewGuests;
 
     FirebaseDatabase database;
     DatabaseReference mTracksRef;
@@ -50,6 +55,8 @@ public class PlayListFragment extends Fragment
     String UserID;
     boolean Allreadyloggedin;
 
+    ArrayList<Guest> guests;
+
 
     @Nullable
     @Override
@@ -60,6 +67,7 @@ public class PlayListFragment extends Fragment
         mActivity = getActivity();
 
         partyID = getArguments().getString("ID");
+        guests = new ArrayList<>();
 
         // SHaredPreferences
         sharedPreferencesData = new SharedPreferencesData();
@@ -111,6 +119,7 @@ public class PlayListFragment extends Fragment
         });
 
         setUpRecyclerView();
+        setUpRecyclerViewGuests();
         addGuestToParty();
 
         return view;
@@ -133,6 +142,22 @@ public class PlayListFragment extends Fragment
         recyclerView.getItemAnimator().setAddDuration(300);
     }
 
+    private void setUpRecyclerViewGuests() {
+
+        recyclerViewGuests = (RecyclerView) view.findViewById(R.id.recyclerViewGuests);
+        adapterGuests = new RecyclerViewGuestAdapter(mContext, guests);
+        recyclerViewGuests.setAdapter(adapterGuests);
+
+        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
+        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewGuests.setLayoutManager(mLinearLayoutManagerVertical);
+
+        recyclerViewGuests.getItemAnimator().setChangeDuration(400);
+        recyclerViewGuests.getItemAnimator().setMoveDuration(300);
+        recyclerViewGuests.getItemAnimator().setRemoveDuration(200);
+        recyclerViewGuests.getItemAnimator().setAddDuration(300);
+    }
+
 
     private void addGuestToParty()
     {
@@ -147,6 +172,7 @@ public class PlayListFragment extends Fragment
                     if(g.getUserID().equals(UserID))
                     {
                         Allreadyloggedin = true;
+                        mGuestsRef.removeEventListener(this);
                     }
                 }
                 if(Allreadyloggedin == false)
@@ -155,7 +181,37 @@ public class PlayListFragment extends Fragment
                     String thisUserID = sharedPreferencesData.getFacebookUID(mContext);
                     mGuestsRef.push().setValue(new Guest(thisUserID,thisUserName));
                     Allreadyloggedin = true;
+                    mGuestsRef.removeEventListener(this);
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mGuestsRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                Guest g = dataSnapshot.getValue(Guest.class);
+                adapterGuests.addTrack(g);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
