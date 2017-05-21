@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by Jonas R. Hartogsohn on 17-05-2017.
@@ -31,7 +32,7 @@ public class Track implements Serializable
     @Expose
     public String URI;
 
-    @SerializedName("votes")
+    @SerializedName("voters")
     @Expose
-    public int Votes;
+    public HashMap<String,Guest> Voters;
 }

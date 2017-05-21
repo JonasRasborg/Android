@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
@@ -90,7 +91,7 @@ public class APIConnector {
             track.Album = i.album.name;
             if (i.album.images.size() != 0) {track.ImageURL = i.album.images.get(0).url;}
             track.URI = i.uri;
-            track.Votes = 0;
+            track.Voters = new HashMap<>();
 
             tracks.add(track);
         }
