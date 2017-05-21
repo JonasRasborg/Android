@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferencesData sharedPreferencesData;
 
+    FloatingActionButton fabDJ, fabGuest;
+
 
     // Firebase
     private DatabaseReference mDatabase;
@@ -62,23 +65,24 @@ public class MainActivity extends AppCompatActivity {
        SaveMyLocationLocally(); // saves location in userLatLng member
 
 
-        Button BtnDJ = (Button) findViewById(R.id.BtnDJ);
-        Button BtnGuest = (Button) findViewById(R.id.BtnGuest);
+        fabDJ = (FloatingActionButton)findViewById(R.id.fabDJ);
+        fabGuest = (FloatingActionButton)findViewById(R.id.fabGuest);
 
-        BtnDJ.setOnClickListener(new View.OnClickListener() {
+        fabDJ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 OpenSetupPartyActivity();
             }
         });
 
-        BtnGuest.setOnClickListener(new View.OnClickListener() {
+
+        fabGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OpenPartyFinderActivity();
             }
         });
+
 
 
         sharedPreferencesData = new SharedPreferencesData();
