@@ -92,13 +92,16 @@ public class SetupPartyActivity extends AppCompatActivity {
         mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null)
+                {
+                    Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
+                }
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
                     Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
                     if(p.userID.equals(sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this))){
                         adapter.addParty(p);
                         Log.d("SetupPartyActivity","party from this DJ found");
-                        Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
                     }
                 }
 
