@@ -13,6 +13,7 @@ public class Guest
     public String userID;
     public String name;
     public String picURI;
+    public int Points = 0;
 
     public Guest()
     {

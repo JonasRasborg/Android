@@ -35,6 +35,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private LayoutInflater inflater;
     Context mContext;
     DatabaseReference mTracksRef;
+    DatabaseReference mPartyRef;
     SharedPreferencesData sharedPreferencesData;
     String thisUserID;
     String thisUserFullName;
@@ -47,6 +48,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         inflater = LayoutInflater.from(context);
         this.mData = new ArrayList<>();
         mContext = context;
+        mPartyRef = root;
         mTracksRef = root.child("Tracks");
         sharedPreferencesData = new SharedPreferencesData();
         thisUserID = sharedPreferencesData.getFacebookUID(mContext);
@@ -270,7 +272,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     if(dataSnapshot.getValue()==null)
                     {
                         mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
-                       // mTracksRef.child(current.AddedBy).
+                        mPartyRef.child(current.AddedBy).child("Points").setValue(1);
                     }
 
                     else {

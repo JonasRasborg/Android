@@ -33,7 +33,7 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
         mContext = context;
     }
 
-    public void addTrack(Guest newGuest){
+    public void addGuest(Guest newGuest){
         mData.add(newGuest);
         notifyItemChanged(mData.size()-1);
     }

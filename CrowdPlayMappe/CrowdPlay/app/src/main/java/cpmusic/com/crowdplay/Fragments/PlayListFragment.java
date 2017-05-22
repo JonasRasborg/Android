@@ -181,7 +181,7 @@ public class PlayListFragment extends Fragment
                 {
                     String thisUserName = sharedPreferencesData.getFacebookFullName(mContext);
                     String thisUserID = sharedPreferencesData.getFacebookUID(mContext);
-                    mGuestsRef.push().setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
+                    mGuestsRef.push().child(thisUserID).setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
                     Allreadyloggedin = true;
                     mGuestsRef.removeEventListener(this);
                 }
@@ -198,7 +198,7 @@ public class PlayListFragment extends Fragment
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 Guest g = dataSnapshot.getValue(Guest.class);
-                adapterGuests.addTrack(g);
+                adapterGuests.addGuest(g);
             }
 
             @Override
