@@ -26,7 +26,7 @@
         <LinearLayout
             android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.18"
+            android:layout_weight="0.75"
             android:orientation="vertical"
             android:weightSum="1">
 
@@ -62,7 +62,7 @@
 
             <TextView
                 android:id="@+id/tvVotes"
-                android:layout_width="35dp"
+                android:layout_width="43dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="7"
@@ -78,12 +78,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="1"
-            android:layout_weight="0.21">
+            android:layout_weight="0.29">
 
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabUpvote"
-                android:layout_width="40dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clickable="true"

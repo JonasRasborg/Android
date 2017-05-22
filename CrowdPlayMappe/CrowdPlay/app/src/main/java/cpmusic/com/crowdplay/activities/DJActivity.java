@@ -52,13 +52,13 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     Context mContext;
 
     ArrayList<Track> newTracks;
+    boolean startedFirstTrack = false;
 
+    int timer = 0;
 
     ToggleButton togglePlay;
     ProgressBar progressBar;
-    CountDownTimer countDownTimer;
-    int timerTicker = 0;
-
+    CountDownTimer trackCountDownTimer;
     private Player mPlayer;
 
     private Bundle bundle;
@@ -93,8 +93,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
         mContext = this;
 
-
-
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
@@ -125,16 +123,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         mPartyRef.child("Active").setValue(true);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //Spotify.destroyPlayer(this);
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Spotify.destroyPlayer(this);
+        Spotify.destroyPlayer(this);
         mPartyRef.child("Active").setValue(false);
     }
 
@@ -153,7 +146,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                         mPlayer = spotifyPlayer;
                         mPlayer.addConnectionStateCallback(DJActivity.this);
                         mPlayer.addNotificationCallback(DJActivity.this);
-
                     }
 
                     @Override
@@ -170,23 +162,38 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         setUpListeners();
     }
 
-    public void setupProgressBar(){
-
-        progressBar.setProgress(timerTicker);
-        countDownTimer = new CountDownTimer(100000,1000) {
+    public void startFirstSong(){
+        trackCountDownTimer = new CountDownTimer(3000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timerTicker++;
-                progressBar.setProgress(timerTicker);
 
+            }
+
+            @Override
+            public void onFinish() {
+                playTopSong();
+            }
+        };
+        trackCountDownTimer.start();
+    }
+
+    public void setupProgressBar(long ms){
+        progressBar.setProgress(timer);
+        progressBar.setMax(1000);
+        trackCountDownTimer = new CountDownTimer(ms,ms/1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer++;
+                progressBar.setProgress(timer);
             }
 
             @Override
             public void onFinish() {
 
             }
+
         };
-        countDownTimer.start();
+        trackCountDownTimer.start();
     }
 
     @Override
@@ -219,8 +226,19 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     playTopSong();
                     break;
                 }
+                else{
+                    timer = 0;
+                    setupProgressBar(mPlayer.getMetadata().currentTrack.durationMs);
+                }
 
-            case kSpPlaybackEventAudioFlush:
+
+            case kSpPlaybackNotifyPause:
+                trackCountDownTimer.cancel();
+                break;
+            case kSpPlaybackNotifyPlay:
+                trackCountDownTimer.start();
+
+
 
             default:
                 break;
@@ -240,14 +258,12 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     public void playTopSong(){
         Track topTrack = adapter.getTopTrack();
+        mPlayer.playUri(null,topTrack.URI,0,0);
         adapter.resetVotes(topTrack);
         recyclerView.scrollToPosition(0);
-        mPlayer.playUri(null,topTrack.URI,0,0);
         txtArtist.setText(topTrack.Artist);
         txtTrack.setText(topTrack.Title);
         Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
-        setupProgressBar();
-
     }
 
     public void setUpListeners(){
@@ -256,12 +272,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Track newTrack = dataSnapshot.getValue(Track.class);
                 adapter.addTrack(newTrack);
-                if(mPlayer != null && !mPlayer.getPlaybackState().isActiveDevice){
-                    Track topTrack = adapter.getTopTrack();
-                    mPlayer.playUri(null,topTrack.URI,0,0);
-                    txtArtist.setText(topTrack.Artist);
-                    txtTrack.setText(topTrack.Title);
-                    Picasso.with(DJActivity.this).load(topTrack.ImageURL).into(imgAlbum);
+                if(mPlayer != null && !startedFirstTrack){
+                    startedFirstTrack = true;
+                    startFirstSong();
                 }
             }
 
