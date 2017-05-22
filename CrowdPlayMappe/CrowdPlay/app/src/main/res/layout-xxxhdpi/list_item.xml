@@ -24,11 +24,11 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="220dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.18"
             android:orientation="vertical"
-            android:weightSum="1"
-            android:layout_weight="0.64">
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -37,9 +37,8 @@
                 android:layout_margin="7dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_weight="0.60" />
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvArtist"
@@ -48,7 +47,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 android:textStyle="italic" />
 
 
@@ -58,11 +57,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="0.11">
 
             <TextView
                 android:id="@+id/tvVotes"
-                android:layout_width="40dp"
+                android:layout_width="35dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="7"
@@ -77,15 +77,17 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_weight="0.21">
 
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabUpvote"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clickable="true"
+                card_view:elevation="0dp"
                 card_view:fabSize="mini"
                 card_view:srcCompat="@drawable/upvote_icon" />
         </LinearLayout>

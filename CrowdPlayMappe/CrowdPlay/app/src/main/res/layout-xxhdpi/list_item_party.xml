@@ -28,7 +28,7 @@
             android:gravity="center_vertical"
             android:text="Pølsefest"
             android:textColor="@color/colorSecondary"
-            android:textSize="20sp" />
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/textView1"
@@ -37,7 +37,7 @@
             android:layout_weight="0.27"
             android:text="Tracks:"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textViewTracks"
@@ -46,7 +46,7 @@
             android:gravity="center_vertical"
             android:text="TextView"
             android:textColor="@color/colorSecondary"
-            android:textSize="18sp"
+            android:textSize="18dp"
             tools:text="150" />
 
         <TextView
@@ -56,7 +56,7 @@
             android:layout_weight="0.12"
             android:text="Guests:"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textViewGuests"
@@ -66,7 +66,7 @@
             android:gravity="center_vertical"
             android:text="99"
             android:textColor="@color/colorSecondary"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
