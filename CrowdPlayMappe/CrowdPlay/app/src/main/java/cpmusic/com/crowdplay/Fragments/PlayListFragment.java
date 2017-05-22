@@ -98,7 +98,7 @@ public class PlayListFragment extends Fragment
                 Track track = dataSnapshot.getValue(Track.class);
                 adapter.changeVote(track);
 
-                if(track.Voters==null)
+                if(track.Voters.size()==0)
                 {
                     adapter.moveTrackToLast(track);
                 }
