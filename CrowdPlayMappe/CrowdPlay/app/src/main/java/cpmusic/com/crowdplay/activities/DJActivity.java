@@ -256,7 +256,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                 Track newTrack = dataSnapshot.getValue(Track.class);
                 adapter.addTrack(newTrack);
                 if(mPlayer != null && !mPlayer.getPlaybackState().isActiveDevice){
-                    playTopSong();
+                    Track topTrack = adapter.getTopTrack();
+                    mPlayer.playUri(null,topTrack.URI,0,0);
+                    txtArtist.setText(topTrack.Artist);
+                    txtTrack.setText(topTrack.Title);
+                    Picasso.with(DJActivity.this).load(topTrack.ImageURL).into(imgAlbum);
                 }
             }
 
