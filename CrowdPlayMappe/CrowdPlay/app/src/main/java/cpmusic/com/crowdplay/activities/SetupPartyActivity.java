@@ -32,7 +32,7 @@ public class SetupPartyActivity extends AppCompatActivity {
     EditText edtPartyName, edtPartyCode;
     Button btnStartParty;
     private Bundle bundle;
-    Intent intentDJ;
+    Intent intentSongs;
     ArrayList<Party> partyList;
     RecyclerView recyclerView;
 
@@ -42,8 +42,6 @@ public class SetupPartyActivity extends AppCompatActivity {
 
     DatabaseReference mRoot;
     FirebaseDatabase database;
-
-    // RecykleView
 
     PartyAdapter adapter;
 
@@ -57,14 +55,11 @@ public class SetupPartyActivity extends AppCompatActivity {
         mRoot = database.getReference();
         partyList = new ArrayList<>();
 
-
-
         sharedPreferencesConnector = new SharedPreferencesConnector();
 
         facebookID = sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this);
 
-
-        intentDJ = new Intent(this, DJActivity.class);
+        intentSongs = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
         mRoot = FirebaseDatabase.getInstance().getReference();
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
@@ -89,12 +84,9 @@ public class SetupPartyActivity extends AppCompatActivity {
 
                 mRoot.child(partyKey).setValue(newParty);
 
-                //mRoot.push().setValue(newParty);
-
-                intentDJ.putExtra("PartyKey",partyKey);
-
-
-                startActivity(intentDJ);
+                intentSongs.putExtra("PartyKey",partyKey);
+                
+                startActivity(intentSongs);
             }
         });
 

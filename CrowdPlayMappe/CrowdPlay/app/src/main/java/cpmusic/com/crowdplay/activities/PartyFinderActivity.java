@@ -161,7 +161,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                                 if (correctPassword.equals(typedPassword))
                                 {
                                     Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
-                                    intent.putExtra("ID",marker.getTag().toString());
+                                    intent.putExtra("PartyKey",marker.getTag().toString());
                                     startActivity(intent);
                                 }
                                 else

@@ -65,7 +65,7 @@ public class SearchFragment extends Fragment
         mActivity = getActivity();
 
 
-        partyID = getArguments().getString("ID");
+        partyID = getArguments().getString("PartyKey");
 
 
         networkChecker = new NetworkChecker();

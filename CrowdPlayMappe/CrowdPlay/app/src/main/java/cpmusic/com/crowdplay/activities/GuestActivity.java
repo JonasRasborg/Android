@@ -22,7 +22,7 @@ public class GuestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_guest_main);
 
         Intent partyIntent = getIntent();
-        partyID = partyIntent.getStringExtra("ID");
+        partyID = partyIntent.getStringExtra("PartyKey");
 
         mViewPager =(ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager);
@@ -30,6 +30,8 @@ public class GuestActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
+
+
     private void setupViewPager(ViewPager viewPager){
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
 
@@ -37,7 +39,7 @@ public class GuestActivity extends AppCompatActivity {
         SearchFragment searchFragment = new SearchFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString("ID", partyID);
+        bundle.putString("PartyKey", partyID);
 
         playListFragment.setArguments(bundle);
         searchFragment.setArguments(bundle);

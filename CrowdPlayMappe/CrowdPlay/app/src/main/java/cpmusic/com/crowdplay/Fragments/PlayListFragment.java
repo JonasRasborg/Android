@@ -67,7 +67,7 @@ public class PlayListFragment extends Fragment
         mContext = getActivity();
         mActivity = getActivity();
 
-        partyID = getArguments().getString("ID");
+        partyID = getArguments().getString("PartyKey");
         guests = new ArrayList<>();
 
         // SHaredPreferences
