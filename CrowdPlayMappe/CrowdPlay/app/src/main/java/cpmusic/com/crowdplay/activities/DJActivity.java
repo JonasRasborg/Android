@@ -37,7 +37,6 @@ import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 
 public class DJActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
@@ -62,8 +61,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private Player mPlayer;
 
-    private Tracks tracks;
-
     private Bundle bundle;
     private TextView txtArtist, txtTrack;
     private ImageView imgAlbum;
@@ -84,8 +81,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
-        tracks = new Tracks();
-        tracks.tracks = new ArrayList<>();
         newTracks = new ArrayList<Track>();
 
         bundle = getIntent().getExtras();

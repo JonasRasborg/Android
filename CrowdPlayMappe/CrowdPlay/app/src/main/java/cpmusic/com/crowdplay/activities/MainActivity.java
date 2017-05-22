@@ -3,7 +3,6 @@ package cpmusic.com.crowdplay.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -31,7 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.Arrays;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     ProfileTracker mProfileTracker;
     Profile currentProfile;
 
-    // Shared Preferences helper class "SharedPreferencesData"
+    // Shared Preferences helper class "SharedPreferencesConnector"
 
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
 
     FloatingActionButton fabDJ, fabGuest;
 
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        sharedPreferencesData = new SharedPreferencesData();
+        sharedPreferencesConnector = new SharedPreferencesConnector();
 
         currentProfile = Profile.getCurrentProfile();
 
@@ -225,11 +223,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
 
-                        sharedPreferencesData.setLoggidInStatus(MainActivity.this,true);
-                        sharedPreferencesData.setFacebookUID(MainActivity.this,newProfile.getId());
-                        sharedPreferencesData.setFacebookFirstName(MainActivity.this,newProfile.getFirstName());
-                        sharedPreferencesData.setFacebookFullName(MainActivity.this,newProfile.getName());
-                        sharedPreferencesData.setFacebookProfilePicURI(MainActivity.this,newProfile.getProfilePictureUri(200,200).toString());
+                        sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
+                        sharedPreferencesConnector.setFacebookUID(MainActivity.this,newProfile.getId());
+                        sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,newProfile.getFirstName());
+                        sharedPreferencesConnector.setFacebookFullName(MainActivity.this,newProfile.getName());
+                        sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,newProfile.getProfilePictureUri(200,200).toString());
                         Toast.makeText(MainActivity.this,"Welcome "+newProfile.getFirstName(),Toast.LENGTH_SHORT).show();
 
                     }

@@ -24,7 +24,7 @@ import java.util.List;
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 /**
  * Created by rrask on 19-05-2017.
@@ -36,7 +36,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     Context mContext;
     DatabaseReference mTracksRef;
     DatabaseReference mPartyRef;
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
     String thisUserID;
     String thisUserFullName;
     String thisUserPicURI;
@@ -50,10 +50,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
         mContext = context;
         mPartyRef = root;
         mTracksRef = root.child("Tracks");
-        sharedPreferencesData = new SharedPreferencesData();
-        thisUserID = sharedPreferencesData.getFacebookUID(mContext);
-        thisUserFullName = sharedPreferencesData.getFacebookFullName(mContext);
-        thisUserPicURI = sharedPreferencesData.getFacebookProfilepicUri(mContext);
+        sharedPreferencesConnector = new SharedPreferencesConnector();
+        thisUserID = sharedPreferencesConnector.getFacebookUID(mContext);
+        thisUserFullName = sharedPreferencesConnector.getFacebookFullName(mContext);
+        thisUserPicURI = sharedPreferencesConnector.getFacebookProfilepicUri(mContext);
     }
 
     @Override

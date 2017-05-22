@@ -25,7 +25,7 @@ import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.PartyAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Location;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 public class SetupPartyActivity extends AppCompatActivity {
 
@@ -38,7 +38,7 @@ public class SetupPartyActivity extends AppCompatActivity {
 
     String facebookID;
 
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
 
     DatabaseReference mRoot;
     FirebaseDatabase database;
@@ -59,9 +59,9 @@ public class SetupPartyActivity extends AppCompatActivity {
 
 
 
-        sharedPreferencesData = new SharedPreferencesData();
+        sharedPreferencesConnector = new SharedPreferencesConnector();
 
-        facebookID = sharedPreferencesData.getFacebookUID(SetupPartyActivity.this);
+        facebookID = sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this);
 
 
         intentDJ = new Intent(this, DJActivity.class);
@@ -104,7 +104,7 @@ public class SetupPartyActivity extends AppCompatActivity {
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
                     Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
-                    if(p.userID.equals(sharedPreferencesData.getFacebookUID(SetupPartyActivity.this))){
+                    if(p.userID.equals(sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this))){
                         adapter.addParty(p);
                         Log.d("SetupPartyActivity","party from this DJ found");
                         Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();

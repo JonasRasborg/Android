@@ -26,7 +26,7 @@ import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 
 public class PlayListFragment extends Fragment
@@ -51,7 +51,7 @@ public class PlayListFragment extends Fragment
 
     String partyID;
 
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
     String UserID;
     String facebookPicUri;
     boolean Allreadyloggedin;
@@ -71,9 +71,9 @@ public class PlayListFragment extends Fragment
         guests = new ArrayList<>();
 
         // SHaredPreferences
-        sharedPreferencesData = new SharedPreferencesData();
-        UserID = sharedPreferencesData.getFacebookUID(mContext);
-        facebookPicUri = sharedPreferencesData.getFacebookProfilepicUri(mContext);
+        sharedPreferencesConnector = new SharedPreferencesConnector();
+        UserID = sharedPreferencesConnector.getFacebookUID(mContext);
+        facebookPicUri = sharedPreferencesConnector.getFacebookProfilepicUri(mContext);
 
         Allreadyloggedin = false;
 
@@ -179,8 +179,8 @@ public class PlayListFragment extends Fragment
                 }
                 if(Allreadyloggedin == false)
                 {
-                    String thisUserName = sharedPreferencesData.getFacebookFullName(mContext);
-                    String thisUserID = sharedPreferencesData.getFacebookUID(mContext);
+                    String thisUserName = sharedPreferencesConnector.getFacebookFullName(mContext);
+                    String thisUserID = sharedPreferencesConnector.getFacebookUID(mContext);
                     mGuestsRef.child(thisUserID).setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
                     Allreadyloggedin = true;
                     mGuestsRef.removeEventListener(this);

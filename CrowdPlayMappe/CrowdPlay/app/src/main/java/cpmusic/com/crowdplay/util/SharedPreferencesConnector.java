@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
  * Created by ander on 20/05/2017.
  */
 
-public class SharedPreferencesData
+public class SharedPreferencesConnector
 {
     static final String FACEBOOK_UID = "logged_in_uid";
     static final String FACEBOOK_FIRST_NAME = "logged_in_firstname";

@@ -2,14 +2,12 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,7 @@ import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 /**
  * Created by Jonas R. Hartogsohn on 17-05-2017.
@@ -35,7 +33,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
 
     DatabaseReference mTracksRef;
     Activity searchActivity;
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
     String thisUserID;
 
     public SearchAdapter(Context context, List<Track> data, DatabaseReference root, Activity activity) {
@@ -44,8 +42,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         mContext = context;
         mTracksRef = root.child("Tracks");
         searchActivity = activity;
-        sharedPreferencesData = new SharedPreferencesData();
-        thisUserID = sharedPreferencesData.getFacebookUID(mContext);
+        sharedPreferencesConnector = new SharedPreferencesConnector();
+        thisUserID = sharedPreferencesConnector.getFacebookUID(mContext);
     }
 
     @Override
