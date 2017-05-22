@@ -77,8 +77,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
-
-
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
         newTracks = new ArrayList<Track>();
@@ -86,14 +84,21 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         bundle = getIntent().getExtras();
         partyKey = bundle.getString("PartyKey");
 
+        database = FirebaseDatabase.getInstance();
+        mPartyRef = database.getReference().child(partyKey);
+        mTracksRef = database.getReference(partyKey).child("Tracks");
+
         txtArtist = (TextView)findViewById(R.id.txtArtist);
         txtTrack = (TextView)findViewById(R.id.txtTrack);
         imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
         mContext = this;
 
+
+
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
+        togglePlay.setChecked(true);
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -101,16 +106,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     if(isChecked){
                         if(mPlayer.getPlaybackState().isActiveDevice){
                             mPlayer.resume(null);
-                        }
-                        else{
-                            Track topTrack = adapter.getTopTrack();
-                            adapter.resetVotes(topTrack);
-                            recyclerView.scrollToPosition(0);
-                            txtArtist.setText(topTrack.Artist);
-                            txtTrack.setText(topTrack.Title);
-                            Picasso.with(mContext).load(topTrack.ImageURL).into(imgAlbum);
-                            mPlayer.playUri(null,topTrack.URI,0,0);
-                            setupProgressBar();
                         }
                     }
                     else{
@@ -126,41 +121,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-
-        database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child(partyKey);
-        mTracksRef = database.getReference(partyKey).child("Tracks");
-
-        mTracksRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Track newTrack = dataSnapshot.getValue(Track.class);
-                adapter.addTrack(newTrack);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Track track = dataSnapshot.getValue(Track.class);
-                adapter.changeVote(track);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         setUpRecyclerView();
+
     }
 
     @Override
@@ -190,6 +152,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                         mPlayer = spotifyPlayer;
                         mPlayer.addConnectionStateCallback(DJActivity.this);
                         mPlayer.addNotificationCallback(DJActivity.this);
+
                     }
 
                     @Override
@@ -203,7 +166,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     @Override
     public void onLoggedIn() {
-        Log.d(TAG, "User logged in");
+        setUpListeners();
     }
 
     public void setupProgressBar(){
@@ -252,14 +215,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
             case kSpPlaybackNotifyTrackChanged:
                 if(!mPlayer.getPlaybackState().isPlaying){
-                    Track topTrack = adapter.getTopTrack();
-                    adapter.resetVotes(topTrack);
-                    mPlayer.playUri(null,topTrack.URI,0,0);
-                    txtArtist.setText(topTrack.Artist);
-                    txtTrack.setText(topTrack.Title);
-                    Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
-
-                    setupProgressBar();
+                    playTopSong();
                     break;
                 }
 
@@ -279,6 +235,52 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             default:
                 break;
         }
+    }
+
+    public void playTopSong(){
+        Track topTrack = adapter.getTopTrack();
+        adapter.resetVotes(topTrack);
+        recyclerView.scrollToPosition(0);
+        mPlayer.playUri(null,topTrack.URI,0,0);
+        txtArtist.setText(topTrack.Artist);
+        txtTrack.setText(topTrack.Title);
+        Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
+        setupProgressBar();
+
+    }
+
+    public void setUpListeners(){
+        mTracksRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Track newTrack = dataSnapshot.getValue(Track.class);
+                adapter.addTrack(newTrack);
+                if(mPlayer != null && !mPlayer.getPlaybackState().isActiveDevice){
+                    playTopSong();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Track track = dataSnapshot.getValue(Track.class);
+                adapter.changeVote(track);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setUpRecyclerView() {
