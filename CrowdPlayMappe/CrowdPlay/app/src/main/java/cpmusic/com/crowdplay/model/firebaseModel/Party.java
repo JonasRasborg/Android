@@ -15,7 +15,7 @@ public class Party {
     public Location location;
     public String userID;
     public String partyID;
-    public boolean active;
+    public boolean Active;
 
     public Party()
     {
@@ -30,6 +30,7 @@ public class Party {
         userID = _userID;
         Guests = new HashMap<>();
         partyID = _partyID;
+        Active=false;
     }
 
 

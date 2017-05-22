@@ -88,16 +88,22 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mMap.clear();
                 for(DataSnapshot i:dataSnapshot.getChildren())
                 {
+
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
-                    LatLng thisLatLng = new LatLng(p.location.getLatitude(),p.location.getLongtitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    // Tilføjer database key key til Markers "Tag"
-                    marker.setTag(dataSnapshot.child(i.getKey()).getKey());
+                    if(p.Active==true) {
+                        LatLng thisLatLng = new LatLng(p.location.getLatitude(),p.location.getLongtitude());
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        // Tilføjer database key key til Markers "Tag"
+                        marker.setTag(dataSnapshot.child(i.getKey()).getKey());
+                    }
 
                 }
 
