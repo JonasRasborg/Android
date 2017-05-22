@@ -21,8 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
-import cpmusic.com.crowdplay.adapters.RecyclerViewGuestAdapter;
+import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
+import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
@@ -38,8 +38,8 @@ public class PlayListFragment extends Fragment
 
     NetworkChecker networkChecker;
 
-    RecycleViewAdapter adapter;
-    RecyclerViewGuestAdapter adapterGuests;
+    PlaylistAdapter adapter;
+    GuestAdapter adapterGuests;
 
     RecyclerView recyclerView;
     RecyclerView recyclerViewGuests;
@@ -131,7 +131,7 @@ public class PlayListFragment extends Fragment
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(mContext, mPartyRef);
+        adapter = new PlaylistAdapter(mContext, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
@@ -147,7 +147,7 @@ public class PlayListFragment extends Fragment
     private void setUpRecyclerViewGuests() {
 
         recyclerViewGuests = (RecyclerView) view.findViewById(R.id.recyclerViewGuests);
-        adapterGuests = new RecyclerViewGuestAdapter(mContext, guests);
+        adapterGuests = new GuestAdapter(mContext, guests);
         recyclerViewGuests.setAdapter(adapterGuests);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)

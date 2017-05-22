@@ -31,10 +31,8 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
+import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 
@@ -73,7 +71,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     String partyKey;
 
     RecyclerView recyclerView;
-    RecycleViewAdapter adapter;
+    PlaylistAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,7 +289,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, mPartyRef);
+        adapter = new PlaylistAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,14 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.RecyclePartyViewAdapter;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
-import cpmusic.com.crowdplay.adapters.SearchAdapter;
-import cpmusic.com.crowdplay.model.firebaseModel.CustomLatLng;
+import cpmusic.com.crowdplay.adapters.PartyAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Location;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.util.SharedPreferencesData;
 
@@ -49,7 +45,7 @@ public class SetupPartyActivity extends AppCompatActivity {
 
     // RecykleView
 
-    RecyclePartyViewAdapter adapter;
+    PartyAdapter adapter;
 
 
     @Override
@@ -87,7 +83,7 @@ public class SetupPartyActivity extends AppCompatActivity {
                 String password = edtPartyCode.getText().toString();
                 String partyKey = UUID.randomUUID().toString();
 
-                CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
+                Location newLatLng = new Location(latLong.latitude,latLong.longitude);
                 Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
 
 
@@ -134,7 +130,7 @@ public class SetupPartyActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
-        adapter = new RecyclePartyViewAdapter(this);
+        adapter = new PartyAdapter(this);
         recyclerView.setAdapter(adapter);
 
 

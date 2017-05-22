@@ -2,22 +2,16 @@ package cpmusic.com.crowdplay.activities;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cpmusic.com.crowdplay.Fragments.PlayListFragment;
 import cpmusic.com.crowdplay.Fragments.SearchFragment;
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.adapters.FragmentAdapter;
 
-public class GuestMainActivity extends AppCompatActivity {
+public class GuestActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     String partyID;
@@ -37,7 +31,7 @@ public class GuestMainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
     private void setupViewPager(ViewPager viewPager){
-        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
 
         PlayListFragment playListFragment = new PlayListFragment();
         SearchFragment searchFragment = new SearchFragment();
@@ -55,35 +49,3 @@ public class GuestMainActivity extends AppCompatActivity {
     }
 }
 
- class SectionPageAdapter extends FragmentPagerAdapter {
-
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
-
-    public void addFragment(Fragment fragment, String title){
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
-
-    }
-
-    public SectionPageAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
-
-
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
-    }
-}

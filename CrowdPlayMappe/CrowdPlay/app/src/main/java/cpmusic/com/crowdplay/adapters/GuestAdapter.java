@@ -14,20 +14,19 @@ import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
-import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 /**
  * Created by Jonas R. Hartogsohn on 21-05-2017.
  */
 
-public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewGuestAdapter.MyViewHolder>{
-    private static final String TAG = RecyclerViewGuestAdapter.class.getSimpleName();
+public class GuestAdapter extends RecyclerView.Adapter<GuestAdapter.MyViewHolder>{
+    private static final String TAG = GuestAdapter.class.getSimpleName();
 
     private List<Guest> mData;
     private LayoutInflater mInflater;
     Context mContext;
 
-    public RecyclerViewGuestAdapter(Context context, List<Guest> data) {
+    public GuestAdapter(Context context, List<Guest> data) {
         this.mData = data;
         this.mInflater = LayoutInflater.from(context);
         mContext = context;

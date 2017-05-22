@@ -30,7 +30,7 @@ import cpmusic.com.crowdplay.util.SharedPreferencesData;
  * Created by rrask on 19-05-2017.
  */
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
     List<Track> mData;
     private LayoutInflater inflater;
     Context mContext;
@@ -44,7 +44,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     MyViewHolder holder;
 
 
-    public RecycleViewAdapter(Context context, DatabaseReference root) {
+    public PlaylistAdapter(Context context, DatabaseReference root) {
         inflater = LayoutInflater.from(context);
         this.mData = new ArrayList<>();
         mContext = context;

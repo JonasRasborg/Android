@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.icu.text.MessagePattern;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,8 +28,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
@@ -164,7 +160,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
                                 if (correctPassword.equals(typedPassword))
                                 {
-                                    Intent intent = new Intent(PartyFinderActivity.this,GuestMainActivity.class);
+                                    Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
                                     intent.putExtra("ID",marker.getTag().toString());
                                     startActivity(intent);
                                 }
