@@ -35,4 +35,10 @@ public class Track implements Serializable
     @SerializedName("voters")
     @Expose
     public HashMap<String,Guest> Voters;
+
+    public boolean isVoted;
+
+    @SerializedName("addedBy")
+    @Expose
+    public String AddedBy;
 }

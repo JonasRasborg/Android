@@ -2,6 +2,7 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
+import cpmusic.com.crowdplay.util.SharedPreferencesData;
 
 /**
  * Created by Jonas R. Hartogsohn on 17-05-2017.
@@ -33,7 +35,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
 
     DatabaseReference mTracksRef;
     Activity searchActivity;
-
+    SharedPreferencesData sharedPreferencesData;
+    String thisUserID;
 
     public SearchAdapter(Context context, List<Track> data, DatabaseReference root, Activity activity) {
         inflater = LayoutInflater.from(context);
@@ -41,6 +44,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         mContext = context;
         mTracksRef = root.child("Tracks");
         searchActivity = activity;
+        sharedPreferencesData = new SharedPreferencesData();
+        thisUserID = sharedPreferencesData.getFacebookUID(mContext);
     }
 
     @Override
@@ -102,6 +107,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         @Override
         public void onClick(View v)
         {
+            current.AddedBy = thisUserID;
             mTracksRef.child(current.URI).setValue(current);
             Toast.makeText(mContext, current.Title + " Added to playlist", Toast.LENGTH_SHORT).show();
         }

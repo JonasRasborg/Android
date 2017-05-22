@@ -67,7 +67,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         Track current = mData.get(position);
         holder.setData(current, position);
         holder.setListeners();
-        holder.setFabVote();
+        //holder.setFabVote();
     }
 
 
@@ -96,18 +96,24 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     {
         mData.remove(0);
         // Remove voters locally
-        track.Voters.clear();
+        if(track.Voters != null){
+            track.Voters.clear();
+        }
+        track.isVoted=false;
         mData.add(track);
+
 
         for(int i = 0; i<mData.size()-1;i++){
             notifyItemMoved(i+1,i);
         }
+        notifyItemChanged(mData.size());
     }
 
 
     public void resetVotes(Track track){
 
         moveTrackToLast(track);
+
 
         // Remove all voters from Track on firebse
             mTracksRef.child(track.URI).child("Voters").removeValue();
@@ -148,24 +154,40 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
                 // Asserrt on local int
            if(TrackVotesThis>TrackVoteslast)
-         {
-            Track a = mData.get(i);
-            Track b = mData.get(i-1);
-            mData.set(i-1,a);
-            mData.set(i,b);
-            notifyItemMoved(i,i-1);
-            notifyItemChanged(i-1);
-            notifyItemChanged(i);
-         }
+            {
+                Track a = mData.get(i);
+                Track b = mData.get(i-1);
+                mData.set(i-1,a);
+                mData.set(i,b);
+                notifyItemMoved(i,i-1);
+                notifyItemChanged(i-1);
+                notifyItemChanged(i);
+            }
 
         }
     }
 
+    public boolean setIsVoted(Track votedTrack){
+        if (votedTrack.Voters != null)
+        {
+            for (HashMap.Entry<String, Guest> entry : votedTrack.Voters.entrySet())
+            {
+                Guest g = entry.getValue();
+
+                if (g.userID.equals(thisUserID))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void addTrack(Track newTrack){
+        newTrack.isVoted = setIsVoted(newTrack);
         mData.add(newTrack);
         notifyItemChanged(mData.size()-1);
         checkPositions(mData.size()-1);
-       // holder.setFabVote();
     }
 
 
@@ -201,23 +223,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             Picasso.with(mContext).load(current.ImageURL).into(this.imgThumb);
             this.position = position;
             this.current = current;
-
-        }
-
-        public void setFabVote()
-        {
-            if (current!= null && current.Voters != null)
+            if(current.isVoted)
             {
-                for (HashMap.Entry<String, Guest> entry : current.Voters.entrySet())
-                {
-                    Guest g = entry.getValue();
-
-                    if (g.userID.equals(thisUserID))
-                    {
-                        holder.fabVote.setAlpha(50);
-                    }
-                }
+                this.fabVote.setAlpha(40);
             }
+            else if(!current.isVoted){
+                this.fabVote.setAlpha(255);
+            }
+
         }
 
 
@@ -226,7 +239,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 @Override
                 public void onClick(View v) {
                    VoteOnTrack();
-                    fabVote.setAlpha(50);
+                    current.isVoted = true;
                 }
             });
         }
@@ -257,6 +270,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     if(dataSnapshot.getValue()==null)
                     {
                         mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
+                       // mTracksRef.child(current.AddedBy).
                     }
 
                     else {
