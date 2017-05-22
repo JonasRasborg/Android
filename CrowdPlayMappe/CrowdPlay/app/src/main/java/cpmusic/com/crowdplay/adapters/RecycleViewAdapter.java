@@ -69,9 +69,27 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         Track current = mData.get(position);
         holder.setData(current, position);
         holder.setListeners();
-        //holder.setFabVote();
     }
 
+    public void addPointToGuest(String id)
+    {
+        final DatabaseReference votedGust = mPartyRef.child("Guests").child(id);
+
+        votedGust.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Guest voteReceivingGuest = dataSnapshot.getValue(Guest.class);
+                int points = voteReceivingGuest.Points + 1;
+
+                votedGust.child("Votes").setValue(points);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     @Override
@@ -272,7 +290,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     if(dataSnapshot.getValue()==null)
                     {
                         mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
-                        mPartyRef.child(current.AddedBy).child("Points").setValue(1);
+                        addPointToGuest(current.AddedBy);
                     }
 
                     else {
