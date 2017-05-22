@@ -40,7 +40,7 @@
                 android:layout_weight="0.57"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="16sp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_weight="0.10"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="15sp"
+                android:textSize="13dp"
                 android:textStyle="italic" />
 
 

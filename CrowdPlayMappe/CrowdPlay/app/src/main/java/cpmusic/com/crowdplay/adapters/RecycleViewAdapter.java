@@ -81,7 +81,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 Guest voteReceivingGuest = dataSnapshot.getValue(Guest.class);
                 int points = voteReceivingGuest.Points + 1;
 
-                votedGust.child("Votes").setValue(points);
+                votedGust.child("Points").setValue(points);
             }
 
             @Override
@@ -307,6 +307,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         if (AllreadyVoted == false) {
                             // Push this Guest on voters list
                             mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
+                            addPointToGuest(current.AddedBy);
                             Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
                             AllreadyVoted = true;
 
