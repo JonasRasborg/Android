@@ -7,10 +7,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,9 +40,12 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     LatLng navitas = new LatLng(56.158897, 10.213706);
     LatLng party1 = new LatLng(56.1587, 10.213);
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
-    int minTime = 500; // millisecs
-    int minDistance = 1; // meters
+    int minTime = 1000; // millisecs
+    int minDistance = 5; // meters
     LocationManager locationManager;
+    int MAPZOOMLEVEL = 12;
+    String LOGTAG = PartyFinderActivity.class.getSimpleName();
+    private Location userlocation;
 
 
 
@@ -75,7 +80,9 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         mMap = googleMap;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.partymapstyle));
 
-
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        }
         // put user location on map
         PutMylocationOnMap();
 
@@ -115,19 +122,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-
-        // Listener for marker (Pin) click
-       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
-
-                intent.putExtra("ID",marker.getTag().toString());
-                startActivity(intent);
-                return true;
-            }
-        });*/
 
         //Listener for marker inforWindow click
 
@@ -182,52 +176,17 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
                             }
                         });
-
-
                     }
                 });
-
-
-
                 alert.show();
-
-
-
-
-
             }
         });
-
-
-
-
-
-
     }
 
 
 
 
 
-
-
-    public void ListenForUserLocationUpdates()
-    {
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        }
-
-        if (locationManager != null) {
-            try {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListener);
-
-            } catch (SecurityException ex) {
-                //TODO: user have disabled location permission - need to validate this permission for newer versions
-            }
-        } else {
-
-        }
-    }
 
     public void PutMylocationOnMap()
     {
@@ -237,13 +196,58 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             // If not, ask for it
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             // onRequestPermissionsResult is automatically invoked now
-
         }
+
         else {
             mMap.setMyLocationEnabled(true);
+
+            if(userlocation==null)
+            {
+                String provider = LocationManager.GPS_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with GPS provider");
+
+            }
+            if(userlocation==null)
+            {
+                String provider = LocationManager.NETWORK_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Network provider");
+
+            }
+            if(userlocation==null)
+            {
+                String provider = LocationManager.PASSIVE_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Passive provider");
+            }
+            if(userlocation!=null)
+            {
+                LatLng userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,MAPZOOMLEVEL));
+            }
+
         }
 
 
+    }
+
+    public void ListenForUserLocationUpdates()
+    {
+
+        if (locationManager != null) {
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListener);
+
+            }
+            catch (SecurityException ex)
+            {
+            }
+        }
+        else
+            {
+
+        }
     }
 
     // Invokes når der kommer svar på requestPermissions
@@ -280,7 +284,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
             // Update user location
             LatLng userLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,MAPZOOMLEVEL));
         }
 
         @Override
