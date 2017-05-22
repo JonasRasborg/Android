@@ -13,11 +13,11 @@ public class Guest
     public String userID;
     public String name;
     public String picURI;
-    public int Points = 0;
+    public int Points;
 
     public Guest()
     {
-
+        Points = 0;
     }
 
     public Guest(String _userid, String _name, String _picURI)
@@ -25,6 +25,7 @@ public class Guest
         userID = _userid;
         name = _name;
         picURI = _picURI;
+        Points = 0;
     }
 
 
