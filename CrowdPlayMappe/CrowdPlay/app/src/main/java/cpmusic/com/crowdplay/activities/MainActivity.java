@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
 
+    // Logging
+    private String LOGTAG = "MainActivity";
+
     // Facebook
     CallbackManager mCallbackManager;
     ProfileTracker mProfileTracker;
@@ -49,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton fabDJ, fabGuest;
 
-
-
     // Firebase
     private DatabaseReference mDatabase;
 
@@ -59,13 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        }
-
        SaveMyLocationLocally(); // saves location in userLatLng member
-
 
         fabDJ = (FloatingActionButton)findViewById(R.id.fabDJ);
         fabGuest = (FloatingActionButton)findViewById(R.id.fabGuest);
@@ -76,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 OpenSetupPartyActivity();
             }
         });
-
-
         fabGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,17 +79,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         sharedPreferencesConnector = new SharedPreferencesConnector();
 
         currentProfile = Profile.getCurrentProfile();
 
         // Check if user is allready logged in
-
         if (currentProfile==null)
         {
-            // if not
+            // if not logged in
             LoginFacebook();
         }
         if (currentProfile!=null)
@@ -107,29 +98,41 @@ public class MainActivity extends AppCompatActivity {
 
     public void OpenPartyFinderActivity()
     {
-        Intent intent = new Intent(this,PartyFinderActivity.class);
-        startActivity(intent);
-    }
-
-    public void OpenSetupPartyActivity()
-    {
-        if (userlocation!=null) {
-            Intent intent = new Intent(this, SetupPartyActivity.class);
-
-            userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
-
-            Bundle args = new Bundle();
-
-            args.putParcelable("Location",userLatLng);
-            intent.putExtra("bundle", args);
-
+        if (sharedPreferencesConnector.getLoggedInStatus(this)==true) {
+            Intent intent = new Intent(this, PartyFinderActivity.class);
             startActivity(intent);
         }
         else
-            Toast.makeText(this,"Sorry, we could not find your location",Toast.LENGTH_SHORT).show();
+        {
+            Toast.makeText(this, "You need to be loggid in with Facebook to find parties", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // Invokes når der kommer svar på requestPermissions
+    public void OpenSetupPartyActivity() {
+        if (sharedPreferencesConnector.getLoggedInStatus(this) == true) {
+            if (userlocation != null) {
+                Intent intent = new Intent(this, SetupPartyActivity.class);
+
+                userLatLng = new LatLng(userlocation.getLatitude(), userlocation.getLongitude());
+
+                Bundle args = new Bundle();
+
+                args.putParcelable("Location", userLatLng);
+                intent.putExtra("bundle", args);
+
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Sorry, we could not find your location", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(this, "You need to be loggid in with Facebook to start a party", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // Invoked when requestPermissions callback returns
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -153,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void SaveMyLocationLocally()
     {
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        }
+
         //Check for permission on location services
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -167,38 +174,47 @@ public class MainActivity extends AppCompatActivity {
             {
                 String provider = LocationManager.GPS_PROVIDER;
                 userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with GPS provider");
+
             }
             if(userlocation==null)
             {
                 String provider = LocationManager.NETWORK_PROVIDER;
                 userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Network provider");
+
             }
             if(userlocation==null)
             {
                 String provider = LocationManager.PASSIVE_PROVIDER;
                 userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Passive provider");
+
             }
             if(userlocation == null)
             {
                 final LocationListener locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        Toast.makeText(MainActivity.this,"We found your location",Toast.LENGTH_LONG).show();
+                        Log.d(LOGTAG,"Locationlistener onLocationChanged");
                         userlocation = location;
                     }
 
                     @Override
                     public void onStatusChanged(String provider, int status, Bundle extras) {
+                        Log.d(LOGTAG,"Locationlistener onStatusChanged");
 
                     }
 
                     @Override
                     public void onProviderEnabled(String provider) {
+                        Log.d(LOGTAG,"Locationlistener onProviderEnabled");
 
                     }
 
                     @Override
                     public void onProviderDisabled(String provider) {
+                        Log.d(LOGTAG,"Locationlistener onProviderDisabled");
 
                     }
                 };
@@ -222,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 mProfileTracker = new ProfileTracker() {
                     @Override
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
+                        Log.d(LOGTAG,"LoginFacebook onSuccess");
 
                         sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
                         sharedPreferencesConnector.setFacebookUID(MainActivity.this,newProfile.getId());
@@ -238,12 +255,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
 
+                Log.d(LOGTAG,"LoginFacebook onCancel");
                 Toast.makeText(MainActivity.this,"You cant use this app without logging into Facebook",Toast.LENGTH_LONG).show();
                 finish();
             }
 
             @Override
             public void onError(FacebookException error) {
+                Log.d(LOGTAG,"LoginFacebook onError");
 
             }
         });
