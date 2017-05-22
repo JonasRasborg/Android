@@ -122,7 +122,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
         setUpRecyclerView();
-
+        mPartyRef.child("Active").setValue(true);
     }
 
     @Override
@@ -135,6 +135,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     protected void onDestroy() {
         super.onDestroy();
         //Spotify.destroyPlayer(this);
+        mPartyRef.child("Active").setValue(false);
     }
 
     @Override
