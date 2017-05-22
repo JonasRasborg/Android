@@ -98,10 +98,11 @@ public class PlayListFragment extends Fragment
                 Track track = dataSnapshot.getValue(Track.class);
                 adapter.changeVote(track);
 
-                if (track.Voters.size() == 0)
+                if(track.Voters==null)
                 {
                     adapter.moveTrackToLast(track);
                 }
+
             }
 
             @Override
