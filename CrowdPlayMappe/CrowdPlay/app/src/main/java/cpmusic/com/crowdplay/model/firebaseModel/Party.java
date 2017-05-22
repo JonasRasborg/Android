@@ -15,6 +15,7 @@ public class Party {
     public Location location;
     public String userID;
     public String partyID;
+    public boolean active;
 
     public Party()
     {

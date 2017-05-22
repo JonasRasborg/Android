@@ -81,7 +81,6 @@ public class SetupPartyActivity extends AppCompatActivity {
                 Location newLatLng = new Location(latLong.latitude,latLong.longitude);
                 Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
 
-
                 mRoot.child(partyKey).setValue(newParty);
 
                 intentSongs.putExtra("PartyKey",partyKey);

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
 
     // Logging
-    private String LOGTAG = "MainActivity";
+    private String LOGTAG = MainActivity.class.getSimpleName();
 
     // Facebook
     CallbackManager mCallbackManager;
