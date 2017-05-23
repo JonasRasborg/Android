@@ -24,7 +24,7 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="190dp"
+            android:layout_width="170dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -53,25 +53,25 @@
 
         <TextView
             android:id="@+id/tvVotes"
-            android:layout_width="30dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="7"
             android:textAlignment="center"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="30sp" />
+            android:textSize="30dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabUpvote"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:clickable="true"
             card_view:fabSize="mini"
-            card_view:srcCompat="@drawable/upvote_icon"
-            android:layout_gravity="center"/>
+            card_view:srcCompat="@drawable/upvote_icon" />
 
 
     </LinearLayout>
