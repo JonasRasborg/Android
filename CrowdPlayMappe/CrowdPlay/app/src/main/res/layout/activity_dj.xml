@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtTrack"
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtArtist"
+        android:id="@+id/tvArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
@@ -36,7 +36,7 @@
         android:textColor="@color/colorSecondary"
         android:textSize="18dp"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"
-        app:layout_constraintTop_toBottomOf="@+id/txtTrack" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -46,7 +46,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginTop="7dp"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"
-        app:layout_constraintTop_toBottomOf="@+id/txtArtist"
+        app:layout_constraintTop_toBottomOf="@+id/tvArtist"
         android:layout_marginRight="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 

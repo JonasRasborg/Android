@@ -93,8 +93,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         mPartyRef = database.getReference().child(partyKey);
         mTracksRef = database.getReference(partyKey).child("Tracks");
 
-        txtArtist = (TextView)findViewById(R.id.txtArtist);
-        txtTrack = (TextView)findViewById(R.id.txtTrack);
+        txtArtist = (TextView)findViewById(R.id.tvArtist);
+        txtTrack = (TextView)findViewById(R.id.tvTitle);
         imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
         mContext = this;
 

@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.activities.GuestActivity;
 import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
 import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
@@ -103,6 +104,7 @@ public class PlayListFragment extends Fragment
                 {
                     currenPlaying = newTrack;
                     adapter.removeCurrentPlaying(newTrack);
+                    ((GuestActivity)getActivity()).dispatchInformations(newTrack);
                 }
 
             }
@@ -123,6 +125,10 @@ public class PlayListFragment extends Fragment
                     {
                         currenPlaying = track;
                         adapter.removeCurrentPlaying(track);
+                        if (getActivity() != null)
+                        {
+                            ((GuestActivity)getActivity()).dispatchInformations(track);
+                        }
 
                     }
                     else

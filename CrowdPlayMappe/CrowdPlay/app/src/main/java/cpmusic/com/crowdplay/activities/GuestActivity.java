@@ -5,21 +5,37 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import cpmusic.com.crowdplay.Fragments.PlayListFragment;
 import cpmusic.com.crowdplay.Fragments.SearchFragment;
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.FragmentAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 public class GuestActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     String partyID;
 
+    ImageView imgAlbum;
+    TextView tvTitle;
+    TextView tvArtist;
+
+    PlayListFragment playListFragment;
+    SearchFragment searchFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guest_main);
+        setContentView(R.layout.activity_guest);
+
+        imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
+        tvTitle = (TextView)findViewById(R.id.tvTitle);
+        tvArtist = (TextView)findViewById(R.id.tvArtist);
 
         Intent partyIntent = getIntent();
         partyID = partyIntent.getStringExtra("PartyKey");
@@ -35,8 +51,8 @@ public class GuestActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager){
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
 
-        PlayListFragment playListFragment = new PlayListFragment();
-        SearchFragment searchFragment = new SearchFragment();
+        playListFragment = new PlayListFragment();
+        searchFragment = new SearchFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("PartyKey", partyID);
@@ -47,7 +63,12 @@ public class GuestActivity extends AppCompatActivity {
         adapter.addFragment(playListFragment,"Playlist");
         adapter.addFragment(searchFragment,"Search");
         viewPager.setAdapter(adapter);
+    }
 
+    public void dispatchInformations(Track track){
+        tvTitle.setText(track.Title);
+        tvArtist.setText(track.Artist);
+        Picasso.with(this).load(track.ImageURL).into(imgAlbum);
     }
 }
 
