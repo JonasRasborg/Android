@@ -127,7 +127,7 @@ public class PlayListFragment extends Fragment
                     }
                     else
                     {
-                        if (currenPlaying.URI == track.URI) //Hvis den pågældende sang er ændret fra playing til notPlaying (og har null voters)
+                        if (currenPlaying != null && currenPlaying.URI == track.URI) //Hvis den pågældende sang er ændret fra playing til notPlaying (og har null voters)
                         {
                             adapter.addTrack(track);
                         }
