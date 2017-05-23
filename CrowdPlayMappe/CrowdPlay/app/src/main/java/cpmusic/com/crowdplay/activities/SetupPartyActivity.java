@@ -1,6 +1,10 @@
 package cpmusic.com.crowdplay.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +50,7 @@ public class SetupPartyActivity extends AppCompatActivity {
     PartyAdapter adapter;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,9 @@ public class SetupPartyActivity extends AppCompatActivity {
         partyList = new ArrayList<>();
 
         sharedPreferencesConnector = new SharedPreferencesConnector();
+
+       LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("PartyToDelete"));
+
 
         facebookID = sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this);
 
@@ -89,47 +97,51 @@ public class SetupPartyActivity extends AppCompatActivity {
             }
         });
 
-        mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()!=null)
-                {
-                    Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
-                }
-                for(DataSnapshot d: dataSnapshot.getChildren()){
-
-                    Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
-                    if(p.userID.equals(sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this))){
-                        adapter.addParty(p);
-                        Log.d("SetupPartyActivity","party from this DJ found");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-        setUpRecyclerView();
 
 
 
     }
 
+
     @Override
     public void onResume(){
         super.onResume();
+
+        UpdatePartylist();
+
+    }
+
+
+    private void setUpRecyclerView() {
+
+        recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
+        adapter = new PartyAdapter(this);
+        recyclerView.setAdapter(adapter);
+
+
+        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
+        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
+
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mRoot.child(intent.getStringExtra("DeleteParty")).removeValue();
+            UpdatePartylist();
+        }
+    };
+
+    private void UpdatePartylist()
+    {
+
+        setUpRecyclerView();
         mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue()!=null)
                 {
-                    Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
                     adapter.clearParties();
                 }
                 for(DataSnapshot d: dataSnapshot.getChildren()){
@@ -148,20 +160,6 @@ public class SetupPartyActivity extends AppCompatActivity {
 
             }
         });
-
-    }
-
-    private void setUpRecyclerView() {
-
-        recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
-        adapter = new PartyAdapter(this);
-        recyclerView.setAdapter(adapter);
-
-
-        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
-        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
-
     }
 
 }

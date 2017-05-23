@@ -1,20 +1,26 @@
 package cpmusic.com.crowdplay.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.activities.DJActivity;
+import cpmusic.com.crowdplay.activities.PartyFinderActivity;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 
 /**
@@ -30,6 +36,8 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder
     Context mContext;
     private Bundle bundle;
     Intent intentDJ;
+
+    LocalBroadcastManager localBroadcastManager;
 
 
     public PartyAdapter(Context context)
@@ -117,6 +125,37 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder
         public void setListeners(){
             itemView.setOnClickListener(MyViewHolder.this);
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                    alert.setMessage("Delete Party?");
+
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent = new Intent("PartyToDelete");
+                            intent.putExtra("DeleteParty",current.partyID);
+                            localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+                            localBroadcastManager.sendBroadcast(intent);
+                        }
+                    });
+
+                    alert.show();
+
+                    return false;
+                }
+            });
         }
 
         @Override
@@ -125,6 +164,7 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder
                     mContext.startActivity(intentDJ);
                     Log.i("onClick","View clicked");
         }
+
     }
 
 }
