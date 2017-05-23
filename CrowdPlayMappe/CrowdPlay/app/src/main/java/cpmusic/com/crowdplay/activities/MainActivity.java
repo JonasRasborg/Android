@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                     mProfileTracker=new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                            Toast.makeText(MainActivity.this, "OnCurrentProfileChanged", Toast.LENGTH_SHORT).show();
+                            Log.d(LOGTAG, "onCurrentProfileChanged");
                             Profile p = currentProfile;
                             sharedPreferencesConnector.setFacebookUID(MainActivity.this,p.getId());
                             sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,p.getFirstName());
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "CurentPrifile not null", Toast.LENGTH_SHORT).show();
+                    Log.d(LOGTAG, "Current profile not null, automatic login");
                     Profile p = Profile.getCurrentProfile();
 
                     sharedPreferencesConnector.setFacebookUID(MainActivity.this,p.getId());
@@ -286,12 +286,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Toast.makeText(MainActivity.this, "Login cancel", Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Login Cancel");
+
 
             }
 
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Login Error");
 
             }
         });
