@@ -132,7 +132,10 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        adapter.addPlayingSong(topTrack);
+        if (adapter.getTopTrack() != null)
+        {
+            adapter.addPlayingSong(topTrack);
+        }
         Spotify.destroyPlayer(this);
         mPartyRef.child("Active").setValue(false);
     }

@@ -155,18 +155,21 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                String correctPassword = dataSnapshot.child(marker.getTag().toString()).child("password").getValue(String.class);
-                                String typedPassword = passwordEditText.getText().toString();
+                                if (marker.getTag() != null)
+                                {
+                                    String markterTag = marker.getTag().toString();
 
-                                if (correctPassword.equals(typedPassword))
-                                {
-                                    Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
-                                    intent.putExtra("PartyKey",marker.getTag().toString());
-                                    startActivity(intent);
-                                }
-                                else
-                                {
-                                    Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+
+                                    String correctPassword = dataSnapshot.child(markterTag).child("password").getValue(String.class);
+                                    String typedPassword = passwordEditText.getText().toString();
+
+                                    if (correctPassword.equals(typedPassword)) {
+                                        Intent intent = new Intent(PartyFinderActivity.this, GuestActivity.class);
+                                        intent.putExtra("PartyKey", marker.getTag().toString());
+                                        startActivityForResult(intent, 200);
+                                    } else {
+                                        Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                             }
@@ -182,10 +185,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
-
-
-
-
 
 
     public void PutMylocationOnMap()
