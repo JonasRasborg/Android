@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/img_album"
-            android:layout_width="74dp"
-            android:layout_height="85dp"
+            android:layout_width="63dp"
+            android:layout_height="60dp"
             android:layout_margin="7dp"
             android:contentDescription="@string/thumbnail"
             android:src="@drawable/thumb_1_0" />
