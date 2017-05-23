@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.Services.DrakeService;
 import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton fabDJ, fabGuest;
 
+    private Intent serviceIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
        SaveMyLocationLocally(); // saves location in userLatLng member
+
+        serviceIntent = new Intent(MainActivity.this, DrakeService.class);
+        startService(serviceIntent);
 
         fabDJ = (FloatingActionButton)findViewById(R.id.fabDJ);
         fabGuest = (FloatingActionButton)findViewById(R.id.fabGuest);

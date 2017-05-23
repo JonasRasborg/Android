@@ -32,10 +32,14 @@ public class APIConnector {
     private Intent dataIntent;
     private LocalBroadcastManager localBroadcastManager;
 
+    private Intent drakeIntent;
+
     public APIConnector(Context c)
     {
         dataIntent = new Intent("SearchData");
         localBroadcastManager = LocalBroadcastManager.getInstance(c);
+
+        drakeIntent = new Intent("Drake");
     }
 
     public void Search(String search, Context c)
@@ -73,6 +77,7 @@ public class APIConnector {
 
     }
 
+
     private void SortData()
     {
         ArrayList<Track> tracks = new ArrayList<>();
@@ -94,4 +99,36 @@ public class APIConnector {
         dataIntent.putExtra("tracks", tracks);
         localBroadcastManager.sendBroadcast(dataIntent);
     }
+
+    public void sendRequestForDrake(Context c) {
+        //send request using Volley
+        if (queue == null) {
+            queue = Volley.newRequestQueue(c);
+        }
+
+        String url = "https://api.spotify.com/v1/search?q=" + "Drake" + "&type=artist,track";
+
+        StringRequest stringRequestDrake = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        webResponse = response;
+                        data = JSONParser.parseSearchWithJsonParser(webResponse);
+
+                        if (data.tracks.items != null)
+                        {
+                            drakeIntent.putExtra("DrakeData", data.tracks);
+                            localBroadcastManager.sendBroadcast(drakeIntent);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        queue.add(stringRequestDrake);
+    }
+
 }
