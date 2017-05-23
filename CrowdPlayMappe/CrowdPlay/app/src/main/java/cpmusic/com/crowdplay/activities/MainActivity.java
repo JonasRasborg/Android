@@ -81,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferencesConnector = new SharedPreferencesConnector();
 
-        LoginFacebook();
+
         // Check if user is allready logged in
-       /* if (sharedPreferencesConnector.getLoggedInStatus(this)==false)
+        if (sharedPreferencesConnector.getLoggedInStatus(this)==false)
         {
             // if not logged in
             LoginFacebook();
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         {
             // if logged in
             Toast.makeText(this,"Welcome back "+sharedPreferencesConnector.getFacebookFirstName(this),Toast.LENGTH_SHORT).show();
-        }*/
+        }
     }
 
     public void OpenPartyFinderActivity()
@@ -260,9 +260,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
                             Log.d(LOGTAG,sharedPreferencesConnector.getFacebookProfilepicUri(MainActivity.this));
 
-
-
-
                         }
                     };
                     mProfileTracker.startTracking();
@@ -278,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     sharedPreferencesConnector.setFacebookFullName(MainActivity.this,p.getName());
                     sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
 
-                    
+
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFirstName(MainActivity.this));
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookUID(MainActivity.this));
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
