@@ -41,9 +41,9 @@
 
             <TextView
                 android:id="@+id/tvArtist"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="7dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
                 android:textSize="15dp"
