@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -131,6 +132,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 alert.setMessage("Enter password for Party");
 
                 final EditText passwordEditText = new EditText(PartyFinderActivity.this);
+                passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
                 alert.setView(passwordEditText);
 
