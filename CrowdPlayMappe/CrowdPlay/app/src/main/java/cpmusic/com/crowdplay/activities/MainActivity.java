@@ -81,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferencesConnector = new SharedPreferencesConnector();
 
+        LoginFacebook();
         // Check if user is allready logged in
-        if (sharedPreferencesConnector.getLoggedInStatus(this)==false)
+       /* if (sharedPreferencesConnector.getLoggedInStatus(this)==false)
         {
             // if not logged in
             LoginFacebook();
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         {
             // if logged in
             Toast.makeText(this,"Welcome back "+sharedPreferencesConnector.getFacebookFirstName(this),Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     public void OpenPartyFinderActivity()
@@ -245,12 +246,22 @@ public class MainActivity extends AppCompatActivity {
                     mProfileTracker=new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            Toast.makeText(MainActivity.this, "OnCurrentProfileChanged", Toast.LENGTH_SHORT).show();
                             Profile p = currentProfile;
+                            sharedPreferencesConnector.setFacebookUID(MainActivity.this,p.getId());
                             sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,p.getFirstName());
                             sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,p.getProfilePictureUri(200,200).toString());
                             sharedPreferencesConnector.setFacebookFullName(MainActivity.this,p.getName());
                             sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
+
                             mProfileTracker.stopTracking();
+                            Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFirstName(MainActivity.this));
+                            Log.d(LOGTAG,sharedPreferencesConnector.getFacebookUID(MainActivity.this));
+                            Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
+                            Log.d(LOGTAG,sharedPreferencesConnector.getFacebookProfilepicUri(MainActivity.this));
+
+
+
 
                         }
                     };
@@ -258,11 +269,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    Toast.makeText(MainActivity.this, "CurentPrifile not null", Toast.LENGTH_SHORT).show();
                     Profile p = Profile.getCurrentProfile();
+
+                    sharedPreferencesConnector.setFacebookUID(MainActivity.this,p.getId());
                     sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,p.getFirstName());
                     sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,p.getProfilePictureUri(200,200).toString());
                     sharedPreferencesConnector.setFacebookFullName(MainActivity.this,p.getName());
                     sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
+
+                    
+                    Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFirstName(MainActivity.this));
+                    Log.d(LOGTAG,sharedPreferencesConnector.getFacebookUID(MainActivity.this));
+                    Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
+                    Log.d(LOGTAG,sharedPreferencesConnector.getFacebookProfilepicUri(MainActivity.this));
                 }
             }
 
