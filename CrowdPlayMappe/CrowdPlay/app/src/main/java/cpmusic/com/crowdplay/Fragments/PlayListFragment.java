@@ -2,6 +2,7 @@ package cpmusic.com.crowdplay.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,12 +22,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
-import cpmusic.com.crowdplay.adapters.RecyclerViewGuestAdapter;
+import cpmusic.com.crowdplay.activities.GuestActivity;
+import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
+import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
+import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
+
+import static android.R.attr.id;
 
 
 public class PlayListFragment extends Fragment
@@ -38,8 +43,8 @@ public class PlayListFragment extends Fragment
 
     NetworkChecker networkChecker;
 
-    RecycleViewAdapter adapter;
-    RecyclerViewGuestAdapter adapterGuests;
+    PlaylistAdapter adapter;
+    GuestAdapter adapterGuests;
 
     RecyclerView recyclerView;
     RecyclerView recyclerViewGuests;
@@ -51,12 +56,14 @@ public class PlayListFragment extends Fragment
 
     String partyID;
 
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
     String UserID;
     String facebookPicUri;
     boolean Allreadyloggedin;
 
     ArrayList<Guest> guests;
+
+    Track currenPlaying;
 
 
     @Nullable
@@ -67,13 +74,13 @@ public class PlayListFragment extends Fragment
         mContext = getActivity();
         mActivity = getActivity();
 
-        partyID = getArguments().getString("ID");
+        partyID = getArguments().getString("PartyKey");
         guests = new ArrayList<>();
 
         // SHaredPreferences
-        sharedPreferencesData = new SharedPreferencesData();
-        UserID = sharedPreferencesData.getFacebookUID(mContext);
-        facebookPicUri = sharedPreferencesData.getFacebookProfilepicUri(mContext);
+        sharedPreferencesConnector = new SharedPreferencesConnector();
+        UserID = sharedPreferencesConnector.getFacebookUID(mContext);
+        facebookPicUri = sharedPreferencesConnector.getFacebookProfilepicUri(mContext);
 
         Allreadyloggedin = false;
 
@@ -84,23 +91,53 @@ public class PlayListFragment extends Fragment
         mPartyRef = database.getReference().child(partyID);
         mTracksRef = mPartyRef.child("Tracks");
 
+
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Track newTrack = dataSnapshot.getValue(Track.class);
+
                 adapter.addTrack(newTrack);
+
+                if(newTrack.IsPlaying == true) //Hvis den pågældende sang er ved at afspille på DJ'en
+                {
+                    currenPlaying = newTrack;
+                    adapter.removeCurrentPlaying(newTrack);
+                    ((GuestActivity)getActivity()).dispatchInformations(newTrack);
+                }
+
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
             {
                 Track track = dataSnapshot.getValue(Track.class);
-                adapter.changeVote(track);
 
-                if (track.Voters.size() == 0)
+                if (track.Voters != null) //Hvis den pågældende sang har modtaget en vote, og ikke er den afspillende
                 {
-                    adapter.moveTrackToLast(track);
+                    adapter.changeVote(track);
+                }
+
+                else
+                {
+                    if(track.IsPlaying == true) //Hvis den pågældende sang netop er staret på DJ'en
+                    {
+                        currenPlaying = track;
+                        adapter.removeCurrentPlaying(track);
+                        if (getActivity() != null)
+                        {
+                            ((GuestActivity)getActivity()).dispatchInformations(track);
+                        }
+
+                    }
+                    else
+                    {
+                        if (currenPlaying != null && currenPlaying.URI == track.URI) //Hvis den pågældende sang er ændret fra playing til notPlaying (og har null voters)
+                        {
+                            adapter.addTrack(track);
+                        }
+                    }
                 }
             }
 
@@ -122,6 +159,7 @@ public class PlayListFragment extends Fragment
 
         setUpRecyclerView();
         setUpRecyclerViewGuests();
+        setmPartyRef();
         addGuestToParty();
 
         return view;
@@ -131,7 +169,7 @@ public class PlayListFragment extends Fragment
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(mContext, mPartyRef);
+        adapter = new PlaylistAdapter(mContext, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
@@ -147,7 +185,7 @@ public class PlayListFragment extends Fragment
     private void setUpRecyclerViewGuests() {
 
         recyclerViewGuests = (RecyclerView) view.findViewById(R.id.recyclerViewGuests);
-        adapterGuests = new RecyclerViewGuestAdapter(mContext, guests);
+        adapterGuests = new GuestAdapter(mContext, guests);
         recyclerViewGuests.setAdapter(adapterGuests);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
@@ -158,6 +196,27 @@ public class PlayListFragment extends Fragment
         recyclerViewGuests.getItemAnimator().setMoveDuration(300);
         recyclerViewGuests.getItemAnimator().setRemoveDuration(200);
         recyclerViewGuests.getItemAnimator().setAddDuration(300);
+    }
+
+    private void setmPartyRef()
+    {
+        mPartyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                Party p = dataSnapshot.getValue(Party.class);
+
+                if (p.Active == false)
+                {
+                    mActivity.finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -179,9 +238,9 @@ public class PlayListFragment extends Fragment
                 }
                 if(Allreadyloggedin == false)
                 {
-                    String thisUserName = sharedPreferencesData.getFacebookFullName(mContext);
-                    String thisUserID = sharedPreferencesData.getFacebookUID(mContext);
-                    mGuestsRef.push().child(thisUserID).setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
+                    String thisUserName = sharedPreferencesConnector.getFacebookFullName(mContext);
+                    String thisUserID = sharedPreferencesConnector.getFacebookUID(mContext);
+                    mGuestsRef.child(thisUserID).setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
                     Allreadyloggedin = true;
                     mGuestsRef.removeEventListener(this);
                 }
@@ -203,6 +262,8 @@ public class PlayListFragment extends Fragment
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Guest g = dataSnapshot.getValue(Guest.class);
+                adapterGuests.SetPoints(g);
 
             }
 

@@ -24,19 +24,19 @@ import java.util.List;
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 /**
  * Created by rrask on 19-05-2017.
  */
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
     List<Track> mData;
     private LayoutInflater inflater;
     Context mContext;
     DatabaseReference mTracksRef;
     DatabaseReference mPartyRef;
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
     String thisUserID;
     String thisUserFullName;
     String thisUserPicURI;
@@ -44,16 +44,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     MyViewHolder holder;
 
 
-    public RecycleViewAdapter(Context context, DatabaseReference root) {
+    public PlaylistAdapter(Context context, DatabaseReference root) {
         inflater = LayoutInflater.from(context);
         this.mData = new ArrayList<>();
         mContext = context;
         mPartyRef = root;
         mTracksRef = root.child("Tracks");
-        sharedPreferencesData = new SharedPreferencesData();
-        thisUserID = sharedPreferencesData.getFacebookUID(mContext);
-        thisUserFullName = sharedPreferencesData.getFacebookFullName(mContext);
-        thisUserPicURI = sharedPreferencesData.getFacebookProfilepicUri(mContext);
+        sharedPreferencesConnector = new SharedPreferencesConnector();
+        thisUserID = sharedPreferencesConnector.getFacebookUID(mContext);
+        thisUserFullName = sharedPreferencesConnector.getFacebookFullName(mContext);
+        thisUserPicURI = sharedPreferencesConnector.getFacebookProfilepicUri(mContext);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 Guest voteReceivingGuest = dataSnapshot.getValue(Guest.class);
                 int points = voteReceivingGuest.Points + 1;
 
-                votedGust.child("Votes").setValue(points);
+                votedGust.child("Points").setValue(points);
             }
 
             @Override
@@ -110,33 +110,48 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
     }
 
+    public void addPlayingSong(Track track){
 
-
-    public void moveTrackToLast(Track track)
-    {
-        mData.remove(0);
-        // Remove voters locally
         if(track.Voters != null){
             track.Voters.clear();
         }
         track.isVoted=false;
-        mData.add(track);
+        addTrack(track);
 
-
-        for(int i = 0; i<mData.size()-1;i++){
-            notifyItemMoved(i+1,i);
-        }
-        notifyItemChanged(mData.size());
+        mTracksRef.child(track.URI).child("IsPlaying").setValue(false);
     }
 
+    public int getSize(){
+        return mData.size();
+    }
+
+    public void removeCurrentPlaying(Track track)
+    {
+        if (track.URI ==mData.get(0).URI)
+        {
+            mData.remove(0);
+            notifyItemRemoved(0);
+        }
+        else
+        {
+            for (int i = 0; i<mData.size(); i++)
+            {
+                if (track.URI == mData.get(i).URI)
+                {
+                    mData.remove(i);
+                    notifyItemRemoved(i);
+                }
+            }
+        }
+    }
 
     public void resetVotes(Track track){
 
-        moveTrackToLast(track);
-
+        removeCurrentPlaying(track);
 
         // Remove all voters from Track on firebse
-            mTracksRef.child(track.URI).child("Voters").removeValue();
+        mTracksRef.child(track.URI).child("Voters").removeValue();
+        mTracksRef.child(track.URI).child("IsPlaying").setValue(true);
     }
 
     public Track getTopTrack(){
@@ -148,24 +163,25 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         int TrackVotesThis =0;
         int TrackVoteslast =0;
 
-
-
        for (int i = position; i > 0; i--)
        {
            // Handling firebase null pointer (Votes is empty)
+                /*
                 if (mData.get(i).Voters==null)
                 {
                     TrackVotesThis = 0;
                 }
+                */
                 if(mData.get(i).Voters!=null)
                 {
                     TrackVotesThis = mData.get(i).Voters.size();
                 }
 
+                /*
                 if(mData.get(i-1).Voters==null)
                 {
-                    TrackVoteslast =0;
-                }
+                    TrackVoteslast = 0;
+                }*/
 
                if(mData.get(i-1).Voters!=null)
                {
@@ -307,6 +323,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         if (AllreadyVoted == false) {
                             // Push this Guest on voters list
                             mCurrentTrackVotersRef.push().setValue(thisVotingGuest);
+                            addPointToGuest(current.AddedBy);
                             Toast.makeText(mContext, current.Title + " Upvoted", Toast.LENGTH_SHORT).show();
                             AllreadyVoted = true;
 

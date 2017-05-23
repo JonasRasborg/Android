@@ -4,16 +4,16 @@ package cpmusic.com.crowdplay.model.firebaseModel;
  * Created by ander on 18/05/2017.
  */
 
-public class CustomLatLng {
+public class Location {
     double latitude;
     double longtitude;
 
-    public CustomLatLng()
+    public Location()
     {
 
     }
 
-    public CustomLatLng(double _lat, double _long)
+    public Location(double _lat, double _long)
     {
         latitude = _lat;
         longtitude = _long;

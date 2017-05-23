@@ -38,7 +38,10 @@ public class Track implements Serializable
 
     public boolean isVoted;
 
-    @SerializedName("addedBy")
-    @Expose
+
     public String AddedBy;
+
+
+    public boolean IsPlaying = false;
+
 }

@@ -4,14 +4,15 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.icu.text.MessagePattern;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,8 +32,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 
@@ -42,9 +41,12 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     LatLng navitas = new LatLng(56.158897, 10.213706);
     LatLng party1 = new LatLng(56.1587, 10.213);
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
-    int minTime = 500; // millisecs
-    int minDistance = 1; // meters
+    int minTime = 1000; // millisecs
+    int minDistance = 5; // meters
     LocationManager locationManager;
+    int MAPZOOMLEVEL = 12;
+    String LOGTAG = PartyFinderActivity.class.getSimpleName();
+    private Location userlocation;
 
 
 
@@ -79,29 +81,33 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         mMap = googleMap;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.partymapstyle));
 
-
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        }
         // put user location on map
         PutMylocationOnMap();
 
-        // Start listening for user location updates - if changed enough map is updated
-        ListenForUserLocationUpdates();
-
-      
 
         // Firebase get all parties
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mMap.clear();
                 for(DataSnapshot i:dataSnapshot.getChildren())
                 {
+
                     Party p = dataSnapshot.child(i.getKey()).getValue(Party.class);
-                    LatLng thisLatLng = new LatLng(p.location.getLatitude(),p.location.getLongtitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    // Tilføjer database key key til Markers "Tag"
-                    marker.setTag(dataSnapshot.child(i.getKey()).getKey());
+                    if(p.Active==true) {
+                        LatLng thisLatLng = new LatLng(p.location.getLatitude(),p.location.getLongtitude());
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(thisLatLng).title(p.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        // Tilføjer database key key til Markers "Tag"
+                        marker.setTag(dataSnapshot.child(i.getKey()).getKey());
+                    }
 
                 }
 
@@ -113,19 +119,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-
-        // Listener for marker (Pin) click
-       /* mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                Intent intent = new Intent(PartyFinderActivity.this,GuestActivity.class);
-
-                intent.putExtra("ID",marker.getTag().toString());
-                startActivity(intent);
-                return true;
-            }
-        });*/
 
         //Listener for marker inforWindow click
 
@@ -139,6 +132,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 alert.setMessage("Enter password for Party");
 
                 final EditText passwordEditText = new EditText(PartyFinderActivity.this);
+                passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
                 alert.setView(passwordEditText);
 
@@ -159,18 +153,21 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                String correctPassword = dataSnapshot.child(marker.getTag().toString()).child("password").getValue(String.class);
-                                String typedPassword = passwordEditText.getText().toString();
+                                if (marker.getTag() != null)
+                                {
+                                    String markterTag = marker.getTag().toString();
 
-                                if (correctPassword.equals(typedPassword))
-                                {
-                                    Intent intent = new Intent(PartyFinderActivity.this,GuestMainActivity.class);
-                                    intent.putExtra("ID",marker.getTag().toString());
-                                    startActivity(intent);
-                                }
-                                else
-                                {
-                                    Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+
+                                    String correctPassword = dataSnapshot.child(markterTag).child("password").getValue(String.class);
+                                    String typedPassword = passwordEditText.getText().toString();
+
+                                    if (correctPassword.equals(typedPassword)) {
+                                        Intent intent = new Intent(PartyFinderActivity.this, GuestActivity.class);
+                                        intent.putExtra("PartyKey", marker.getTag().toString());
+                                        startActivityForResult(intent, 200);
+                                    } else {
+                                        Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                             }
@@ -180,52 +177,13 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
                             }
                         });
-
-
                     }
                 });
-
-
-
                 alert.show();
-
-
-
-
-
             }
         });
-
-
-
-
-
-
     }
 
-
-
-
-
-
-
-    public void ListenForUserLocationUpdates()
-    {
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        }
-
-        if (locationManager != null) {
-            try {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListener);
-
-            } catch (SecurityException ex) {
-                //TODO: user have disabled location permission - need to validate this permission for newer versions
-            }
-        } else {
-
-        }
-    }
 
     public void PutMylocationOnMap()
     {
@@ -235,14 +193,44 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             // If not, ask for it
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_FINE_LOCATION);
             // onRequestPermissionsResult is automatically invoked now
-
         }
+
         else {
+
             mMap.setMyLocationEnabled(true);
+
+            if(userlocation==null)
+            {
+                String provider = LocationManager.GPS_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with GPS provider");
+
+            }
+            if(userlocation==null)
+            {
+                String provider = LocationManager.NETWORK_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Network provider");
+
+            }
+            if(userlocation==null)
+            {
+                String provider = LocationManager.PASSIVE_PROVIDER;
+                userlocation = locationManager.getLastKnownLocation(provider);
+                Log.d(LOGTAG,"LocationManager: location was found with Passive provider");
+            }
+            if(userlocation!=null)
+            {
+                LatLng userLatLng = new LatLng(userlocation.getLatitude(),userlocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,MAPZOOMLEVEL));
+            }
+
         }
 
 
     }
+
+
 
     // Invokes når der kommer svar på requestPermissions
     @Override
@@ -271,29 +259,5 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    // Lytter på når GPS location ændres (væsentligt)
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
 
-            // Update user location
-            LatLng userLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,15));
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 }

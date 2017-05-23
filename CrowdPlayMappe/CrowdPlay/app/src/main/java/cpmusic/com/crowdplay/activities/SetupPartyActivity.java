@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,36 +19,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.adapters.RecyclePartyViewAdapter;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
-import cpmusic.com.crowdplay.adapters.SearchAdapter;
-import cpmusic.com.crowdplay.model.firebaseModel.CustomLatLng;
+import cpmusic.com.crowdplay.adapters.PartyAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Location;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
-import cpmusic.com.crowdplay.util.SharedPreferencesData;
+import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
 
 public class SetupPartyActivity extends AppCompatActivity {
 
     EditText edtPartyName, edtPartyCode;
     Button btnStartParty;
     private Bundle bundle;
-    Intent intentDJ;
+    Intent intentSongs;
     ArrayList<Party> partyList;
     RecyclerView recyclerView;
 
     String facebookID;
 
-    SharedPreferencesData sharedPreferencesData;
+    SharedPreferencesConnector sharedPreferencesConnector;
 
     DatabaseReference mRoot;
     FirebaseDatabase database;
 
-    // RecykleView
-
-    RecyclePartyViewAdapter adapter;
+    PartyAdapter adapter;
 
 
     @Override
@@ -61,14 +55,11 @@ public class SetupPartyActivity extends AppCompatActivity {
         mRoot = database.getReference();
         partyList = new ArrayList<>();
 
+        sharedPreferencesConnector = new SharedPreferencesConnector();
 
+        facebookID = sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this);
 
-        sharedPreferencesData = new SharedPreferencesData();
-
-        facebookID = sharedPreferencesData.getFacebookUID(SetupPartyActivity.this);
-
-
-        intentDJ = new Intent(this, DJActivity.class);
+        intentSongs = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
         mRoot = FirebaseDatabase.getInstance().getReference();
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
@@ -87,31 +78,30 @@ public class SetupPartyActivity extends AppCompatActivity {
                 String password = edtPartyCode.getText().toString();
                 String partyKey = UUID.randomUUID().toString();
 
-                CustomLatLng newLatLng = new CustomLatLng(latLong.latitude,latLong.longitude);
+                Location newLatLng = new Location(latLong.latitude,latLong.longitude);
                 Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
-
 
                 mRoot.child(partyKey).setValue(newParty);
 
-                //mRoot.push().setValue(newParty);
-
-                intentDJ.putExtra("PartyKey",partyKey);
-
-
-                startActivity(intentDJ);
+                intentSongs.putExtra("PartyKey",partyKey);
+                
+                startActivity(intentSongs);
             }
         });
 
         mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null)
+                {
+                    Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
+                }
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
                     Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
-                    if(p.userID.equals(sharedPreferencesData.getFacebookUID(SetupPartyActivity.this))){
+                    if(p.userID.equals(sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this))){
                         adapter.addParty(p);
                         Log.d("SetupPartyActivity","party from this DJ found");
-                        Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -131,10 +121,40 @@ public class SetupPartyActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        mRoot.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null)
+                {
+                    Toast.makeText(SetupPartyActivity.this,"You have ongoing Parties!",Toast.LENGTH_SHORT).show();
+                    adapter.clearParties();
+                }
+                for(DataSnapshot d: dataSnapshot.getChildren()){
+
+                    Party p = dataSnapshot.child(d.getKey()).getValue(Party.class);
+                    if(p.userID.equals(sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this))){
+                        adapter.addParty(p);
+                        Log.d("SetupPartyActivity","party from this DJ found");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.PartyRecyclerView);
-        adapter = new RecyclePartyViewAdapter(this);
+        adapter = new PartyAdapter(this);
         recyclerView.setAdapter(adapter);
 
 

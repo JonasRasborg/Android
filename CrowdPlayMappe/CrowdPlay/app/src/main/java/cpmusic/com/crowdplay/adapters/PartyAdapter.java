@@ -1,11 +1,9 @@
 package cpmusic.com.crowdplay.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.activities.DJActivity;
@@ -24,7 +21,7 @@ import cpmusic.com.crowdplay.model.firebaseModel.Party;
  * Created by ander on 20/05/2017.
  */
 
-public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyViewAdapter.MyViewHolder> {
+public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder> {
 
 
     private List<Party> parties;
@@ -35,7 +32,7 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
     Intent intentDJ;
 
 
-    public RecyclePartyViewAdapter(Context context)
+    public PartyAdapter(Context context)
     {
         mContext = context;
         parties = new ArrayList<>();
@@ -47,6 +44,11 @@ public class RecyclePartyViewAdapter extends RecyclerView.Adapter<RecyclePartyVi
         View view = inflater.inflate(R.layout.list_item_party, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
+    }
+
+    public void clearParties()
+    {
+        parties.clear();
     }
 
     @Override

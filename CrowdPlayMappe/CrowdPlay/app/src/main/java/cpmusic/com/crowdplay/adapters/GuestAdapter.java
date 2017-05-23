@@ -14,20 +14,19 @@ import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
-import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 /**
  * Created by Jonas R. Hartogsohn on 21-05-2017.
  */
 
-public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewGuestAdapter.MyViewHolder>{
-    private static final String TAG = RecyclerViewGuestAdapter.class.getSimpleName();
+public class GuestAdapter extends RecyclerView.Adapter<GuestAdapter.MyViewHolder>{
+    private static final String TAG = GuestAdapter.class.getSimpleName();
 
     private List<Guest> mData;
     private LayoutInflater mInflater;
     Context mContext;
 
-    public RecyclerViewGuestAdapter(Context context, List<Guest> data) {
+    public GuestAdapter(Context context, List<Guest> data) {
         this.mData = data;
         this.mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -60,19 +59,35 @@ public class RecyclerViewGuestAdapter extends RecyclerView.Adapter<RecyclerViewG
 
         TextView title;
         ImageView imgThumb;
+        TextView tvPoints;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title       = (TextView)  itemView.findViewById(R.id.txv_row);
             imgThumb    = (ImageView) itemView.findViewById(R.id.imgProfilePicture);
+            tvPoints    = (TextView)  itemView.findViewById(R.id.tvPoints);
         }
 
         public void setData(Guest current) {
             this.title.setText(current.name);
 
+            tvPoints.setText(Integer.toString(current.Points));
             if (current.picURI != null)
             {
                 Picasso.with(mContext).load(current.picURI).into(this.imgThumb);
+            }
+        }
+    }
+
+    public void SetPoints(Guest guest)
+    {
+        for(int i = 0; i<mData.size();i++)
+        {
+            Guest g = mData.get(i);
+            if(g.userID.equals(guest.userID))
+            {
+                g.Points = guest.Points;
+                notifyItemChanged(i);
             }
         }
     }

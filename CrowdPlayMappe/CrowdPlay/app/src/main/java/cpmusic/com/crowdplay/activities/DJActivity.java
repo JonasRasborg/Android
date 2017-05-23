@@ -31,15 +31,12 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import cpmusic.com.crowdplay.adapters.RecycleViewAdapter;
+import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 
 import cpmusic.com.crowdplay.R;
-import cpmusic.com.crowdplay.model.firebaseModel.Tracks;
 
 public class DJActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
@@ -55,16 +52,19 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     Context mContext;
 
     ArrayList<Track> newTracks;
+    boolean startedFirstTrack = false;
 
+    int timer = 0;
+
+    Track topTrack;
+    Track nowPlaying;
 
     ToggleButton togglePlay;
     ProgressBar progressBar;
-    CountDownTimer countDownTimer;
-    int timerTicker = 0;
-
+    CountDownTimer trackCountDownTimer;
     private Player mPlayer;
 
-    private Tracks tracks;
+    boolean firstTrackStarted = false;
 
     private Bundle bundle;
     private TextView txtArtist, txtTrack;
@@ -73,7 +73,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     String partyKey;
 
     RecyclerView recyclerView;
-    RecycleViewAdapter adapter;
+    PlaylistAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,25 +82,26 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
-
-
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
-        tracks = new Tracks();
-        tracks.tracks = new ArrayList<>();
         newTracks = new ArrayList<Track>();
 
         bundle = getIntent().getExtras();
         partyKey = bundle.getString("PartyKey");
 
-        txtArtist = (TextView)findViewById(R.id.txtArtist);
-        txtTrack = (TextView)findViewById(R.id.txtTrack);
+        database = FirebaseDatabase.getInstance();
+        mPartyRef = database.getReference().child(partyKey);
+        mTracksRef = database.getReference(partyKey).child("Tracks");
+
+        txtArtist = (TextView)findViewById(R.id.tvArtist);
+        txtTrack = (TextView)findViewById(R.id.tvTitle);
         imgAlbum = (ImageView)findViewById(R.id.imgAlbum);
         mContext = this;
 
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         togglePlay = (ToggleButton)findViewById(R.id.togglePlay);
+        togglePlay.setChecked(true);
         togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -108,16 +109,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                     if(isChecked){
                         if(mPlayer.getPlaybackState().isActiveDevice){
                             mPlayer.resume(null);
-                        }
-                        else{
-                            Track topTrack = adapter.getTopTrack();
-                            adapter.resetVotes(topTrack);
-                            recyclerView.scrollToPosition(0);
-                            txtArtist.setText(topTrack.Artist);
-                            txtTrack.setText(topTrack.Title);
-                            Picasso.with(mContext).load(topTrack.ImageURL).into(imgAlbum);
-                            mPlayer.playUri(null,topTrack.URI,0,0);
-                            setupProgressBar();
                         }
                     }
                     else{
@@ -133,53 +124,20 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         AuthenticationRequest request = builder.build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-
-        database = FirebaseDatabase.getInstance();
-        mPartyRef = database.getReference().child(partyKey);
-        mTracksRef = database.getReference(partyKey).child("Tracks");
-
-        mTracksRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Track newTrack = dataSnapshot.getValue(Track.class);
-                adapter.addTrack(newTrack);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Track track = dataSnapshot.getValue(Track.class);
-                adapter.changeVote(track);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         setUpRecyclerView();
+        mPartyRef.child("Active").setValue(true);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //Spotify.destroyPlayer(this);
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Spotify.destroyPlayer(this);
+        if (adapter.getSize() != 0)
+        {
+            adapter.addPlayingSong(topTrack);
+        }
+        Spotify.destroyPlayer(this);
+        mPartyRef.child("Active").setValue(false);
     }
 
     @Override
@@ -210,31 +168,47 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     @Override
     public void onLoggedIn() {
-        Log.d(TAG, "User logged in");
+        setUpListeners();
     }
 
-    public void setupProgressBar(){
-
-        progressBar.setProgress(timerTicker);
-        countDownTimer = new CountDownTimer(100000,1000) {
+    public void startFirstSong(){
+        trackCountDownTimer = new CountDownTimer(3000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timerTicker++;
-                progressBar.setProgress(timerTicker);
 
+            }
+
+            @Override
+            public void onFinish() {
+                playTopSong();
+            }
+        };
+        trackCountDownTimer.start();
+    }
+
+    public void setupProgressBar(long ms){
+        progressBar.setProgress(timer);
+        progressBar.setMax(1000);
+        trackCountDownTimer = new CountDownTimer(ms,ms/1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer++;
+                progressBar.setProgress(timer);
             }
 
             @Override
             public void onFinish() {
 
             }
+
         };
-        countDownTimer.start();
+        trackCountDownTimer.start();
     }
 
     @Override
     public void onLoggedOut() {
         Log.d(TAG, "User logged out");
+
     }
 
     @Override
@@ -258,19 +232,27 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         switch (playerEvent) {
 
             case kSpPlaybackNotifyTrackChanged:
-                if(!mPlayer.getPlaybackState().isPlaying){
-                    Track topTrack = adapter.getTopTrack();
-                    adapter.resetVotes(topTrack);
-                    mPlayer.playUri(null,topTrack.URI,0,0);
-                    txtArtist.setText(topTrack.Artist);
-                    txtTrack.setText(topTrack.Title);
-                    Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
+                if(!mPlayer.getPlaybackState().isPlaying)
+                {
+                    adapter.addPlayingSong(topTrack);
 
-                    setupProgressBar();
+                    playTopSong();
+
                     break;
                 }
 
-            case kSpPlaybackEventAudioFlush:
+                else{
+                    timer = 0;
+                    setupProgressBar(mPlayer.getMetadata().currentTrack.durationMs);
+                }
+
+            case kSpPlaybackNotifyPause:
+                trackCountDownTimer.cancel();
+                break;
+            case kSpPlaybackNotifyPlay:
+                trackCountDownTimer.start();
+
+
 
             default:
                 break;
@@ -288,10 +270,55 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         }
     }
 
+    public void playTopSong(){
+        topTrack = adapter.getTopTrack();
+        mPlayer.playUri(null,topTrack.URI,0,0);
+        adapter.resetVotes(topTrack);
+        recyclerView.scrollToPosition(0);
+        txtArtist.setText(topTrack.Artist);
+        txtTrack.setText(topTrack.Title);
+        Picasso.with(this).load(topTrack.ImageURL).into(imgAlbum);
+    }
+
+    public void setUpListeners(){
+        mTracksRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Track newTrack = dataSnapshot.getValue(Track.class);
+                adapter.addTrack(newTrack);
+                if(mPlayer != null && !startedFirstTrack){
+                    startedFirstTrack = true;
+                    startFirstSong();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Track track = dataSnapshot.getValue(Track.class);
+                adapter.changeVote(track);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RecycleViewAdapter(this, mPartyRef);
+        adapter = new PlaylistAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
 
