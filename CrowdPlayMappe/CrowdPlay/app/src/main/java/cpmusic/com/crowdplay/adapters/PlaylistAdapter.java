@@ -110,33 +110,29 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
         }
     }
 
+    public void addPlayingSong(Track track){
+        if(track.Voters != null){
+            track.Voters.clear();
+        }
+        track.isVoted=false;
+        addTrack(track);
+    }
 
 
     public void moveTrackToLast(Track track)
     {
         mData.remove(0);
+        notifyItemRemoved(0);
         // Remove voters locally
-        if(track.Voters != null){
-            track.Voters.clear();
-        }
-        track.isVoted=false;
-        mData.add(track);
 
-
-        for(int i = 0; i<mData.size()-1;i++){
-            notifyItemMoved(i+1,i);
-        }
-        notifyItemChanged(mData.size());
     }
-
 
     public void resetVotes(Track track){
 
         moveTrackToLast(track);
 
-
         // Remove all voters from Track on firebse
-            mTracksRef.child(track.URI).child("Voters").removeValue();
+        mTracksRef.child(track.URI).child("Voters").removeValue();
     }
 
     public Track getTopTrack(){
@@ -148,24 +144,25 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
         int TrackVotesThis =0;
         int TrackVoteslast =0;
 
-
-
        for (int i = position; i > 0; i--)
        {
            // Handling firebase null pointer (Votes is empty)
+                /*
                 if (mData.get(i).Voters==null)
                 {
                     TrackVotesThis = 0;
                 }
+                */
                 if(mData.get(i).Voters!=null)
                 {
                     TrackVotesThis = mData.get(i).Voters.size();
                 }
 
+                /*
                 if(mData.get(i-1).Voters==null)
                 {
-                    TrackVoteslast =0;
-                }
+                    TrackVoteslast = 0;
+                }*/
 
                if(mData.get(i-1).Voters!=null)
                {

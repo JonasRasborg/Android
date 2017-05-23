@@ -56,10 +56,15 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     int timer = 0;
 
+    Track topTrack;
+    Track nowPlaying;
+
     ToggleButton togglePlay;
     ProgressBar progressBar;
     CountDownTimer trackCountDownTimer;
     private Player mPlayer;
+
+    boolean firstTrackStarted = false;
 
     private Bundle bundle;
     private TextView txtArtist, txtTrack;
@@ -223,14 +228,21 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
             case kSpPlaybackNotifyTrackChanged:
                 if(!mPlayer.getPlaybackState().isPlaying){
+
+                   // if(topTrack.URI != adapter.getTopTrack().URI)
+                    {
+                        adapter.addPlayingSong(topTrack);
+                    }
+
                     playTopSong();
+
                     break;
                 }
+
                 else{
                     timer = 0;
                     setupProgressBar(mPlayer.getMetadata().currentTrack.durationMs);
                 }
-
 
             case kSpPlaybackNotifyPause:
                 trackCountDownTimer.cancel();
@@ -257,7 +269,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     }
 
     public void playTopSong(){
-        Track topTrack = adapter.getTopTrack();
+        topTrack = adapter.getTopTrack();
         mPlayer.playUri(null,topTrack.URI,0,0);
         adapter.resetVotes(topTrack);
         recyclerView.scrollToPosition(0);
