@@ -59,7 +59,7 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabSearch"
-            android:layout_width="47dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
