@@ -122,15 +122,29 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     }
 
 
-    public void moveTrackToLast(Track track)
+    public void removeCurrentPlaying(Track track)
     {
-        mData.remove(0);
-        notifyItemRemoved(0);
+        if (track.URI ==mData.get(0).URI)
+        {
+            mData.remove(0);
+            notifyItemRemoved(0);
+        }
+        else
+        {
+            for (int i = 0; i<mData.size(); i++)
+            {
+                if (track.URI == mData.get(i).URI)
+                {
+                    mData.remove(i);
+                    notifyItemRemoved(i);
+                }
+            }
+        }
     }
 
     public void resetVotes(Track track){
 
-        moveTrackToLast(track);
+        removeCurrentPlaying(track);
 
         // Remove all voters from Track on firebse
         mTracksRef.child(track.URI).child("Voters").removeValue();

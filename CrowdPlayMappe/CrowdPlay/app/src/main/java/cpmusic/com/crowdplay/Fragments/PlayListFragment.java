@@ -24,6 +24,7 @@ import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
 import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
+import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.NetworkChecker;
 import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
@@ -86,6 +87,7 @@ public class PlayListFragment extends Fragment
         mPartyRef = database.getReference().child(partyID);
         mTracksRef = mPartyRef.child("Tracks");
 
+
         mTracksRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -94,10 +96,10 @@ public class PlayListFragment extends Fragment
 
                 adapter.addTrack(newTrack);
 
-                if(newTrack.IsPlaying == true)
+                if(newTrack.IsPlaying == true) //Hvis den pågældende sang er ved at afspille på DJ'en
                 {
                     currenPlaying = newTrack;
-                    adapter.moveTrackToLast(newTrack);
+                    adapter.removeCurrentPlaying(newTrack);
                 }
 
             }
@@ -106,14 +108,28 @@ public class PlayListFragment extends Fragment
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
             {
                 Track track = dataSnapshot.getValue(Track.class);
-                adapter.changeVote(track);
 
-                if(track.IsPlaying == true)
+                if (track.Voters != null) //Hvis den pågældende sang har modtaget en vote, og ikke er den afspillende
                 {
-                    currenPlaying = track;
-                    adapter.moveTrackToLast(track);
+                    adapter.changeVote(track);
                 }
 
+                else
+                {
+                    if(track.IsPlaying == true) //Hvis den pågældende sang netop er staret på DJ'en
+                    {
+                        currenPlaying = track;
+                        adapter.removeCurrentPlaying(track);
+
+                    }
+                    else
+                    {
+                        if (currenPlaying.URI == track.URI) //Hvis den pågældende sang er ændret fra playing til notPlaying (og har null voters)
+                        {
+                            adapter.addTrack(track);
+                        }
+                    }
+                }
             }
 
             @Override
@@ -134,6 +150,7 @@ public class PlayListFragment extends Fragment
 
         setUpRecyclerView();
         setUpRecyclerViewGuests();
+        setmPartyRef();
         addGuestToParty();
 
         return view;
@@ -170,6 +187,27 @@ public class PlayListFragment extends Fragment
         recyclerViewGuests.getItemAnimator().setMoveDuration(300);
         recyclerViewGuests.getItemAnimator().setRemoveDuration(200);
         recyclerViewGuests.getItemAnimator().setAddDuration(300);
+    }
+
+    private void setmPartyRef()
+    {
+        mPartyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                Party p = dataSnapshot.getValue(Party.class);
+
+                if (p.Active == false)
+                {
+                    mActivity.finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
