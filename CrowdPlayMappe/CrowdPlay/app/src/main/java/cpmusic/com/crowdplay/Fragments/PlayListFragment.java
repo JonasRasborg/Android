@@ -58,6 +58,8 @@ public class PlayListFragment extends Fragment
 
     ArrayList<Guest> guests;
 
+    Track currenPlaying;
+
 
     @Nullable
     @Override
@@ -89,7 +91,15 @@ public class PlayListFragment extends Fragment
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Track newTrack = dataSnapshot.getValue(Track.class);
+
                 adapter.addTrack(newTrack);
+
+                if(newTrack.IsPlaying == true)
+                {
+                    currenPlaying = newTrack;
+                    adapter.moveTrackToLast(newTrack);
+                }
+
             }
 
             @Override
@@ -98,10 +108,10 @@ public class PlayListFragment extends Fragment
                 Track track = dataSnapshot.getValue(Track.class);
                 adapter.changeVote(track);
 
-                if(track.Voters == null)
+                if(track.IsPlaying == true)
                 {
+                    currenPlaying = track;
                     adapter.moveTrackToLast(track);
-
                 }
 
             }

@@ -111,11 +111,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     }
 
     public void addPlayingSong(Track track){
+
         if(track.Voters != null){
             track.Voters.clear();
         }
         track.isVoted=false;
         addTrack(track);
+
+        mTracksRef.child(track.URI).child("IsPlaying").setValue(false);
     }
 
 
@@ -123,8 +126,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     {
         mData.remove(0);
         notifyItemRemoved(0);
-        // Remove voters locally
-
     }
 
     public void resetVotes(Track track){
@@ -133,6 +134,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
 
         // Remove all voters from Track on firebse
         mTracksRef.child(track.URI).child("Voters").removeValue();
+        mTracksRef.child(track.URI).child("IsPlaying").setValue(true);
     }
 
     public Track getTopTrack(){
