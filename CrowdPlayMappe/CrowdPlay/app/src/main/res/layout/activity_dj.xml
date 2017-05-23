@@ -14,8 +14,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/star_big_on" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtTrack"
@@ -23,9 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="8dp"
-        android:text="Song name"
         android:textColor="@color/colorSecondary"
-        android:textSize="18sp"
+        android:textSize="18dp"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +33,7 @@
         android:layout_height="wrap_content"
         android:text="Artist name"
         android:textColor="@color/colorSecondary"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/txtTrack"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"

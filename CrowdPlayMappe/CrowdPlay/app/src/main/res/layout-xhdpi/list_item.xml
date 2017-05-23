@@ -24,9 +24,10 @@
             android:src="@drawable/thumb_1_0" />
 
         <LinearLayout
-            android:layout_width="216dp"
+            android:layout_width="189dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="0.25">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -35,7 +36,7 @@
                 android:layout_margin="7dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -45,7 +46,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="15sp"
+                android:textSize="15dp"
                 android:textStyle="italic" />
 
 
@@ -59,7 +60,7 @@
 
             <TextView
                 android:id="@+id/tvVotes"
-                android:layout_width="40dp"
+                android:layout_width="44dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="7"
