@@ -9,12 +9,14 @@ import android.location.LocationManager;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -28,6 +30,7 @@ import com.facebook.FacebookSdk;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.Arrays;
+import java.util.List;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
@@ -44,17 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
     // Facebook
     CallbackManager mCallbackManager;
+    LoginManager loginManager;
     ProfileTracker mProfileTracker;
-    Profile currentProfile;
 
     // Shared Preferences helper class "SharedPreferencesConnector"
-
     SharedPreferencesConnector sharedPreferencesConnector;
 
     FloatingActionButton fabDJ, fabGuest;
 
-    // Firebase
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +81,16 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferencesConnector = new SharedPreferencesConnector();
 
-        currentProfile = Profile.getCurrentProfile();
-
         // Check if user is allready logged in
-        if (currentProfile==null)
+        if (sharedPreferencesConnector.getLoggedInStatus(this)==false)
         {
             // if not logged in
             LoginFacebook();
         }
-        if (currentProfile!=null)
+        if (sharedPreferencesConnector.getLoggedInStatus(this)==true)
         {
             // if logged in
-            Toast.makeText(this,"Welcome back "+currentProfile.getFirstName(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Welcome back "+sharedPreferencesConnector.getFacebookFirstName(this),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -226,49 +224,60 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Code example found at https://stackoverflow.com/questions/29634660/facebook-sdk-4-0-1-login-without-login-button & https://stackoverflow.com/questions/29642759/profile-getcurrentprofile-returns-null-after-logging-in-fb-api-v4-0
     public void LoginFacebook()
     {
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        mCallbackManager = CallbackManager.Factory.create();
 
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        // Try to log user in with facebook
+        List<String> permissionNeeds= Arrays.asList("public_profile");
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this,permissionNeeds);
+
+        loginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(MainActivity.this, "Login successfull", Toast.LENGTH_SHORT).show();
 
-                mProfileTracker = new ProfileTracker() {
-                    @Override
-                    protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-                        Log.d(LOGTAG,"LoginFacebook onSuccess");
+              // Even if login was succesfull, .getCurrentProfile may return null. Start Listening for profile Changed instead.
+                if(Profile.getCurrentProfile()==null)
+                {
 
-                        sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
-                        sharedPreferencesConnector.setFacebookUID(MainActivity.this,newProfile.getId());
-                        sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,newProfile.getFirstName());
-                        sharedPreferencesConnector.setFacebookFullName(MainActivity.this,newProfile.getName());
-                        sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,newProfile.getProfilePictureUri(200,200).toString());
-                        Toast.makeText(MainActivity.this,"Welcome "+newProfile.getFirstName(),Toast.LENGTH_SHORT).show();
+                    mProfileTracker=new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            Profile p = currentProfile;
+                            sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,p.getFirstName());
+                            sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,p.getProfilePictureUri(200,200).toString());
+                            sharedPreferencesConnector.setFacebookFullName(MainActivity.this,p.getName());
+                            sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
+                            mProfileTracker.stopTracking();
 
-                    }
-
-                };
+                        }
+                    };
+                    mProfileTracker.startTracking();
+                }
+                else
+                {
+                    Profile p = Profile.getCurrentProfile();
+                    sharedPreferencesConnector.setFacebookFirstName(MainActivity.this,p.getFirstName());
+                    sharedPreferencesConnector.setFacebookProfilePicURI(MainActivity.this,p.getProfilePictureUri(200,200).toString());
+                    sharedPreferencesConnector.setFacebookFullName(MainActivity.this,p.getName());
+                    sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,true);
+                }
             }
 
             @Override
             public void onCancel() {
+                Toast.makeText(MainActivity.this, "Login cancel", Toast.LENGTH_SHORT).show();
 
-                Log.d(LOGTAG,"LoginFacebook onCancel");
-                Toast.makeText(MainActivity.this,"You cant use this app without logging into Facebook",Toast.LENGTH_LONG).show();
-                finish();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(LOGTAG,"LoginFacebook onError");
+                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
 
             }
         });
-
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
-
     }
 
     @Override
