@@ -132,7 +132,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (adapter.getTopTrack() != null)
+        if (adapter.getSize() != 0)
         {
             adapter.addPlayingSong(topTrack);
         }
@@ -208,6 +208,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     @Override
     public void onLoggedOut() {
         Log.d(TAG, "User logged out");
+
     }
 
     @Override

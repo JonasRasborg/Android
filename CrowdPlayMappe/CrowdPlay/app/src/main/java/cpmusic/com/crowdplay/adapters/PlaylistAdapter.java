@@ -121,6 +121,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
         mTracksRef.child(track.URI).child("IsPlaying").setValue(false);
     }
 
+    public int getSize(){
+        return mData.size();
+    }
 
     public void removeCurrentPlaying(Track track)
     {
