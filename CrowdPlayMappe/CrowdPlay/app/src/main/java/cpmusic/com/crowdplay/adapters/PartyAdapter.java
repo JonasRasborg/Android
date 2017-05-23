@@ -46,6 +46,11 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder
         return holder;
     }
 
+    public void clearParties()
+    {
+        parties.clear();
+    }
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
