@@ -86,10 +86,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         // put user location on map
         PutMylocationOnMap();
 
-        // Start listening for user location updates - if changed enough map is updated
-        ListenForUserLocationUpdates();
-
-      
 
         // Firebase get all parties
 
@@ -198,6 +194,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         }
 
         else {
+
             mMap.setMyLocationEnabled(true);
 
             if(userlocation==null)
@@ -231,23 +228,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
-    public void ListenForUserLocationUpdates()
-    {
 
-        if (locationManager != null) {
-            try {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListener);
-
-            }
-            catch (SecurityException ex)
-            {
-            }
-        }
-        else
-            {
-
-        }
-    }
 
     // Invokes når der kommer svar på requestPermissions
     @Override
@@ -276,29 +257,5 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    // Lytter på når GPS location ændres (væsentligt)
-    private LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
 
-            // Update user location
-            LatLng userLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng,MAPZOOMLEVEL));
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 }
