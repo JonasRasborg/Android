@@ -1,7 +1,9 @@
 package cpmusic.com.crowdplay.activities;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,9 +14,13 @@ import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -49,6 +55,8 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     String LOGTAG = PartyFinderActivity.class.getSimpleName();
     private Location userlocation;
 
+    Context mContext;
+
 
 
 
@@ -60,6 +68,8 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_finder);
+
+        mContext = this;
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -127,6 +137,67 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onInfoWindowClick(final Marker marker) {
 
+                LayoutInflater inflater = LayoutInflater.from(mContext);
+
+                View viewDialog = inflater.inflate(R.layout.type_party_password, null);
+                final Dialog passDialog = new Dialog(mContext);
+                passDialog.setContentView(viewDialog);
+
+                final EditText editPassword = (EditText) viewDialog.findViewById(R.id.editPassword);
+                Button btnCancel = (Button) viewDialog.findViewById(R.id.btnCancel);
+                Button btnOK = (Button) viewDialog.findViewById(R.id.btnOK);
+
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(PartyFinderActivity.this, "If you dont know the password, ask your host for it", Toast.LENGTH_SHORT).show();
+                        passDialog.dismiss();
+                    }
+                });
+
+                btnOK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String correctPassword;
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (marker.getTag() != null) {
+                                    String markterTag = marker.getTag().toString();
+
+
+                                    String correctPassword = dataSnapshot.child(markterTag).child("password").getValue(String.class);
+                                    String typedPassword = editPassword.getText().toString();
+
+                                    if (correctPassword.equals(typedPassword)) {
+                                        Intent intent = new Intent(PartyFinderActivity.this, GuestActivity.class);
+                                        intent.putExtra("PartyKey", marker.getTag().toString());
+                                        startActivityForResult(intent, 200);
+                                    } else {
+                                        Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        passDialog.dismiss();
+                    }
+                });
+
+                passDialog.show();
+
+
+
+
+/*
                 // Alert dialog for entering party password
                 AlertDialog.Builder alert = new AlertDialog.Builder(PartyFinderActivity.this);
 
@@ -183,7 +254,11 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 alert.show();
             }
         });
-    }
+        */
+
+
+            }
+        });}
 
 
     public void PutMylocationOnMap()

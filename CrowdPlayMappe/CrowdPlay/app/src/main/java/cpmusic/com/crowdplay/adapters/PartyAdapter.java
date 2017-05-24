@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,28 +131,32 @@ public class PartyAdapter extends RecyclerView.Adapter<PartyAdapter.MyViewHolder
                 public boolean onLongClick(View v) {
 
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                    alert.setMessage("Delete Party?");
+                    View viewDialog = inflater.inflate(R.layout.delete_party_dialog, null);
+                    final Dialog d = new Dialog(mContext);
+                    d.setContentView(viewDialog);
+                    Button btnCancel = (Button)viewDialog.findViewById(R.id.btnCancel);
+                    Button btnOK = (Button)viewDialog.findViewById(R.id.btnOK);
 
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
+                        public void onClick(View v) {
+                            d.dismiss();
                         }
                     });
 
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    btnOK.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
+                        public void onClick(View v) {
                             Intent intent = new Intent("PartyToDelete");
                             intent.putExtra("DeleteParty",current.partyID);
                             localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
                             localBroadcastManager.sendBroadcast(intent);
+
+                            d.dismiss();
                         }
                     });
 
-                    alert.show();
+                    d.show();
 
                     return false;
                 }
