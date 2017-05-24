@@ -17,7 +17,7 @@
     <string name="title_party_setup">Setup Party</string>
     <string name="party_name">Name</string>
     <string name="party_code">Password</string>
-    <string name="start_party">START PARTY</string>
+    <string name="start_party">START NEW PARTY</string>
 
     // Facebook
     <string name="facebook_app_id">1911910362363575</string>

@@ -22,49 +22,44 @@
             android:id="@+id/textViewPartyName"
             android:layout_width="95dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.93"
+            android:layout_weight="0.84"
 
 
             android:gravity="center_vertical"
-            android:text="Pølsefest"
             android:textColor="@color/colorSecondary"
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/tvTracks"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.12"
+            android:layout_weight="0.19"
             android:text="Tracks:"
             android:textColor="@color/colorPrimeryText"
             android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textViewTracks"
-            android:layout_width="47dp"
+            android:layout_width="39dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="TextView"
             android:textColor="@color/colorSecondary"
-            android:textSize="18dp"
-            tools:text="150" />
+            android:textSize="18dp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvGuests"
             android:layout_width="67dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.07"
+            android:layout_weight="0.02"
             android:text="Guests:"
             android:textColor="@color/colorPrimeryText"
             android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textViewGuests"
-            android:layout_width="47dp"
+            android:layout_width="33dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.36"
             android:gravity="center_vertical"
-            android:text="99"
             android:textColor="@color/colorSecondary"
             android:textSize="18dp" />
 

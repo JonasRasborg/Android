@@ -85,7 +85,7 @@ public class SetupPartyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(edtPartyName.getText().toString() == ""){
+                if(edtPartyName.getText().length() == 0){
                     Toast.makeText(SetupPartyActivity.this, "Choose a name for your Party!", Toast.LENGTH_SHORT).show();
                 }
                 else {
