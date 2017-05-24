@@ -285,6 +285,12 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Track newTrack = dataSnapshot.getValue(Track.class);
+
+                if (newTrack.IsPlaying)
+                {
+                    mTracksRef.child(newTrack.URI).child("IsPlaying").setValue(false);
+                }
+
                 adapter.addTrack(newTrack);
                 if(mPlayer != null && !startedFirstTrack){
                     startedFirstTrack = true;
