@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/img_album"
-            android:layout_width="63dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="7dp"
             android:contentDescription="@string/thumbnail"
             android:src="@drawable/thumb_1_0" />
@@ -37,11 +37,11 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="4dp"
                 android:layout_weight="0.10"
+                android:maxHeight="36dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:maxHeight="36dp"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
                 android:id="@+id/tvArtist"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="4dp"
                 android:layout_weight="0.10"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
@@ -60,7 +60,7 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabSearch"
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
