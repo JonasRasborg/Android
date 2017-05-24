@@ -19,7 +19,6 @@
 
         <item name="android:textColorPrimary">@color/colorSecondary</item>
         <item name="android:textColorSecondary">@color/colorSecondary</item>
-
     </style>
 
     <style name="PopupTheme" parent="ThemeOverlay.AppCompat.Light">
@@ -35,6 +34,5 @@
     <style name="EdtTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorControlNormal">@color/colorPrimaryLight</item>
         <item name="android:textColorHint">@color/colorPrimaryLight</item>
-
     </style>
 </resources>

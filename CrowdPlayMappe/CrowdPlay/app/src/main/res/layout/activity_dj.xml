@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/imgAlbum"
+        android:src="@drawable/dj_icon"
         android:layout_width="83dp"
         android:layout_height="80dp"
         android:layout_marginLeft="8dp"
@@ -18,9 +19,10 @@
 
     <TextView
         android:id="@+id/tvTitle"
+        android:text="CrowdPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorSecondary"
         android:textSize="18dp"
@@ -31,7 +33,7 @@
         android:id="@+id/tvArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorSecondary"
         android:textSize="18dp"
@@ -43,27 +45,28 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"
         app:layout_constraintTop_toBottomOf="@+id/tvArtist"
-        android:layout_marginRight="32dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/imgAlbum"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintRight_toLeftOf="@+id/tvSongTimer"
+        android:layout_marginRight="0dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_height="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/togglePlay"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgAlbum"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/togglePlay" />
 
     <ToggleButton
         style="@style/Widget.AppCompat.Button.Colored"
@@ -80,5 +83,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         tools:layout_editor_absoluteY="507dp" />
+
+    <TextView
+        android:id="@+id/tvSongTimer"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="end"
+        android:text="0:00/0:00"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/progressBar"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
