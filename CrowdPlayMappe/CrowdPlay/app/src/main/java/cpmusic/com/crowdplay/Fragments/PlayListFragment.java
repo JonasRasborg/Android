@@ -44,7 +44,7 @@ public class PlayListFragment extends Fragment
     NetworkChecker networkChecker;
 
     PlaylistAdapter adapter;
-    GuestAdapter adapterGuests;
+    //GuestAdapter adapterGuests;
 
     RecyclerView recyclerView;
     RecyclerView recyclerViewGuests;
@@ -62,7 +62,7 @@ public class PlayListFragment extends Fragment
     String facebookPicUri;
     boolean Allreadyloggedin;
 
-    ArrayList<Guest> guests;
+    //ArrayList<Guest> guests;
 
     Track currenPlaying;
 
@@ -76,7 +76,7 @@ public class PlayListFragment extends Fragment
         mActivity = getActivity();
 
         partyID = getArguments().getString("PartyKey");
-        guests = new ArrayList<>();
+       // guests = new ArrayList<>();
 
         // SHaredPreferences
         sharedPreferencesConnector = new SharedPreferencesConnector();
@@ -161,9 +161,9 @@ public class PlayListFragment extends Fragment
         });
 
         setUpRecyclerView();
-        setUpRecyclerViewGuests();
+       // setUpRecyclerViewGuests();
         setmPartyRef();
-        addGuestToParty();
+      //  addGuestToParty();
 
         return view;
     }
@@ -188,8 +188,8 @@ public class PlayListFragment extends Fragment
     private void setUpRecyclerViewGuests() {
 
         recyclerViewGuests = (RecyclerView) view.findViewById(R.id.recyclerViewGuests);
-        adapterGuests = new GuestAdapter(mContext, guests);
-        recyclerViewGuests.setAdapter(adapterGuests);
+        //adapterGuests = new GuestAdapter(mContext, guests);
+       // recyclerViewGuests.setAdapter(adapterGuests);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -258,13 +258,13 @@ public class PlayListFragment extends Fragment
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 Guest g = dataSnapshot.getValue(Guest.class);
-                adapterGuests.addGuest(g);
+              //  adapterGuests.addGuest(g);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Guest g = dataSnapshot.getValue(Guest.class);
-                adapterGuests.SetPoints(g);
+               // adapterGuests.SetPoints(g);
 
             }
 
