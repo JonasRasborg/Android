@@ -54,8 +54,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fabSearch"
         app:layout_constraintVertical_bias="0.0"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginBottom="0dp" />
 
 </android.support.constraint.ConstraintLayout>
