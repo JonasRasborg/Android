@@ -172,7 +172,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     }
 
     public void startFirstSong(){
-        trackCountDownTimer = new CountDownTimer(3000,1000) {
+        trackCountDownTimer = new CountDownTimer(1000,500) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -187,12 +187,13 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     }
 
     public void setupProgressBar(long ms){
+        int songMs = (int)ms;
         progressBar.setProgress(timer);
-        progressBar.setMax(1000);
-        trackCountDownTimer = new CountDownTimer(ms,ms/1000) {
+        progressBar.setMax(songMs);
+        trackCountDownTimer = new CountDownTimer(ms,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timer++;
+                timer+=1000;
                 progressBar.setProgress(timer);
             }
 

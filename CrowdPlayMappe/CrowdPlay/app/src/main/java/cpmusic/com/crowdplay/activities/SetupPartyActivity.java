@@ -76,24 +76,28 @@ public class SetupPartyActivity extends AppCompatActivity {
 
 
 
-
         btnStartParty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String name = edtPartyName.getText().toString();
-                LatLng latLong = bundle.getParcelable("Location");
-                String password = edtPartyCode.getText().toString();
-                String partyKey = UUID.randomUUID().toString();
+                if(edtPartyName.getText().toString() == ""){
+                    Toast.makeText(SetupPartyActivity.this, "Choose a name for your Party!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String name = edtPartyName.getText().toString();
+                    LatLng latLong = bundle.getParcelable("Location");
+                    String password = edtPartyCode.getText().toString();
+                    String partyKey = UUID.randomUUID().toString();
 
-                Location newLatLng = new Location(latLong.latitude,latLong.longitude);
-                Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
+                    Location newLatLng = new Location(latLong.latitude,latLong.longitude);
+                    Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
 
-                mRoot.child(partyKey).setValue(newParty);
+                    mRoot.child(partyKey).setValue(newParty);
 
-                intentSongs.putExtra("PartyKey",partyKey);
-                
-                startActivity(intentSongs);
+                    intentSongs.putExtra("PartyKey",partyKey);
+
+                    startActivity(intentSongs);
+                }
             }
         });
 
