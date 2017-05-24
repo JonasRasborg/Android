@@ -97,7 +97,10 @@ public class SetupPartyActivity extends AppCompatActivity {
                 Party newParty = new Party(name,password,newLatLng, thisUserID, partyKey);
 
                 mRoot.child(partyKey).setValue(newParty);
-                mRoot.child(partyKey).child("Guests").child(thisUserID).setValue(new Guest(thisUserID,thisUserName,facebookPicUri));
+
+                Guest djGuest = new Guest(thisUserID,thisUserName,facebookPicUri);
+                djGuest.isDJ = true;
+                mRoot.child(partyKey).child("Guests").child(thisUserID).setValue(djGuest);
 
                 partyIntent.putExtra("PartyKey",partyKey);
                 

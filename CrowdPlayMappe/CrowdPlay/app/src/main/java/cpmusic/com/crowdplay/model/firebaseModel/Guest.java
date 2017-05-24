@@ -14,6 +14,7 @@ public class Guest
     public String name;
     public String picURI;
     public int Points;
+    public boolean isDJ = false;
 
     public Guest()
     {
