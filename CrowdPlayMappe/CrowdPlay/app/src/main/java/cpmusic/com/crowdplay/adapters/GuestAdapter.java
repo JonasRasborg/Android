@@ -71,7 +71,16 @@ public class GuestAdapter extends RecyclerView.Adapter<GuestAdapter.MyViewHolder
         public void setData(Guest current) {
             this.title.setText(current.name);
 
-            tvPoints.setText(Integer.toString(current.Points));
+            if (current.isDJ == false)
+            {
+                tvPoints.setText(Integer.toString(current.Points));
+            }
+            else
+            {
+                tvPoints.setText("DJ");
+            }
+
+
             if (current.picURI != null)
             {
                 Picasso.with(mContext).load(current.picURI).into(this.imgThumb);

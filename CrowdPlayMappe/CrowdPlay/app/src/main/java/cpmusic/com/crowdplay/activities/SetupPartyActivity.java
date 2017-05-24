@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.PartyAdapter;
+import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Location;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
@@ -36,11 +37,13 @@ public class SetupPartyActivity extends AppCompatActivity {
     EditText edtPartyName, edtPartyCode;
     Button btnStartParty;
     private Bundle bundle;
-    Intent intentSongs;
+    Intent partyIntent;
     ArrayList<Party> partyList;
     RecyclerView recyclerView;
 
-    String facebookID;
+    String thisUserID;
+    String thisUserName;
+    String facebookPicUri;
 
     SharedPreferencesConnector sharedPreferencesConnector;
 
@@ -65,9 +68,11 @@ public class SetupPartyActivity extends AppCompatActivity {
        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("PartyToDelete"));
 
 
-        facebookID = sharedPreferencesConnector.getFacebookUID(SetupPartyActivity.this);
+        thisUserID = sharedPreferencesConnector.getFacebookUID(this);
+        thisUserName = sharedPreferencesConnector.getFacebookFullName(this);
+        facebookPicUri = sharedPreferencesConnector.getFacebookProfilepicUri(this);
 
-        intentSongs = new Intent(this, DJActivity.class);
+        partyIntent = new Intent(this, DJActivity.class);
         bundle = getIntent().getParcelableExtra("bundle");
         mRoot = FirebaseDatabase.getInstance().getReference();
         edtPartyName = (EditText)findViewById(R.id.edtPartyName);
@@ -90,13 +95,18 @@ public class SetupPartyActivity extends AppCompatActivity {
                     String partyKey = UUID.randomUUID().toString();
 
                     Location newLatLng = new Location(latLong.latitude,latLong.longitude);
-                    Party newParty = new Party(name,password,newLatLng, facebookID, partyKey);
+                    Party newParty = new Party(name,password,newLatLng, thisUserID, partyKey);
 
                     mRoot.child(partyKey).setValue(newParty);
 
-                    intentSongs.putExtra("PartyKey",partyKey);
+                    Guest djGuest = new Guest(thisUserID,thisUserName,facebookPicUri);
+                    djGuest.isDJ = true;
 
-                    startActivity(intentSongs);
+                    mRoot.child(partyKey).child("Guests").child(thisUserID).setValue(djGuest);
+
+                    partyIntent.putExtra("PartyKey",partyKey);
+
+                    startActivity(partyIntent);
                 }
             }
         });
