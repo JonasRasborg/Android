@@ -70,7 +70,7 @@ public class DrakeService extends Service {
             }
         }
 
-        Toast.makeText(mContext, "Drake: " + mostPopular, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Most Popular Drake song: " + "'" + mostPopular + "'", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -114,8 +114,8 @@ public class DrakeService extends Service {
 
                         if (networkChecker.getNetworkStatus(mContext))
                         {
+                            wait(1000*30*1*1);
                             apiConnector.sendRequestForDrake(mContext);
-                            wait(5000);
                         }
                     }
                     catch (InterruptedException e)
