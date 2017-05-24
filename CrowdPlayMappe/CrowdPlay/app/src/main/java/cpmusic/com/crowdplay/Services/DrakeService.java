@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -60,17 +62,19 @@ public class DrakeService extends Service {
     private void CalcDrakePopularity(Tracks tracks)
     {
         List<Item> items = tracks.items;
-        String mostPopular = items.get(0).name;
+        Item mostPopular = items.get(0);
 
         for(int i = 0; i<items.size()-1; i++)
         {
-            if(items.get(i).popularity < items.get(i+1).popularity)
+            if(mostPopular.popularity < items.get(i+1).popularity)
             {
-                mostPopular = items.get(i+1).name;
+                mostPopular = items.get(i+1);
             }
         }
-
-        Toast.makeText(mContext, "Most Popular Drake song: " + "'" + mostPopular + "'", Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(this, "Most Popular Drake song on Spotify:\r\n" + "'" + mostPopular.name + "'", Toast.LENGTH_LONG);
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        if( v != null) v.setGravity(Gravity.CENTER);
+        toast.show();
     }
 
     @Override
@@ -109,12 +113,9 @@ public class DrakeService extends Service {
             {
                 while (true) {
                     try {
-                        Date date;
-                        date = new Date();
-
                         if (networkChecker.getNetworkStatus(mContext))
                         {
-                            wait(1000*30*1*1);
+                            wait(1000*60*60);
                             apiConnector.sendRequestForDrake(mContext);
                         }
                     }
