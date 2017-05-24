@@ -2,12 +2,15 @@ package cpmusic.com.crowdplay.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,6 +40,7 @@ import cpmusic.com.crowdplay.model.firebaseModel.Track;
 
 
 import cpmusic.com.crowdplay.R;
+import cpmusic.com.crowdplay.model.spotifyModel.Image;
 
 public class DJActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
@@ -60,9 +64,13 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     Track nowPlaying;
 
     ToggleButton togglePlay;
+    ImageView imgPlayPause;
     ProgressBar progressBar;
     CountDownTimer trackCountDownTimer;
+    boolean isPlaying;
     private Player mPlayer;
+    Drawable play_icon;
+    Drawable pause_icon;
     int songMs  = 0;
     int sec     = 0;
     int min     = 0;
@@ -103,24 +111,22 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         imgAlbum    = (ImageView)findViewById(R.id.imgAlbum);
         mContext    = this;
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        imgPlayPause= (ImageView) findViewById(R.id.imgPlayPause);
+        play_icon   = getResources().getDrawable(R.drawable.play_icon);
+        pause_icon  = getResources().getDrawable(R.drawable.pause_icon);
 
-        togglePlay  = (ToggleButton)findViewById(R.id.togglePlay);
-        togglePlay.setChecked(true);
-        togglePlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        imgPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(mPlayer!=null){
-                    if(isChecked){
-                        if(mPlayer.getPlaybackState().isActiveDevice){
-                            mPlayer.resume(null);
-                        }
+            public void onClick(View v) {
+                    if(!isPlaying){
+                        mPlayer.resume(null);
                     }
                     else{
                         mPlayer.pause(null);
                     }
-                }
             }
         });
+
 
         //Spotify SDK:
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
@@ -264,11 +270,15 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
             case kSpPlaybackNotifyPause:
                 trackCountDownTimer.cancel();
+                isPlaying = false;
+                imgPlayPause.setImageDrawable(play_icon);
+
+
                 break;
             case kSpPlaybackNotifyPlay:
                 trackCountDownTimer.start();
-
-
+                isPlaying = true;
+                imgPlayPause.setImageDrawable(pause_icon);
 
             default:
                 break;
