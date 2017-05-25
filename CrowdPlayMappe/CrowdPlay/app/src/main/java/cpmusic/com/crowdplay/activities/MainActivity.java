@@ -293,7 +293,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCancel() {
                 Toast.makeText(MainActivity.this, "Login cancel", Toast.LENGTH_SHORT).show();
                 Log.d(LOGTAG, "Login Cancel");
-
+                sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,false);
+                Toast.makeText(MainActivity.this, "You need to be loggid in with Facebook to use CrowdPlay", Toast.LENGTH_SHORT).show();
+                finish();
 
             }
 
@@ -301,6 +303,10 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
                 Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
                 Log.d(LOGTAG, "Login Error");
+                sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,false);
+                Toast.makeText(MainActivity.this, "You need to be loggid in with Facebook to use CrowdPlay", Toast.LENGTH_SHORT).show();
+                finish();
+
 
             }
         });
