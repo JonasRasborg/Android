@@ -27,7 +27,6 @@ import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.adapters.SearchAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.util.APIConnector;
-import cpmusic.com.crowdplay.util.NetworkChecker;
 
 
 public class SearchFragment extends Fragment
@@ -37,7 +36,6 @@ public class SearchFragment extends Fragment
     EditText editSearch;
     FloatingActionButton fabSearch;
 
-    NetworkChecker networkChecker;
     APIConnector apiConnector;
 
     SearchAdapter adapter;
@@ -67,8 +65,6 @@ public class SearchFragment extends Fragment
 
         partyID = getArguments().getString("PartyKey");
 
-
-        networkChecker = new NetworkChecker();
         apiConnector = new APIConnector(mContext);
 
         editSearch = (EditText)view.findViewById(R.id.editSearch);
@@ -106,10 +102,9 @@ public class SearchFragment extends Fragment
 
     public void Search()
     {
-        if(networkChecker.getNetworkStatus(mContext))
-        {
-            apiConnector.Search(editSearch.getText().toString(), mContext);
-        }
+
+        apiConnector.Search(editSearch.getText().toString(), mContext);
+
 
         InputMethodManager inputManager = (InputMethodManager) mActivity.getSystemService(mContext.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(mActivity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

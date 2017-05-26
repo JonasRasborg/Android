@@ -12,15 +12,11 @@ import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.model.spotifyModel.Item;
 import cpmusic.com.crowdplay.model.spotifyModel.Tracks;
 import cpmusic.com.crowdplay.util.APIConnector;
-import cpmusic.com.crowdplay.util.NetworkChecker;
 
 public class DrakeService extends Service {
 
@@ -95,14 +91,12 @@ public class DrakeService extends Service {
     {
         int service_id;
         Service starterservice;
-        NetworkChecker networkChecker;
         APIConnector apiConnector;
 
         DrakeThreadClass(int service_id, Service service)
         {
             this.service_id = service_id;
-            starterservice = service;
-            networkChecker = new NetworkChecker();
+
             apiConnector = new APIConnector(mContext);
         }
 
@@ -113,11 +107,9 @@ public class DrakeService extends Service {
             {
                 while (true) {
                     try {
-                        if (networkChecker.getNetworkStatus(mContext))
-                        {
-                            wait(1000*60*60);
-                            apiConnector.sendRequestForDrake(mContext);
-                        }
+                        wait(1000*60*60);
+                        apiConnector.sendRequestForDrake(mContext);
+
                     }
                     catch (InterruptedException e)
                     {

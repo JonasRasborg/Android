@@ -2,7 +2,6 @@ package cpmusic.com.crowdplay.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,19 +18,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.activities.GuestActivity;
 import cpmusic.com.crowdplay.adapters.PlaylistAdapter;
-import cpmusic.com.crowdplay.adapters.GuestAdapter;
 import cpmusic.com.crowdplay.model.firebaseModel.Guest;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
-import cpmusic.com.crowdplay.util.NetworkChecker;
 import cpmusic.com.crowdplay.util.SharedPreferencesConnector;
-
-import static android.R.attr.id;
 
 
 public class PlayListFragment extends Fragment
@@ -41,7 +34,6 @@ public class PlayListFragment extends Fragment
     Context mContext;
     Activity mActivity;
 
-    NetworkChecker networkChecker;
 
     PlaylistAdapter adapter;
     //GuestAdapter adapterGuests;
@@ -87,7 +79,6 @@ public class PlayListFragment extends Fragment
 
         Allreadyloggedin = false;
 
-        networkChecker = new NetworkChecker();
 
         database = FirebaseDatabase.getInstance();
 
