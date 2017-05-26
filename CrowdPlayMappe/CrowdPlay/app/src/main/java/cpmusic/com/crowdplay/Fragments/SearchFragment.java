@@ -38,7 +38,7 @@ public class SearchFragment extends Fragment
 
     APIConnector apiConnector;
 
-    SearchAdapter adapter;
+    SearchAdapter searchAdapter;
 
     RecyclerView recyclerView;
 
@@ -96,7 +96,7 @@ public class SearchFragment extends Fragment
         @Override
         public void onReceive(Context context, Intent intent) {
             tracks = (ArrayList<Track>) intent.getExtras().getSerializable("tracks");
-            adapter.addTrack(tracks);
+            searchAdapter.addTrack(tracks);
         }
     };
 
@@ -113,8 +113,8 @@ public class SearchFragment extends Fragment
     private void setUpRecyclerView() {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        adapter = new SearchAdapter(mContext, tracks, mPartyRef, mActivity);
-        recyclerView.setAdapter(adapter);
+        searchAdapter = new SearchAdapter(mContext, tracks, mPartyRef, mActivity);
+        recyclerView.setAdapter(searchAdapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(mContext); // (Context context, int spanCount)
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
