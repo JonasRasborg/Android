@@ -102,9 +102,8 @@ public class SearchFragment extends Fragment
 
     public void Search()
     {
-
-        apiConnector.Search(editSearch.getText().toString(), mContext);
-
+        String searchString = editSearch.getText().toString();
+        apiConnector.Search( searchString, mContext);
 
         InputMethodManager inputManager = (InputMethodManager) mActivity.getSystemService(mContext.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(mActivity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
