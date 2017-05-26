@@ -67,7 +67,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
     }
 
 
-    public void addTrack(ArrayList<Track> newTracks){
+    public void addTracks(ArrayList<Track> newTracks){
         mData = newTracks;
         notifyDataSetChanged();
     }

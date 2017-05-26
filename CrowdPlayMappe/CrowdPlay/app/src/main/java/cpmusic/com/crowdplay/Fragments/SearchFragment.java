@@ -96,7 +96,7 @@ public class SearchFragment extends Fragment
         @Override
         public void onReceive(Context context, Intent intent) {
             tracks = (ArrayList<Track>) intent.getExtras().getSerializable("tracks");
-            searchAdapter.addTrack(tracks);
+            searchAdapter.addTracks(tracks);
         }
     };
 
