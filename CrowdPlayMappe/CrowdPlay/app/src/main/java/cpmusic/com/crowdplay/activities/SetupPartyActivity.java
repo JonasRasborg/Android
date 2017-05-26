@@ -86,7 +86,7 @@ public class SetupPartyActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(edtPartyName.getText().length() == 0){
-                    Toast.makeText(SetupPartyActivity.this, "Choose a name for your Party!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetupPartyActivity.this, getString(R.string.choose_name), Toast.LENGTH_SHORT).show();
                 }
                 else {
                     String name = edtPartyName.getText().toString();

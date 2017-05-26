@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         loginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(MainActivity.this, "Login successfull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
 
               // Even if login was succesfull, .getCurrentProfile may return null. Start Listening for profile Changed instead.
                 if(Profile.getCurrentProfile()==null)
@@ -291,20 +291,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(MainActivity.this, "Login cancel", Toast.LENGTH_SHORT).show();
-                Log.d(LOGTAG, "Login Cancel");
+                Toast.makeText(MainActivity.this, getString(R.string.login_cancelled), Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Login Cancelled");
                 sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,false);
-                Toast.makeText(MainActivity.this, "You need to be loggid in with Facebook to use CrowdPlay", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.need_facebook_login), Toast.LENGTH_SHORT).show();
                 finish();
 
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(MainActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.login_error), Toast.LENGTH_SHORT).show();
                 Log.d(LOGTAG, "Login Error");
                 sharedPreferencesConnector.setLoggidInStatus(MainActivity.this,false);
-                Toast.makeText(MainActivity.this, "You need to be loggid in with Facebook to use CrowdPlay", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.need_facebook_login), Toast.LENGTH_SHORT).show();
                 finish();
 
 

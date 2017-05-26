@@ -61,9 +61,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     int timer = 0;
 
     Track topTrack;
-    Track nowPlaying;
 
-    ToggleButton togglePlay;
     ImageView imgPlayPause;
     ProgressBar progressBar;
     CountDownTimer trackCountDownTimer;
@@ -76,8 +74,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     int min     = 0;
     int songSec;
     int songMin;
-
-    boolean firstTrackStarted = false;
 
     private Bundle bundle;
     private TextView tvArtist, tvTrack, tvSongTimer;
@@ -95,9 +91,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
         Log.i(TAG,"OnCreate");
 
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveFromFirebase, new IntentFilter("trackAdded"));
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mReceiveAllTracks, new IntentFilter("allTracks"));
-        newTracks = new ArrayList<Track>();
+        newTracks = new ArrayList<>();
 
         bundle = getIntent().getExtras();
         partyKey = bundle.getString("PartyKey");
@@ -215,6 +209,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
                 sec     = (timer/1000)%60;
                 min     = (timer/(1000*60))%60;
+
                 tvSongTimer.setText(min + ":" + String.format("%02d",sec) + "/" + songMin + ":" + String.format("%02d",songSec));
             }
 
@@ -257,9 +252,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
                 if(!mPlayer.getPlaybackState().isPlaying)
                 {
                     adapter.addPlayingSong(topTrack);
-
                     playTopSong();
-
                     break;
                 }
 
@@ -348,11 +341,9 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     }
 
     private void setUpRecyclerView() {
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new PlaylistAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
-
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
@@ -363,6 +354,5 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         recyclerView.getItemAnimator().setRemoveDuration(200);
         recyclerView.getItemAnimator().setAddDuration(300);
 
-        //recyclerView.setItemAnimator(new DefaultItemAnimator()); // Even if we dont use it then also our items shows default animation. #Check Docs
     }
 }

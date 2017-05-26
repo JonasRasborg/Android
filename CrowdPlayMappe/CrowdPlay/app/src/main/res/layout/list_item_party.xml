@@ -22,46 +22,47 @@
             android:id="@+id/textViewPartyName"
             android:layout_width="95dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.84"
+            android:layout_weight="0.86"
 
 
             android:gravity="center_vertical"
             android:textColor="@color/colorSecondary"
-            android:textSize="20dp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tvTracks"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.19"
-            android:text="Tracks:"
+            android:layout_weight="0.08"
+            android:text="@string/tracks_c"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/textViewTracks"
-            android:layout_width="39dp"
+            android:layout_width="22dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@color/colorSecondary"
-            android:textSize="18dp" />
+            android:textSize="16dp"
+            android:layout_weight="0.05" />
 
         <TextView
             android:id="@+id/tvGuests"
-            android:layout_width="67dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.02"
-            android:text="Guests:"
+            android:layout_weight="0.08"
+            android:text="@string/guests_c"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/textViewGuests"
-            android:layout_width="33dp"
+            android:layout_width="26dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@color/colorSecondary"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

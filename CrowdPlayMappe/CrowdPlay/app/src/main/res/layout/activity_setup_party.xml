@@ -45,7 +45,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="@string/party_name"
-        android:maxLength="13"
+        android:maxLength="20"
         android:textColor="@color/colorSecondary"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -150,7 +150,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 btnCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(PartyFinderActivity.this, "If you dont know the password, ask your host for it", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PartyFinderActivity.this, getString(R.string.ask_for_password), Toast.LENGTH_SHORT).show();
                         passDialog.dismiss();
                     }
                 });
@@ -176,7 +176,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                                         intent.putExtra("PartyKey", marker.getTag().toString());
                                         startActivityForResult(intent, 200);
                                     } else {
-                                        Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(PartyFinderActivity.this, getString(R.string.incorrect_password), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -193,69 +193,6 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 });
 
                 passDialog.show();
-
-
-
-
-/*
-                // Alert dialog for entering party password
-                AlertDialog.Builder alert = new AlertDialog.Builder(PartyFinderActivity.this);
-
-                alert.setMessage("Enter password for Party");
-
-                final EditText passwordEditText = new EditText(PartyFinderActivity.this);
-                passwordEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-                alert.setView(passwordEditText);
-
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(PartyFinderActivity.this, "If you dont know the password, ask your host for it", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        String correctPassword;
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                if (marker.getTag() != null)
-                                {
-                                    String markterTag = marker.getTag().toString();
-
-
-                                    String correctPassword = dataSnapshot.child(markterTag).child("password").getValue(String.class);
-                                    String typedPassword = passwordEditText.getText().toString();
-
-                                    if (correctPassword.equals(typedPassword)) {
-                                        Intent intent = new Intent(PartyFinderActivity.this, GuestActivity.class);
-                                        intent.putExtra("PartyKey", marker.getTag().toString());
-                                        startActivityForResult(intent, 200);
-                                    } else {
-                                        Toast.makeText(PartyFinderActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                });
-                alert.show();
-            }
-        });
-        */
-
 
             }
         });}
@@ -325,7 +262,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
                 } else {
 
-                    Toast.makeText(this, "Cant use the app without allowing permissions to location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.allow_location), Toast.LENGTH_SHORT).show();
                 }
                 return;
             }

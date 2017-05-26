@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CrowdPlay</string>
+    <string name="action_settings">Indstillinger</string>
+    <string name="allow_location">Det er ikke muligt at bruge CrowdPlay uden adgang til din lokation</string>
+    <string name="artist">Artist</string>
+    <string name="ask_for_password">\"Få adgangskoden hos værten\"</string>
+    <string name="choose_name">Vælg et navn til din fest!</string>
+    <string name="delete">Slet</string>
+    <string name="delete_party">Vil du slette denne fest?</string>
+    <string name="edit"></string>
+    <string name="enter_password">Skriv festens adgangskode</string>
+    <string name="incorrect_password">Forkert adgangskode</string>
+    <string name="login_cancelled">Log-in stoppet</string>
+    <string name="login_error">Log-in fejl</string>
+    <string name="need_facebook_login">\"CrowdPlay kræver adgang til din offentlige Facebook profil for at fungere\"</string>
+    <string name="google_maps_key" translatable="false"></string>
+    <string name="party_code">Adgangskode</string>
+    <string name="party_name">Navn</string>
+    <string name="search">Søg</string>
+    <string name="settings">Indstillinger</string>
+    <string name="start_party">START NY FEST</string>
+    <string name="title">Titel</string>
+    <string name="guests_c">Gæster:</string>
+    <string name="tracks_c">Sange:</string>
+    <string name="title_party_setup">Opret Fest</string>
+</resources>
