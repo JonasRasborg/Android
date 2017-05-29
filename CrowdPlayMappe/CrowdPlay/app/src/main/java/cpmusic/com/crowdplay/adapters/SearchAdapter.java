@@ -68,8 +68,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
 
 
     public void addTracks(ArrayList<Track> newTracks){
-        mData = newTracks;
-        notifyDataSetChanged();
+        if (newTracks != null)
+        {
+            mData = newTracks;
+            notifyDataSetChanged();
+        }
+        else
+        {
+            mData.clear();
+            notifyDataSetChanged();
+        }
+
     }
 
 
