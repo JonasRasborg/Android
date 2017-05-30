@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.spotify.sdk.android.player.Spotify;
 
 import cpmusic.com.crowdplay.R;
 import cpmusic.com.crowdplay.model.firebaseModel.Party;
@@ -45,24 +46,17 @@ import cpmusic.com.crowdplay.model.firebaseModel.Party;
 public class PartyFinderActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    LatLng navitas = new LatLng(56.158897, 10.213706);
-    LatLng party1 = new LatLng(56.1587, 10.213);
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
-    int minTime = 1000; // millisecs
-    int minDistance = 5; // meters
     LocationManager locationManager;
     int MAPZOOMLEVEL = 12;
     String LOGTAG = PartyFinderActivity.class.getSimpleName();
     private Location userlocation;
+    private boolean mapready = false;
 
     Context mContext;
 
-
-
-
     // Firebase database instances
     private DatabaseReference mDatabase;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +79,11 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     }
 
 
-
     // When map async call returns (map is built on screen)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mapready = true;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.partymapstyle));
 
         if (locationManager == null) {
@@ -243,6 +237,36 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mapready == true)
+        {
+            PutMylocationOnMap();
+        }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Cheking if app has permission to get users location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // If not, ask for it
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            // onRequestPermissionsResult is automatically invoked now
+        }
+
+        else {
+
+            mMap.setMyLocationEnabled(false);
+        }
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapready = false;
+    }
 
 
     // Invokes når der kommer svar på requestPermissions
@@ -271,10 +295,5 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
             // permissions this app might request
         }
     }
-
-
-
-
-
 
 }
