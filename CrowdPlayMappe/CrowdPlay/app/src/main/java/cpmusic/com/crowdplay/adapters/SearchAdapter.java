@@ -122,6 +122,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
             current.AddedBy = thisUserID;
             mTracksRef.child(current.URI).setValue(current);
             Toast.makeText(mContext, current.Title + " Added to playlist", Toast.LENGTH_SHORT).show();
+
+            for(int i = 0; i<mData.size();i++)
+            {
+                if (mData.get(i).URI == current.URI)
+                {
+                    mData.remove(i);
+                    notifyItemRemoved(i);
+                }
+            }
         }
     }
 }
