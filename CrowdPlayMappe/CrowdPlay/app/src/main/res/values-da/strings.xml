@@ -25,4 +25,10 @@
     <string name="tracks_c">Sange:</string>
     <string name="title_party_setup">Opret Fest</string>
     <string name="no_search_results">Ingen søgeresultater fundet</string>
+    <string name="facebook_login_find_parties">Du skal være logget ind med facebook for at finde fester</string>
+    <string name="facebook_login_start_party">Du skal være logget ind med facebook for at starte en fest</string>
+    <string name="location_not_found">Vi kunne desværre ikke finde din placering</string>
+    <string name="location_permissions_needed">DU kan ikke bruge appen uden at tillade lokalitetstjenester</string>
+    <string name="login_success">Login lykkedes</string>
+
 </resources>

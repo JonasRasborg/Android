@@ -38,5 +38,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="facebook_login_find_parties">You need to be logged in with Facebook to find parties</string>
+    <string name="facebook_login_start_party">You need to be loggid in with Facebook to start a party</string>
+    <string name="location_not_found">Sorry, we could not find your location</string>
+    <string name="location_permissions_needed">Cant use the app without allowing permissions to location</string>
+    <string name="login_success">Login Successful</string>
+
 
 </resources>

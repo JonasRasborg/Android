@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            Toast.makeText(this, "You need to be loggid in with Facebook to find parties", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.facebook_login_find_parties, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -127,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "Sorry, we could not find your location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.location_not_found, Toast.LENGTH_SHORT).show();
             }
         }
         else
         {
-            Toast.makeText(this, "You need to be loggid in with Facebook to start a party", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.facebook_login_start_party, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    Toast.makeText(this, "Cant use the app without allowing permissions to location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.location_permissions_needed, Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 return;
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
         loginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
 
               // Even if login was succesfull, .getCurrentProfile may return null. Start Listening for profile Changed instead.
                 if(Profile.getCurrentProfile()==null)
