@@ -180,7 +180,7 @@ public void sendRequest(String url, Context c)
 
 
 
-    public void sendRequestForDrake(Context c) {
+/*    public void sendRequestForDrake(Context c) {
 
         //send request using Volley
         if (queue == null) {
@@ -210,6 +210,54 @@ public void sendRequest(String url, Context c)
         });
 
         queue.add(stringRequestDrake);
+    }*/
+
+    public void sendRequestForDrake(Context c)
+    {
+        if (queue == null) {
+            queue = Volley.newRequestQueue(c);
+        }
+
+        String url = "https://api.spotify.com/v1/search?q=" + "Drake" + "&type=artist,track";
+
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+
+                        String webResponse = response;
+                        Example data = JSONParser.parseSearchWithJsonParser(webResponse);
+
+                        if (data.tracks.items != null)
+                        {
+                            drakeIntent.putExtra("DrakeData", data.tracks);
+                            localBroadcastManager.sendBroadcast(drakeIntent);
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                        ArrayList<Track> tracks = new ArrayList<>();
+                        dataIntent.putExtra("tracks", tracks);
+                        localBroadcastManager.sendBroadcast(dataIntent);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Authorization", "Bearer " + token);
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+
+        queue.add(postRequest);
     }
 
 }
