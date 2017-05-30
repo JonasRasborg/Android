@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
+import cpmusic.com.crowdplay.model.spotifyModel.Auth;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
 import cpmusic.com.crowdplay.model.spotifyModel.Item;
 
@@ -31,7 +32,7 @@ public class APIConnector {
 
     RequestQueue queue;
 
-    String token = "BQAdcIAikwOszKZzPujQknDdL5u__YhSGK9ABmYOgF4QX-BFQoPZjN8T58ttB8JRwJoOAyBnHSv5KpU5Dsku9SpX26wNb5MCzX38DUzIJpKVnEGhHpdNFb5hnx0_DKWVU0YodudPWs8";
+    public String token;
 
 
 
@@ -46,6 +47,7 @@ public class APIConnector {
         localBroadcastManager = LocalBroadcastManager.getInstance(c);
 
         drakeIntent = new Intent("Drake");
+        getAuth(c);
     }
 
     public void Search(String search, Context c)
@@ -55,6 +57,57 @@ public class APIConnector {
         sendRequest(url, c);
     }
 
+    private void setToken(String _token)
+    {
+        token = _token;
+    }
+
+    public void getAuth(Context c)
+    {
+        final String clientID = "NTlkNWE2NzU4YjlkNGE3OWE2NzkzMjNhNjVhZDhhMWI6MDU4MDJhZWZiMTkxNDc4ODg3MTAxNjFhNzkzNWQ5NTg=";
+
+        String url = "https://accounts.spotify.com/api/token?grant_type=client_credentials";
+
+        if (queue == null) {
+            queue = Volley.newRequestQueue(c);
+        }
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        String webResponse = response;
+
+                        Auth data = JSONParser.parseAuthWithJsonParser(webResponse);
+
+                        String token = data.accessToken;
+
+                        setToken(token);
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        int a = 0;
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Authorization", "Basic " + clientID);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        queue.add(postRequest);
+
+    }
 
 public void sendRequest(String url, Context c)
 {

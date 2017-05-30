@@ -3,6 +3,7 @@ package cpmusic.com.crowdplay.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cpmusic.com.crowdplay.model.spotifyModel.Auth;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
 
 /**
@@ -21,6 +22,18 @@ public class JSONParser {
             return example;
         } else {
             return example; //return "could not parse with gson";
+        }
+    }
+
+    public static Auth parseAuthWithJsonParser(String jsonString){
+
+        Gson gson = new GsonBuilder().create();
+        Auth auth =  gson.fromJson(jsonString, Auth.class);
+        if(auth != null) {
+            //weatherInfo.time = new Date();
+            return auth;
+        } else {
+            return auth; //return "could not parse with gson";
         }
     }
 }
