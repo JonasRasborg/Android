@@ -30,5 +30,8 @@
     <string name="location_not_found">Vi kunne desværre ikke finde din placering</string>
     <string name="location_permissions_needed">DU kan ikke bruge appen uden at tillade lokalitetstjenester</string>
     <string name="login_success">Login lykkedes</string>
+    <string name="welcome_back">Godt at se dig igen</string>
+
+
 
 </resources>

@@ -94,11 +94,7 @@ public class MainActivity extends AppCompatActivity {
             // if not logged in
             LoginFacebook();
         }
-        if (sharedPreferencesConnector.getLoggedInStatus(this)==true)
-        {
-            // if logged in
-            Toast.makeText(this,"Welcome back "+sharedPreferencesConnector.getFacebookFirstName(this),Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     public void OpenPartyFinderActivity()
@@ -267,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(LOGTAG,sharedPreferencesConnector.getFacebookUID(MainActivity.this));
                             Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
                             Log.d(LOGTAG,sharedPreferencesConnector.getFacebookProfilepicUri(MainActivity.this));
+                            Toast.makeText(MainActivity.this,getString(R.string.welcome_facebookname)+" "+sharedPreferencesConnector.getFacebookFirstName(MainActivity.this),Toast.LENGTH_SHORT).show();
+
 
                         }
                     };
@@ -288,6 +286,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookUID(MainActivity.this));
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookFullName(MainActivity.this));
                     Log.d(LOGTAG,sharedPreferencesConnector.getFacebookProfilepicUri(MainActivity.this));
+
+                    Toast.makeText(MainActivity.this,getString(R.string.welcome_facebookname)+" "+sharedPreferencesConnector.getFacebookFirstName(MainActivity.this),Toast.LENGTH_SHORT).show();
                 }
             }
 
