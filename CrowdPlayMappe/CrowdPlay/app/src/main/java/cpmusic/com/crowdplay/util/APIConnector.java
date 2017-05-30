@@ -47,11 +47,14 @@ public class APIConnector {
         localBroadcastManager = LocalBroadcastManager.getInstance(c);
 
         drakeIntent = new Intent("Drake");
+
         getAuth(c);
     }
 
     public void Search(String search, Context c)
     {
+        getAuth(c);
+
         String url = "https://api.spotify.com/v1/search?q=" + search + "&type=artist,track";
 
         sendRequest(url, c);
