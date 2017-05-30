@@ -37,15 +37,14 @@
         android:layout_width="0dp"
         android:layout_height="22dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="CrowdPlay"
         android:textColor="@color/colorSecondary"
         android:textSize="18dp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/imgAlbum"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:layout_constraintRight_toLeftOf="@+id/imgPlayPause"
-        android:layout_marginRight="8dp"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -85,7 +84,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
         android:gravity="end"
-        android:text="0:00/0:00"
         android:textAlignment="textEnd"
         android:textColor="@color/colorSecondary"
         app:layout_constraintBottom_toBottomOf="@+id/progressBar"

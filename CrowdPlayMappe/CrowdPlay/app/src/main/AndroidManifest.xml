@@ -71,8 +71,10 @@
             android:label="@string/title_activity_party_finder" />
         android:enabled="true"
         android:exported="true" />
-        <activity android:name=".activities.SetupPartyActivity" />
-        <activity android:name=".activities.GuestActivity" />
+        <activity android:name=".activities.SetupPartyActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.GuestActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".Services.DrakeService"

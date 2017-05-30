@@ -144,6 +144,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         mPartyRef.child("Active").setValue(false);
     }
 
+    //**CODE INSPIRATION FROM SPOTIFY DEVELOPER WEBSIDE
+    //**https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -342,7 +344,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
 
     private void setUpRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new PlaylistAdapter(this, mPartyRef);
+        adapter      = new PlaylistAdapter(this, mPartyRef);
         recyclerView.setAdapter(adapter);
 
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this); // (Context context, int spanCount)
