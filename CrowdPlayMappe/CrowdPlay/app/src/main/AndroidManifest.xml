@@ -68,7 +68,8 @@
 
         <activity
             android:name=".activities.PartyFinderActivity"
-            android:label="@string/title_activity_party_finder" />
+            android:label="@string/title_activity_party_finder"
+            android:screenOrientation="portrait" />
         android:enabled="true"
         android:exported="true" />
         <activity android:name=".activities.SetupPartyActivity"

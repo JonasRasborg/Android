@@ -122,7 +122,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         });
 
 
-        //Spotify SDK:
+        //Spotify Authentication. Åbner activity til Spotify logon. Taget fra Spotify' hjemmeside.
+        //https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
         builder.setScopes(new String[]{"user-read-private", "streaming"});
         AuthenticationRequest request = builder.build();
@@ -144,8 +145,8 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         mPartyRef.child("Active").setValue(false);
     }
 
-    //**CODE INSPIRATION FROM SPOTIFY DEVELOPER WEBSIDE
-    //**https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/
+    //Kodeinspiration fra SPOTIFY DEVELOPER WEBSIDE
+    //https://developer.spotify.com/technologies/spotify-android-sdk/tutorial/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -181,9 +182,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         trackCountDownTimer = new CountDownTimer(1000,500) {
             @Override
             public void onTick(long millisUntilFinished) {
-
             }
-
             @Override
             public void onFinish() {
                 playTopSong();
@@ -192,6 +191,7 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         trackCountDownTimer.start();
     }
 
+    //Opsætter progressbar og nedtælling på brugergrænsefladen
     public void setupProgressBar(long ms){
         songMs      = (int)ms;
         songSec     = (songMs/1000)%60;
@@ -200,7 +200,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
         min         = 0;
 
         tvSongTimer.setText(min + ":" + String.format("%02d",sec) + "/" + songMin + ":" + String.format("%02d",songSec));
-
         progressBar.setProgress(timer);
         progressBar.setMax(songMs);
         trackCountDownTimer = new CountDownTimer(ms,1000) {
@@ -219,7 +218,6 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
             public void onFinish() {
 
             }
-
         };
         trackCountDownTimer.start();
     }
@@ -246,10 +244,11 @@ public class DJActivity extends AppCompatActivity implements SpotifyPlayer.Notif
     }
 
     @Override
+
     public void onPlaybackEvent(PlayerEvent playerEvent) {
         Log.d(TAG, "Playback event received: " + playerEvent.name());
+        //Lytter på events fra spotify playeren
         switch (playerEvent) {
-
             case kSpPlaybackNotifyTrackChanged:
                 if(!mPlayer.getPlaybackState().isPlaying)
                 {
