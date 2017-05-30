@@ -8,13 +8,11 @@
     <string name="choose_name">Vælg et navn til din fest!</string>
     <string name="delete">Slet</string>
     <string name="delete_party">Vil du slette denne fest?</string>
-    <string name="edit"></string>
     <string name="enter_password">Skriv festens adgangskode</string>
     <string name="incorrect_password">Forkert adgangskode</string>
     <string name="login_cancelled">Log-in stoppet</string>
     <string name="login_error">Log-in fejl</string>
     <string name="need_facebook_login">\"CrowdPlay kræver adgang til din offentlige Facebook profil for at fungere\"</string>
-    <string name="google_maps_key" translatable="false"></string>
     <string name="party_code">Adgangskode</string>
     <string name="party_name">Navn</string>
     <string name="search">Søg</string>
@@ -31,6 +29,8 @@
     <string name="location_permissions_needed">DU kan ikke bruge appen uden at tillade lokalitetstjenester</string>
     <string name="login_success">Login lykkedes</string>
     <string name="welcome_back">Godt at se dig igen</string>
+    <string name="welcome_facebookname">Velkommen</string>
+
 
 
 
