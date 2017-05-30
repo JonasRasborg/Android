@@ -31,6 +31,8 @@ public class APIConnector {
 
     RequestQueue queue;
 
+    String token = "BQAdcIAikwOszKZzPujQknDdL5u__YhSGK9ABmYOgF4QX-BFQoPZjN8T58ttB8JRwJoOAyBnHSv5KpU5Dsku9SpX26wNb5MCzX38DUzIJpKVnEGhHpdNFb5hnx0_DKWVU0YodudPWs8";
+
 
 
     private Intent dataIntent;
@@ -85,13 +87,14 @@ public void sendRequest(String url, Context c)
                 }
             }
     ) {
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            Map<String, String>  params = new HashMap<String, String>();
-            params.put("Authorization", "Bearer BQD_wE4vX3a2jX1Cr6oXL3MhG2ZnKVRSxQAzjpeIo7uvJXqFv9HChnSO5IzM7iax6sbtEiM_0f2FaOgqHlQ2cgD6QpxRyEcR8TyIx8eXdGJCk85vdi2GvxQqr-KQV2qr7jejU1ZB5_Q");
-            return params;
-        }
-    };
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        Map<String, String>  params = new HashMap<String, String>();
+        params.put("Authorization", "Bearer " + token);
+        params.put("Accept", "application/json");
+        return params;
+    }
+};
 
     queue.add(postRequest);
 }
