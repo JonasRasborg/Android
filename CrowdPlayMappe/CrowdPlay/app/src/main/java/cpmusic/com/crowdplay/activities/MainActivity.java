@@ -231,7 +231,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Code example found at https://stackoverflow.com/questions/29634660/facebook-sdk-4-0-1-login-without-login-button & https://stackoverflow.com/questions/29642759/profile-getcurrentprofile-returns-null-after-logging-in-fb-api-v4-0
+    // Code example for facebook login found at
+    // https://stackoverflow.com/questions/29634660/facebook-sdk-4-0-1-login-without-login-button &
+    // https://stackoverflow.com/questions/29642759/profile-getcurrentprofile-returns-null-after-logging-in-fb-api-v4-0
     public void LoginFacebook()
     {
 
@@ -311,6 +313,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
