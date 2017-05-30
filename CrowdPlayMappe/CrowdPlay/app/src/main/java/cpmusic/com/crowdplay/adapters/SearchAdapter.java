@@ -2,6 +2,8 @@ package cpmusic.com.crowdplay.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,7 +70,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
 
 
     public void addTracks(ArrayList<Track> newTracks){
-        if (newTracks != null)
+
+        if (newTracks.size() != 0)
         {
             mData = newTracks;
             notifyDataSetChanged();
@@ -77,6 +80,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MySearchVi
         {
             mData.clear();
             notifyDataSetChanged();
+
+            Toast.makeText(mContext, mContext.getString(R.string.no_search_results), Toast.LENGTH_SHORT).show();
         }
 
     }

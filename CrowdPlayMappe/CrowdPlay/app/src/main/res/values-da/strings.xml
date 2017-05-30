@@ -24,4 +24,5 @@
     <string name="guests_c">Gæster:</string>
     <string name="tracks_c">Sange:</string>
     <string name="title_party_setup">Opret Fest</string>
+    <string name="no_search_results">Ingen søgeresultater fundet</string>
 </resources>

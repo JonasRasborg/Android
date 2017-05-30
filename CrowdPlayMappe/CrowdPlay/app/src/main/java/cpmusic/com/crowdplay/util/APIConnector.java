@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import cpmusic.com.crowdplay.model.firebaseModel.Track;
 import cpmusic.com.crowdplay.model.spotifyModel.Example;
@@ -25,8 +30,7 @@ import cpmusic.com.crowdplay.model.spotifyModel.Item;
 public class APIConnector {
 
     RequestQueue queue;
-    String webResponse;
-    Example data;
+
 
 
     private Intent dataIntent;
@@ -50,35 +54,50 @@ public class APIConnector {
     }
 
 
-    public void sendRequest(String url, Context c) {
-        //send request using Volley
-        if (queue == null) {
-            queue = Volley.newRequestQueue(c);
-        }
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        webResponse = response;
-                        data = JSONParser.parseSearchWithJsonParser(webResponse);
-
-                        SortData();
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-
-        queue.add(stringRequest);
-
+public void sendRequest(String url, Context c)
+{
+    if (queue == null) {
+        queue = Volley.newRequestQueue(c);
     }
 
+    StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+            new Response.Listener<String>()
+            {
+                @Override
+                public void onResponse(String response) {
+                    String webResponse = response;
+                    Example data = JSONParser.parseSearchWithJsonParser(webResponse);
 
-    private void SortData()
+                    SortData(data);
+
+                    // response
+                }
+            },
+            new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // TODO Auto-generated method stub
+
+                    ArrayList<Track> tracks = new ArrayList<>();
+                    dataIntent.putExtra("tracks", tracks);
+                    localBroadcastManager.sendBroadcast(dataIntent);
+                }
+            }
+    ) {
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+            Map<String, String>  params = new HashMap<String, String>();
+            params.put("Authorization", "Bearer BQD_wE4vX3a2jX1Cr6oXL3MhG2ZnKVRSxQAzjpeIo7uvJXqFv9HChnSO5IzM7iax6sbtEiM_0f2FaOgqHlQ2cgD6QpxRyEcR8TyIx8eXdGJCk85vdi2GvxQqr-KQV2qr7jejU1ZB5_Q");
+            return params;
+        }
+    };
+
+    queue.add(postRequest);
+}
+
+
+    private void SortData(Example data)
     {
         ArrayList<Track> tracks = new ArrayList<>();
 
@@ -100,7 +119,10 @@ public class APIConnector {
         localBroadcastManager.sendBroadcast(dataIntent);
     }
 
+
+
     public void sendRequestForDrake(Context c) {
+
         //send request using Volley
         if (queue == null) {
             queue = Volley.newRequestQueue(c);
@@ -112,8 +134,8 @@ public class APIConnector {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        webResponse = response;
-                        data = JSONParser.parseSearchWithJsonParser(webResponse);
+                        String webResponse = response;
+                        Example data = JSONParser.parseSearchWithJsonParser(webResponse);
 
                         if (data.tracks.items != null)
                         {
