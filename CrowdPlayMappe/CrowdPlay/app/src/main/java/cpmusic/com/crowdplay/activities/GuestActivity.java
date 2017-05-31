@@ -100,8 +100,8 @@ public class GuestActivity extends AppCompatActivity {
         playListFragment.setArguments(bundle);
         searchFragment.setArguments(bundle);
 
-        adapter.addFragment(playListFragment,"Playlist");
-        adapter.addFragment(searchFragment,"Search");
+        adapter.addFragment(playListFragment,getString(R.string.PlaylistTab));
+        adapter.addFragment(searchFragment, getString(R.string.SearchTab));
         viewPager.setAdapter(adapter);
     }
 

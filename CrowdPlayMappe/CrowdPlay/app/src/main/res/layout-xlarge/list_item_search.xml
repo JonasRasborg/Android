@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/img_album"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_margin="7dp"
             android:contentDescription="@string/thumbnail"
             android:src="@drawable/thumb_1_0" />
@@ -38,11 +38,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_weight="0.10"
                 android:maxHeight="36dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="35dp"
+                android:textSize="25dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -53,7 +52,7 @@
                 android:layout_weight="0.10"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
         </LinearLayout>

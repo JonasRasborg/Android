@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/img_album"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_margin="7dp"
             android:contentDescription="@string/thumbnail"
             android:src="@drawable/thumb_1_0" />
@@ -36,7 +36,7 @@
                 android:maxHeight="36dp"
                 android:text="@string/title"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="35dp"
+                android:textSize="25dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_marginLeft="2dp"
                 android:text="@string/artist"
                 android:textColor="@color/colorPrimeryText"
-                android:textSize="30dp"
+                android:textSize="20dp"
                 android:textStyle="italic" />
 
 
@@ -61,12 +61,12 @@
             android:text="7"
             android:textAlignment="center"
             android:textColor="@color/colorPrimeryText"
-            android:textSize="60dp" />
+            android:textSize="50dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabUpvote"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"

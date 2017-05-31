@@ -31,6 +31,8 @@
     <string name="ask_for_password">If you dont know the password, ask your host for it</string>
     <string name="incorrect_password">Incorrect Password</string>
     <string name="allow_location">You can not use the app without allowing permissions to location</string>
+    <string name="PlaylistTab" translatable="false">Playlist</string>
+    <string name="SearchTab">Search</string>
 
     // Facebook
     <string name="facebook_app_id" translatable="false">1911910362363575</string>
