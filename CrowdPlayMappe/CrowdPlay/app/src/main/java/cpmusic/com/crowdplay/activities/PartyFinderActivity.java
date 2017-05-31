@@ -48,7 +48,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
     private GoogleMap mMap;
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION=0;
     LocationManager locationManager;
-    int MAPZOOMLEVEL = 12;
+    int MAPZOOMLEVEL = 16;
     String LOGTAG = PartyFinderActivity.class.getSimpleName();
     private Location userlocation;
     private boolean mapready = false;
