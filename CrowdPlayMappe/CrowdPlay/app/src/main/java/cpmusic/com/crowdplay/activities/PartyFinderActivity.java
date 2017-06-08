@@ -279,8 +279,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // If permission granted
                     PutMylocationOnMap();
 
 
@@ -291,8 +290,7 @@ public class PartyFinderActivity extends FragmentActivity implements OnMapReadyC
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+
         }
     }
 
