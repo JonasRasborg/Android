@@ -55,7 +55,16 @@ public class APIConnector {
     {
         getAuth(c);
 
-        String url = "https://api.spotify.com/v1/search?q=" + search + "&type=artist,track";
+        String[] searchWords = search.split(" ");
+
+        String searchString = "";
+
+        for (int i = 0; i<searchWords.length; i++)
+        {
+            searchString += "+" + searchWords[i];
+        }
+
+        String url = "https://api.spotify.com/v1/search?q=" + searchString + "&type=artist,track";
 
         sendRequest(url, c);
     }
